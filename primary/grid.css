@@ -1,0 +1,52 @@
+/* Supersede the original coarse map grid so there is only one visible lattice to track. */
+.map-grid{display:none}
+
+.coord-grid-overlay{
+  position:absolute;
+  inset:2em;
+  overflow:hidden;
+  z-index:5;
+  pointer-events:none;
+  opacity:1;
+  -webkit-mask-image:
+    linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%),
+    linear-gradient(to bottom,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);
+  -webkit-mask-composite:source-in;
+  mask-image:
+    linear-gradient(to right,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%),
+    linear-gradient(to bottom,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);
+  mask-composite:intersect;
+}
+.coord-grid-world{
+  position:absolute;
+  left:-2em;
+  top:-2em;
+  will-change:transform;
+}
+.coord-grid-svg{position:absolute;inset:0;overflow:visible}
+.coord-grid-line{
+  stroke:rgba(188,202,180,.35);
+  stroke-width:1;
+  vector-effect:non-scaling-stroke;
+  shape-rendering:crispEdges;
+  transition:stroke .32s ease,stroke-width .32s ease;
+}
+.coord-grid-line.major{stroke:rgba(188,202,180,.5)}
+.coord-grid-line.tracking,
+.coord-grid-line.major.tracking{
+  stroke:rgba(188,202,180,.75);
+  stroke-width:2;
+}
+.coord-grid-ref{
+  fill:rgba(216,225,208,.75);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:.01em;
+  paint-order:stroke;
+  stroke:rgba(2,7,3,.82);
+  stroke-width:2.2px;
+  stroke-linejoin:round;
+  user-select:none;
+}
+.coord-grid-ref.secondary{opacity:.72;font-size:8px}

@@ -1,0 +1,232 @@
+/* Large-format secondary display.
+   Base styles load first; this file is the final, intentional override layer. */
+
+/* ---------- Structural frame ---------- */
+.secondary-display{
+  grid-template-rows:96px 1fr;
+}
+
+.secondary-tabs{
+  height:96px;
+  padding:12px 24px 0;
+  grid-template-columns:repeat(5,minmax(0,1fr)) 96px;
+  gap:12px;
+  border-bottom:4px solid var(--green);
+}
+
+.secondary-tab{
+  height:72px;
+  padding:0 18px 0 30px;
+  font-size:35px;
+  letter-spacing:.035em;
+  transform:translateY(0);
+}
+
+/* Four-pixel outer shape, preserving the clipped/chamfered tab construction. */
+.secondary-tab::after{
+  inset:4px;
+  clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);
+}
+
+/* Inactive tabs sit proud. Active tab drops into the 4px baseline. */
+.secondary-tab.active{transform:translateY(8px)}
+
+.secondary-tab[data-tab="maintenance"]{padding-left:74px}
+.secondary-tab[data-tab="maintenance"]::before{
+  left:24px;
+  width:30px;
+  min-width:30px;
+  height:27px;
+  border-width:2px;
+  font-size:19px;
+}
+
+.settings-tab svg{
+  width:36px;
+  height:36px;
+}
+
+.secondary-module{border-width:2px}
+
+.module-heading{
+  font-size:24px;
+  letter-spacing:.045em;
+}
+
+/* ---------- Ground station status ---------- */
+.status-cards{
+  padding:12px 14px 7px;
+  column-gap:18px;
+}
+
+.status-card{
+  height:80px;
+  padding:9px 0 10px;
+}
+
+.status-card span,
+.status-summary span,
+.trend-heading span{
+  font-size:16px;
+  line-height:1;
+}
+
+.status-card strong{
+  font-size:25px;
+  line-height:.95;
+}
+
+.status-lower{padding-top:5px}
+.trend-heading{height:22px}
+.trend-heading strong{font-size:20px}
+.status-summary>div{gap:1px}
+.status-summary strong{font-size:20px}
+
+/* ---------- Tactical airspace plot ---------- */
+.air-geo-label{font-size:16px}
+.air-zone-label{font-size:14px}
+.air-contact .air-readout{font-size:17px}
+.air-contact .air-readout.dim{font-size:15px}
+
+/* Readability retrofit: widen the target-data rail rather than shrinking values. */
+.air-module .radar-module-body{
+  grid-template-columns:minmax(0,1fr) 244px;
+  gap:8px;
+}
+
+.air-module .radar-side-data{padding:5px 7px 6px}
+
+.air-module .radar-side-data>div:not(.air-alert){
+  grid-template-columns:38px 1fr;
+  gap:3px;
+}
+
+.air-module .radar-side-data>div:nth-child(1){height:43px}
+.air-module .radar-side-data>div:nth-child(2){height:48px;margin-top:-2px}
+.air-module .radar-side-data>div:nth-child(3){height:44px;margin-top:8px}
+.air-module .radar-side-data>div:nth-child(4){height:44px;margin-top:-2px}
+
+/* Small legends deliberately remain a different typographic system. */
+.air-module .radar-side-data>div:not(.air-alert)>span::after{
+  min-width:30px;
+  min-height:18px;
+  font-size:10px;
+  line-height:.82;
+}
+
+.air-module .radar-side-data>div:nth-child(1)>strong::after{font-size:41px}
+.air-module .radar-side-data>div:nth-child(2)>strong::after{font-size:47px}
+.air-module .radar-side-data>div:nth-child(3)>strong::after{font-size:39px}
+.air-module .radar-side-data>div:nth-child(4)>strong::after{font-size:43px}
+
+/* Later-added wind/drift annotations keep their own scale. */
+.air-module .radar-side-data>div:nth-child(2)>strong{padding-right:31px}
+.air-module .radar-side-data>div:nth-child(2)>strong::before{
+  right:0;
+  top:6px;
+  font-size:10px;
+  line-height:.85;
+}
+.air-module .radar-side-data>div:nth-child(2)::before{
+  left:39px;
+  bottom:-8px;
+  font-size:9px;
+}
+.air-module .radar-side-data>div:nth-child(2)::after{
+  right:30px;
+  bottom:-10px;
+  font-size:15px;
+}
+
+.air-module .radar-side-data::before{
+  height:43px;
+  flex-basis:43px;
+  margin-left:-7px;
+  margin-right:-7px;
+  padding:5px 7px 0;
+  font-size:11px;
+}
+.air-module .radar-side-data::after{
+  right:8px;
+  top:190px;
+  font-size:14px;
+  line-height:1.05;
+}
+
+.air-module .radar-side-data .air-alert{
+  left:9px;
+  right:9px;
+  top:236px;
+  bottom:6px;
+  padding-top:4px;
+}
+
+/* Header has an inline font declaration in the JS-generated markup. */
+.air-module .radar-side-data .air-alert>b{
+  font-size:12px!important;
+  line-height:.95!important;
+}
+.air-message-entry{
+  font-size:11.5px!important;
+  line-height:1.08!important;
+  margin-bottom:4px!important;
+}
+
+.air-module .radar-legend{
+  font-size:15px;
+  gap:18px;
+}
+
+/* Primitive edge cruft stays intentionally irregular. */
+.air-module::before,
+.air-module::after,
+.air-module .radar-module-body::before,
+.air-module .radar-module-body::after{
+  font-size:12px;
+  line-height:.95;
+}
+.air-module::before{
+  width:84px;
+  height:38px;
+  padding:5px 6px 3px;
+}
+.air-module::after{
+  left:109px;
+  width:78px;
+  height:38px;
+  padding:5px 6px 3px;
+}
+.air-module .radar-module-body::before{
+  width:126px;
+  height:44px;
+  padding:5px 6px 3px;
+}
+.air-module .radar-module-body::after{
+  top:91px;
+  width:100px;
+  height:42px;
+  padding:5px 6px 3px;
+}
+
+/* ---------- Weather ---------- */
+.wx-heading-scale text{font-size:19px}
+.wx-range-labels text{font-size:17px}
+
+.weather-legend-greeble{
+  min-width:330px;
+  padding:6px 8px;
+  font-size:14px;
+  line-height:1;
+}
+.wx-mode,
+.wx-intensity{min-height:18px}
+.wx-mode strong{font-size:14px}
+.wx-swatch{width:22px;height:9px}
+
+.weather-alert{
+  height:62px;
+  grid-template-columns:46px 1fr 100px;
+}
+.weather-alert span{font-size:15px;line-height:1}
+.weather-alert strong{font-size:16px;line-height:1}
+.alert-icon{font-size:38px!important}
