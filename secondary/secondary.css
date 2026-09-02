@@ -1,4 +1,13 @@
-.secondary-shell{width:1920px;height:480px;background:var(--bg);border:1px solid var(--line);display:grid;grid-template-rows:64px 1fr}.secondary-content{display:grid;place-items:center;color:var(--green);font-size:28px;letter-spacing:.16em}.secondary-note{font-size:13px;color:var(--muted);margin-top:12px;text-align:center}
+.secondary-shell{
+  width:1920px;
+  height:480px;
+  background:var(--bg);
+  border:1px solid var(--line);
+  display:grid;
+  grid-template-rows:64px 1fr;
+}
+.secondary-content{display:grid;place-items:center;color:var(--green);font-size:28px;letter-spacing:.16em}
+.secondary-note{font-size:13px;color:var(--muted);margin-top:12px;text-align:center}
 
 :root{
   --sec-green:var(--green);
@@ -23,60 +32,6 @@
 }
 
 .secondary-display:after{opacity:1}
-
-.secondary-tabs{
-  height:64px;
-  padding:8px 16px 0;
-  display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr)) 64px;
-  gap:8px;
-  position:relative;
-  z-index:8;
-  background:#010201;
-  border-bottom:1px solid var(--line);
-}
-
-.secondary-tab{
-  position:relative;
-  height:48px;
-  border:1px solid var(--line-soft);
-  background:transparent;
-  color:var(--green);
-  opacity:.62;
-  font:700 14px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-  letter-spacing:.08em;
-}
-
-.secondary-tab:before,
-.secondary-tab:after{content:none}
-
-.secondary-tab.active{
-  z-index:2;
-  color:var(--green);
-  opacity:1;
-  border-color:var(--green);
-  border-bottom-color:#010201;
-  background:rgba(119,201,91,.035);
-  box-shadow:none;
-}
-
-.secondary-tab.active:after{
-  content:"";
-  display:block;
-  position:absolute;
-  left:-1px;
-  right:-1px;
-  bottom:-9px;
-  height:9px;
-  background:#010201;
-  border-left:1px solid var(--green);
-  border-right:1px solid var(--green);
-}
-
-.secondary-tab:not(.active):hover{opacity:.82}
-
-.settings-tab{display:grid;place-items:center;padding:0}
-.settings-tab svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
 .secondary-grid{
   min-height:0;
