@@ -13,12 +13,6 @@
   const startX = 60;
   const startY = 38;
 
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = 'grid.css';
-  link.dataset.gridCss = 'true';
-  document.head.appendChild(link);
-
   const overlay = document.createElement('div');
   overlay.className = 'coord-grid-overlay';
 
