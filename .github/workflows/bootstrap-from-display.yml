@@ -1,0 +1,261 @@
+name: Bootstrap interactive repository
+
+on:
+  push:
+    paths:
+      - .github/workflows/bootstrap-from-display.yml
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out interactive repo
+        uses: actions/checkout@v4
+
+      - name: Fetch frozen display source
+        run: git clone --depth 1 https://github.com/elikblack/pelican-uav-display.git /tmp/pelican-uav-display
+
+      - name: Build interactive repository layout
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+          import shutil
+
+          root = Path.cwd()
+          src = Path('/tmp/pelican-uav-display')
+
+          primary = root / 'primary'
+          secondary = root / 'secondary'
+          shared = root / 'shared'
+          assets = shared / 'assets'
+          weather_assets = assets / 'weather'
+          for path in (primary, secondary, weather_assets):
+              path.mkdir(parents=True, exist_ok=True)
+
+          # Split the old monolithic stylesheet at natural ownership boundaries.
+          styles = (src / 'styles.css').read_text()
+          primary_start = styles.index('\n.topbar') + 1
+          secondary_start = styles.index('\n.secondary-shell') + 1
+
+          ui_base = styles[:primary_start].rstrip() + '\n'
+          primary_css = styles[primary_start:secondary_start].rstrip() + '\n'
+          secondary_shell_css = styles[secondary_start:].rstrip() + '\n'
+
+          primary_css = primary_css.replace('url("assets/terrain.svg")', 'url("../shared/assets/terrain.svg")')
+          (shared / 'ui-base.css').write_text(ui_base)
+          (primary / 'primary.css').write_text(primary_css)
+
+          # Primary display. Preserve behavior while making ownership explicit.
+          primary_html = (src / 'index.html').read_text()
+          primary_html = primary_html.replace(
+              '<link rel="stylesheet" href="styles.css">',
+              '<link rel="stylesheet" href="../shared/ui-base.css">\n  <link rel="stylesheet" href="primary.css">'
+          )
+          primary_html = primary_html.replace('Pelican UAV Display — Primary', 'Pelican UAV Interactive — Primary')
+          primary_html = primary_html.replace(
+              '<script src="config.js"></script>',
+              '<script src="../shared/state.js"></script>\n  <script src="config.js"></script>'
+          )
+          primary_html = primary_html.replace('<script src="app.js"></script>', '<script src="primary.js"></script>')
+          (primary / 'index.html').write_text(primary_html)
+
+          primary_config = (src / 'config.js').read_text().replace(
+              'image: "assets/terrain-desert.jpg"',
+              'image: "../shared/assets/terrain-desert.jpg"'
+          )
+          (primary / 'config.js').write_text(primary_config)
+          shutil.copy2(src / 'app.js', primary / 'primary.js')
+          shutil.copy2(src / 'effects.css', primary / 'effects.css')
+          shutil.copy2(src / 'grid.css', primary / 'grid.css')
+          shutil.copy2(src / 'grid.js', primary / 'grid.js')
+
+          # Secondary display starts from the large-format/readability fork.
+          secondary_html = (src / 'secondary-large.html').read_text()
+          secondary_html = secondary_html.replace('Pelican UAV Display — Secondary Large', 'Pelican UAV Interactive — Secondary')
+          secondary_html = secondary_html.replace('href="styles.css"', 'href="../shared/ui-base.css"')
+          secondary_html = secondary_html.replace('href="secondary-tabs.css"', 'href="tabs.css"')
+          secondary_html = secondary_html.replace('href="secondary-weather.css"', 'href="weather.css"')
+          secondary_html = secondary_html.replace('href="secondary-air.css"', 'href="air.css"')
+          secondary_html = secondary_html.replace('href="secondary-large.css"', 'href="large.css"')
+          secondary_html = secondary_html.replace(
+              '<script src="secondary.js"></script>',
+              '<script src="../shared/state.js"></script>\n  <script src="secondary.js"></script>'
+          )
+          (secondary / 'index.html').write_text(secondary_html)
+
+          secondary_css = secondary_shell_css + '\n' + (src / 'secondary.css').read_text()
+          (secondary / 'secondary.css').write_text(secondary_css)
+          shutil.copy2(src / 'secondary-tabs.css', secondary / 'tabs.css')
+          shutil.copy2(src / 'secondary-weather.css', secondary / 'weather.css')
+          shutil.copy2(src / 'secondary-air.css', secondary / 'air.css')
+          shutil.copy2(src / 'secondary-large.css', secondary / 'large.css')
+
+          secondary_js = (src / 'secondary.js').read_text()
+
+          # air.css is now loaded explicitly by the page, so remove late CSS injection.
+          secondary_js = re.sub(
+              r'\n\s*if \(!document\.querySelector\(\'link\[href="secondary-air\.css"\]\'\)\) \{.*?\n\s*\}\n',
+              '\n',
+              secondary_js,
+              count=1,
+              flags=re.S,
+          )
+
+          # Assets are shared between displays in v2.
+          secondary_js = secondary_js.replace(
+              '`assets/weather-radar-frame-${String(index + 1).padStart(2, \'0\')}.png`',
+              '`../shared/assets/weather/weather-radar-frame-${String(index + 1).padStart(2, \'0\')}.png`'
+          )
+
+          # The large-format status panel intentionally removed these fields. Keep
+          # the updater compatible with either markup instead of crashing on null.
+          secondary_js = secondary_js.replace(
+              '    fields.voltage.textContent = `${voltage.toFixed(1)} V`;',
+              '    if (fields.voltage) fields.voltage.textContent = `${voltage.toFixed(1)} V`;'
+          )
+          secondary_js = secondary_js.replace(
+              '    fields.battery.textContent = `${battery}%`;',
+              '    if (fields.battery) fields.battery.textContent = `${battery}%`;'
+          )
+          (secondary / 'secondary.js').write_text(secondary_js)
+
+          # Shared assets are imported intact so the new repo remains usable offline.
+          shutil.copy2(src / 'assets' / 'terrain-desert.jpg', assets / 'terrain-desert.jpg')
+          shutil.copy2(src / 'assets' / 'terrain.svg', assets / 'terrain.svg')
+          for frame in sorted((src / 'assets').glob('weather-radar-frame-*.png')):
+              shutil.copy2(frame, weather_assets / frame.name)
+
+          # A deliberately small shared state boundary. Neither display depends on
+          # it yet, but both load it now so inter-display behavior has one home.
+          (shared / 'state.js').write_text(r'''(() => {
+            const CHANNEL_NAME = 'pelican-uav-interactive-v2';
+            const listeners = new Set();
+            let state = {
+              mission: { status: 'IDLE', requestId: null },
+              aircraft: { status: 'READY' },
+              selectedTrack: null,
+              alerts: []
+            };
+
+            const clone = value => JSON.parse(JSON.stringify(value));
+            const channel = typeof BroadcastChannel === 'function'
+              ? new BroadcastChannel(CHANNEL_NAME)
+              : null;
+
+            function notify(source = 'local') {
+              const snapshot = clone(state);
+              listeners.forEach(listener => listener(snapshot, source));
+            }
+
+            function replace(next, source = 'local', broadcast = true) {
+              state = clone(next);
+              notify(source);
+              if (broadcast && channel) channel.postMessage({ type: 'state', state, source });
+            }
+
+            function update(patch, source = 'local') {
+              replace({ ...state, ...patch }, source, true);
+            }
+
+            function subscribe(listener) {
+              listeners.add(listener);
+              listener(clone(state), 'initial');
+              return () => listeners.delete(listener);
+            }
+
+            if (channel) {
+              channel.addEventListener('message', event => {
+                const message = event.data || {};
+                if (message.type === 'hello') {
+                  channel.postMessage({ type: 'state', state, source: 'sync' });
+                } else if (message.type === 'state' && message.state) {
+                  replace(message.state, message.source || 'remote', false);
+                }
+              });
+              channel.postMessage({ type: 'hello' });
+            }
+
+            window.UAV_SHARED = {
+              getState: () => clone(state),
+              update,
+              replace,
+              subscribe
+            };
+          })();
+          ''')
+
+          # Small local launcher for development. Operational displays still open
+          # directly and retain their fixed 1920x1080 / 1920x480 canvases.
+          (root / 'index.html').write_text('''<!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Pelican UAV Interactive</title>
+            <style>
+              :root{color-scheme:dark;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+              *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#010301;color:#b3caaa}
+              main{width:min(720px,calc(100% - 40px));border:1px solid #345f30;padding:28px;background:#020804}
+              h1{margin:0 0 8px;color:#77c95b;font-size:24px;letter-spacing:.06em}p{color:#70866a;line-height:1.5}
+              nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}a{display:block;border:1px solid #77c95b;padding:20px;color:#77c95b;text-decoration:none;font-weight:700;letter-spacing:.08em}a:hover{background:#77c95b;color:#010301}
+            </style>
+          </head>
+          <body>
+            <main>
+              <h1>PELICAN UAV INTERACTIVE</h1>
+              <p>Development launcher. Open each display in its own browser window for the intended hardware layout.</p>
+              <nav>
+                <a href="primary/index.html" target="_blank">PRIMARY / 1920×1080</a>
+                <a href="secondary/index.html" target="_blank">SECONDARY / 1920×480</a>
+              </nav>
+            </main>
+          </body>
+          </html>
+          ''')
+
+          (root / 'README.md').write_text('''# pelican-uav-interactive
+
+          Interactive descendant of `pelican-uav-display`. The original repository is treated as the frozen v1 prop/display artifact; this repository is free to evolve into a coordinated two-screen system.
+
+          ## Displays
+
+          - `primary/index.html` — 1920×1080 primary ground-control display.
+          - `secondary/index.html` — 1920×480 large-format secondary instrument display.
+          - `index.html` — lightweight development launcher for opening either display.
+
+          ## Structure
+
+          ```text
+          primary/            Primary display markup, styling, configuration and behavior
+          secondary/          Secondary display markup, instrument styling and behavior
+          shared/
+            ui-base.css       Shared palette, global reset, fixed-canvas fitting and scanline treatment
+            state.js          Cross-window state boundary using BroadcastChannel
+            assets/           Terrain and weather imagery used by the displays
+          ```
+
+          The migration intentionally keeps display-specific CSS and JavaScript local instead of prematurely turning everything into shared abstractions. New interactive behavior that genuinely affects both displays should cross through `shared/state.js`.
+
+          ## Lineage
+
+          Initial screen implementations and assets were migrated from `elikblack/pelican-uav-display`. The secondary starts from the large-text/readability fork rather than the original small-format secondary.
+          ''')
+
+          # This workflow is a migration tool, not part of the application.
+          workflow = root / '.github' / 'workflows' / 'bootstrap-from-display.yml'
+          if workflow.exists():
+              workflow.unlink()
+          PY
+
+      - name: Commit migrated interactive baseline
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Bootstrap interactive two-screen baseline"
+          git push
