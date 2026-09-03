@@ -21,7 +21,7 @@
 
 .air-module .airspace-plot{
   left:122px!important;
-  right:252px!important;
+  right:240px!important;
   top:0!important;
   bottom:0!important;
 }
@@ -85,12 +85,12 @@
 
 .air-module .radar-legend{
   left:12px;
-  right:266px;
+  right:244px;
   bottom:7px;
   height:32px;
   box-sizing:border-box;
   padding:0 7px;
-  border-top:2px solid rgba(119,201,91,.82);
+  border-top:0;
   background:#020402;
   z-index:9;
   display:grid;
@@ -103,8 +103,17 @@
   overflow:hidden;
 }
 
+/* The data rail is attached to the upper-right edge and reads as a divider,
+   not a framed card: only the left edge gets a green rule. */
 .air-module .radar-side-data{
-  bottom:-38px;
+  top:0!important;
+  right:-12px!important;
+  bottom:-46px!important;
+  width:244px;
+  border:0!important;
+  border-left:2px solid rgba(119,201,91,.92)!important;
+  box-shadow:none!important;
+  background:#020402;
 }
 
 /* ---------- Weather radar ---------- */
