@@ -93,13 +93,29 @@
 .air-contact .air-readout{font-size:17px}
 .air-contact .air-readout.dim{font-size:15px}
 
-/* Readability retrofit: widen the target-data rail rather than shrinking values. */
+/* The plot owns the body; the old-console data rail is parked independently
+   in the upper-right and allowed to run nearly to the module floor. */
 .air-module .radar-module-body{
-  grid-template-columns:minmax(0,1fr) 244px;
-  gap:8px;
+  display:block;
 }
 
-.air-module .radar-side-data{padding:5px 7px 6px}
+.air-module .airspace-plot{
+  position:absolute;
+  inset:0 252px 0 0;
+  width:auto;
+  height:auto;
+}
+
+.air-module .radar-side-data{
+  position:absolute;
+  top:0;
+  right:0;
+  bottom:-34px;
+  width:244px;
+  height:auto;
+  padding:5px 7px 6px;
+  z-index:6;
+}
 
 .air-module .radar-side-data>div:not(.air-alert){
   grid-template-columns:38px 1fr;
@@ -162,7 +178,7 @@
   left:9px;
   right:9px;
   top:236px;
-  bottom:6px;
+  bottom:2px;
   padding-top:4px;
 }
 
@@ -177,7 +193,9 @@
   margin-bottom:4px!important;
 }
 
+/* Keep the plot legend out from under the now-full-height data rail. */
 .air-module .radar-legend{
+  right:266px;
   font-size:15px;
   gap:18px;
 }
@@ -196,7 +214,8 @@
   padding:5px 6px 3px;
 }
 .air-module::after{
-  left:109px;
+  content:"AIR\A PLOT";
+  left:118px;
   width:78px;
   height:38px;
   padding:5px 6px 3px;
