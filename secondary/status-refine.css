@@ -171,6 +171,3 @@
   font-variant-numeric:tabular-nums;
   mix-blend-mode:difference;
 }
-
-/* Retained temporarily because secondary.js still updates the legacy telemetry nodes. */
-.status-lower{display:none!important}
