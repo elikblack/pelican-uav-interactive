@@ -1,0 +1,104 @@
+/* Ground station status: two-zone layout.
+   Top is the operator go/no-go view; lower area is compact live telemetry. */
+
+.status-module{
+  padding-bottom:8px;
+}
+
+.status-health{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
+  gap:10px;
+  padding:10px 12px 8px;
+  border-bottom:1px solid var(--line-soft);
+}
+
+.status-health-main{
+  min-width:0;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  padding:5px 8px 6px;
+  border:1px solid rgba(119,201,91,.48);
+  background:#020402;
+}
+
+.status-health-main span,
+.status-health-main small,
+.status-go-list span{
+  color:var(--green);
+  font-size:10px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.055em;
+}
+
+.status-health-main span{opacity:.72}
+.status-health-main small{opacity:.7}
+
+.status-health-main strong{
+  align-self:center;
+  color:var(--green);
+  font-size:35px;
+  font-weight:900;
+  line-height:.9;
+  letter-spacing:.015em;
+}
+
+.status-go-list{
+  min-width:0;
+  display:grid;
+  grid-template-rows:repeat(3,1fr);
+  border-top:1px solid var(--line-soft);
+}
+
+.status-go-list>div{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:8px;
+  padding:0 3px;
+  border-bottom:1px solid var(--line-soft);
+}
+
+.status-go-list strong{
+  color:var(--green);
+  font-size:18px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.04em;
+}
+
+/* Keep the original four useful engineering values, but make them read as
+   one dense telemetry block instead of four equal dashboard cards. */
+.status-cards{
+  grid-template-columns:1fr!important;
+  gap:0!important;
+  padding:6px 12px 0!important;
+}
+
+.status-card{
+  height:45px!important;
+  padding:5px 2px 5px!important;
+  grid-template-columns:1fr auto!important;
+  grid-template-rows:auto 6px!important;
+  gap:3px 8px!important;
+}
+
+.status-card span{
+  font-size:11px!important;
+}
+
+.status-card strong{
+  font-size:18px!important;
+  font-weight:700!important;
+}
+
+.status-card .meter{
+  height:5px;
+}
+
+/* The former trend/history footer is deliberately retired. HEALTH has been
+   promoted to the operator-facing top block, so this no longer earns space. */
+.status-lower{
+  display:none!important;
+}
