@@ -34,10 +34,7 @@
   }
 
   function kinematicSuffix(fields) {
-    const parts = [];
-    if (fields.hdg) parts.push(`HDG ${fields.hdg}`);
-    if (fields.spd) parts.push(`SPD ${fields.spd}`);
-    return parts.join('  ');
+    return [fields.hdg, fields.spd].filter(Boolean).join('  ');
   }
 
   function positionSuffix(fields) {
