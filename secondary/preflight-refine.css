@@ -133,12 +133,14 @@
   overflow:visible;
 }
 
-/* The four large values are now supplied by the active radar track. */
+/* The four large values are now supplied by the active radar track. Keep the
+   numerals genuinely monospaced so changing telemetry never shifts the row. */
 .air-module .radar-side-data>div:nth-child(-n+4)>strong::after{
   content:attr(data-live-value)!important;
-  font-family:"Chakra Petch",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace!important;
-  font-weight:700!important;
-  letter-spacing:.01em!important;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
+  font-weight:800!important;
+  letter-spacing:.015em!important;
+  font-variant-numeric:tabular-nums slashed-zero;
 }
 
 /* The old track boxes were permanent decoration. The new one represents the
