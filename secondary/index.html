@@ -5,18 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pelican UAV Interactive — Secondary</title>
   <link rel="stylesheet" href="../shared/ui-base.css?v=20260903-2">
-  <link rel="stylesheet" href="secondary.css?v=20260903-2">
+  <link rel="stylesheet" href="secondary.css?v=20260903-3">
   <link rel="stylesheet" href="tabs.css?v=20260903-2">
   <link rel="stylesheet" href="weather.css?v=20260903-2">
   <link rel="stylesheet" href="air.css?v=20260903-2">
-  <link rel="stylesheet" href="large.css?v=20260903-2">
+  <link rel="stylesheet" href="large.css?v=20260903-3">
   <link rel="stylesheet" href="preflight-refine.css?v=20260903-5">
   <link rel="stylesheet" href="air-message-layout.css?v=20260903-6">
-  <link rel="stylesheet" href="status-refine.css?v=20260903-5">
+  <link rel="stylesheet" href="status-refine.css?v=20260903-6">
 </head>
 <body>
   <div id="screen-fit">
-    <main id="secondary-display" class="display secondary-shell secondary-display" aria-label="Secondary large-format systems display">
+    <main id="secondary-display" class="display secondary-display" aria-label="Secondary large-format systems display">
       <nav class="secondary-tabs" aria-label="Secondary display modes">
         <button class="secondary-tab active" data-tab="preflight">PREFLIGHT</button>
         <button class="secondary-tab" data-tab="avionics">AVIONICS</button>
@@ -77,18 +77,6 @@
             <div class="status-card"><span>THERMAL</span><strong id="thermal">38°C</strong><i class="meter"><b id="thermal-meter" style="width:56%"></b></i></div>
             <div class="status-card"><span>LINK MARGIN</span><strong id="link-margin">+18.2 dB</strong><i class="meter"><b id="link-meter" style="width:79%"></b></i></div>
           </div>
-          <div class="status-lower">
-            <div class="trend-panel">
-              <div class="trend-heading"><span>POWER / 60 SEC</span><strong id="trend-value">232 W</strong></div>
-              <svg viewBox="0 0 300 74" preserveAspectRatio="none" aria-label="Power trend"><path class="trend-grid" d="M0 18.5H300M0 37H300M0 55.5H300"/><polyline id="power-trace" points="0,52 12,49 24,45 36,48 48,40 60,44 72,41 84,46 96,39 108,42 120,38 132,44 144,36 156,39 168,35 180,40 192,34 204,36 216,31 228,35 240,29 252,32 264,26 276,30 288,24 300,27"/></svg>
-            </div>
-            <div class="status-summary">
-              <div><span>UPTIME</span><strong id="uptime">12:47:11</strong></div>
-              <div><span>DATA RATE</span><strong id="data-rate">8.2 Mbps</strong></div>
-              <div><span>LINK QUALITY</span><strong id="link-quality">92%</strong></div>
-              <div><span>HEALTH</span><strong class="good-state">GOOD</strong></div>
-            </div>
-          </div>
         </article>
 
         <article class="secondary-module weather-module">
@@ -107,13 +95,12 @@
               <div class="wx-intensity"><span>PRECIP</span><i class="wx-swatch green"></i><i class="wx-swatch yellow"></i><i class="wx-swatch red"></i><i class="wx-swatch magenta"></i></div>
             </div>
           </div>
-          <footer class="weather-alert"><span class="alert-icon">△</span><div><span>WEATHER ALERT</span><strong>MODERATE / HEAVY PRECIPITATION · FORWARD SECTOR</strong></div><div class="alert-range"><span>RANGE</span><strong>20–40 NM</strong></div></footer>
         </article>
       </section>
     </main>
   </div>
   <script src="../shared/state.js?v=20260903-2"></script>
-  <script src="secondary.js?v=20260903-2"></script>
+  <script src="secondary.js?v=20260903-3"></script>
   <script src="preflight-refine.js?v=20260903-2"></script>
   <script src="air-identity-greeble.js?v=20260903-3"></script>
   <script src="air-message-layout.js?v=20260903-5"></script>
