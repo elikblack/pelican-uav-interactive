@@ -1,6 +1,6 @@
 (() => {
   const WEATHER_FRAME_COUNT = 40;
-  const WEATHER_FRAME_MS = 200;
+  const WEATHER_FRAME_MS = 500;
   const WEATHER_FRAME_PATH = '../shared/assets/weather';
 
   const weatherBody = document.querySelector('.weather-sector-body');
