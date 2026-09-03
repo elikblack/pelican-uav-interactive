@@ -15,6 +15,248 @@
     body.appendChild(rail);
   }
 
+  function startAirTrackSystem() {
+    const module = document.querySelector('.air-module');
+    const svg = module && module.querySelector('.airspace-plot');
+    const rail = module && module.querySelector('.radar-side-data');
+    const alert = rail && rail.querySelector('.air-alert');
+    const staleFeed = document.getElementById('air-message-feed');
+    if (!module || !svg || !rail || !alert || !staleFeed) return;
+
+    /* secondary.js owns the original decorative feed. Replace its node so its
+       already-running timer can harmlessly continue against the detached copy,
+       while this layer owns the coherent track narrative. */
+    const feed = staleFeed.cloneNode(false);
+    staleFeed.replaceWith(feed);
+
+    const header = alert.querySelector('b');
+    const valueNodes = [...rail.querySelectorAll(':scope > div:not(.air-alert) > strong')].slice(0, 4);
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const svgNS = 'http://www.w3.org/2000/svg';
+
+    const targets = [
+      { selector: '.contact-a', id: 'A17', heading: 176, speed: 312, phase: 0.3, fallback: [125, 197] },
+      { selector: '.contact-c', id: 'T03', heading: 247, speed: 268, phase: 1.4, fallback: [211, 205] },
+      { selector: '.contact-d', id: 'A08', heading: 312, speed: 224, phase: 2.2, fallback: [250, 104] },
+      { selector: '.contact-f', id: 'T11', heading: 91, speed: 191, phase: 3.1, fallback: [318, 164] }
+    ].map(target => ({ ...target, element: svg.querySelector(target.selector) }))
+      .filter(target => target.element);
+
+    if (!targets.length || valueNodes.length < 4) return;
+
+    targets.forEach(target => {
+      target.element.classList.add('air-cycle-target');
+      const box = document.createElementNS(svgNS, 'rect');
+      box.setAttribute('class', 'air-active-target-box');
+      box.setAttribute('x', '-13');
+      box.setAttribute('y', '-13');
+      box.setAttribute('width', '26');
+      box.setAttribute('height', '26');
+      target.element.insertBefore(box, target.element.firstChild);
+    });
+
+    let selectedIndex = -1;
+    let selectedTarget = null;
+    let eventMode = null;
+    let eventToken = 0;
+
+    function randomBetween(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function clearEventClasses() {
+      targets.forEach(target => {
+        target.element.classList.remove(
+          'air-event-coast',
+          'air-event-query',
+          'air-event-unknown',
+          'air-event-resolved'
+        );
+      });
+    }
+
+    function setHeader(state = 'CORRELATED') {
+      if (!header || !selectedTarget) return;
+      header.textContent = `[TGT ${selectedTarget.id} / ${state}]`;
+    }
+
+    function selectTarget(target, state = 'CORRELATED') {
+      targets.forEach(item => item.element.classList.remove('air-selected'));
+      target.element.classList.add('air-selected');
+      selectedTarget = target;
+      selectedIndex = targets.indexOf(target);
+      setHeader(state);
+      updateLiveValues();
+    }
+
+    function targetPosition(target) {
+      const symbol = target.element.querySelector('.air-symbol, .air-dot');
+      const matrix = svg.getScreenCTM();
+      if (!symbol || !matrix) return { x: target.fallback[0], y: target.fallback[1] };
+
+      const bounds = symbol.getBoundingClientRect();
+      const point = svg.createSVGPoint();
+      point.x = bounds.left + bounds.width / 2;
+      point.y = bounds.top + bounds.height / 2;
+      const local = point.matrixTransform(matrix.inverse());
+      return { x: local.x, y: local.y };
+    }
+
+    function liveTargetData(target) {
+      const now = performance.now();
+      const position = targetPosition(target);
+      const dx = position.x - 195;
+      const dy = position.y - 160;
+      const bearing = (Math.atan2(dx, -dy) * 180 / Math.PI + 360) % 360;
+      const range = Math.hypot(dx, dy) / 15;
+      const heading = (target.heading + Math.sin(now / 9000 + target.phase) * 1.8 + 360) % 360;
+      const speed = target.speed + Math.sin(now / 7200 + target.phase * 1.7) * 3.2;
+      return { heading, speed, bearing, range };
+    }
+
+    function formatBearing(value) {
+      return `${value.toFixed(1).padStart(5, '0')}°T`;
+    }
+
+    function updateLiveValues() {
+      if (!selectedTarget) return;
+      const data = liveTargetData(selectedTarget);
+      valueNodes[0].dataset.liveValue = formatBearing(data.heading);
+      valueNodes[1].dataset.liveValue = `${Math.round(data.speed)}kt`;
+      valueNodes[2].dataset.liveValue = formatBearing(data.bearing);
+      valueNodes[3].dataset.liveValue = `${data.range.toFixed(1)}NM`;
+    }
+
+    function makeMessage(text, tone = 'normal') {
+      const entry = document.createElement('div');
+      entry.className = `air-message-entry${tone === 'critical' ? ' air-message-critical' : ''}${tone === 'resolved' ? ' air-message-resolved' : ''}`;
+      entry.textContent = text;
+      return entry;
+    }
+
+    function pushMessage(text, tone = 'normal') {
+      const entry = makeMessage(text, tone);
+      feed.insertBefore(entry, feed.firstChild);
+
+      if (!reducedMotion) {
+        entry.animate(
+          [
+            { opacity: 0, transform: 'translateY(-8px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ],
+          { duration: 220, easing: 'steps(3,end)' }
+        );
+      }
+
+      while (feed.children.length > 4) feed.lastElementChild.remove();
+    }
+
+    function normalTrackMessage(target) {
+      const data = liveTargetData(target);
+      pushMessage(
+        `${target.id} CORRELATED\nBRG ${Math.round(data.bearing).toString().padStart(3, '0')}°  RNG ${data.range.toFixed(1)}NM`
+      );
+    }
+
+    function cycleTarget() {
+      if (!eventMode) {
+        selectedIndex = (selectedIndex + 1) % targets.length;
+        selectTarget(targets[selectedIndex]);
+        normalTrackMessage(selectedTarget);
+      }
+      setTimeout(cycleTarget, Math.round(randomBetween(5200, 7000)));
+    }
+
+    function beginCoast() {
+      if (eventMode) return;
+      const token = ++eventToken;
+      eventMode = 'coast';
+      clearEventClasses();
+
+      const target = selectedTarget || targets[Math.floor(Math.random() * targets.length)];
+      selectTarget(target, 'COAST');
+      target.element.classList.add('air-event-coast');
+      pushMessage(`${target.id} COAST\nPOSITION EXTRAPOLATED`);
+
+      setTimeout(() => {
+        if (token !== eventToken) return;
+        target.element.classList.remove('air-event-coast');
+        target.element.classList.add('air-event-resolved');
+        setHeader('REACQUIRED');
+        pushMessage(`${target.id} REACQUIRED\nSURVEILLANCE VALID`, 'resolved');
+      }, 4300);
+
+      setTimeout(() => {
+        if (token !== eventToken) return;
+        target.element.classList.remove('air-event-resolved');
+        eventMode = null;
+        setHeader('CORRELATED');
+      }, 6800);
+    }
+
+    function beginUnknown(force = false) {
+      if (eventMode && !force) return;
+
+      const token = ++eventToken;
+      eventMode = 'unknown';
+      clearEventClasses();
+
+      const target = selectedTarget || targets[Math.floor(Math.random() * targets.length)];
+      selectTarget(target, 'IDENT CHECK');
+      target.element.classList.add('air-event-query');
+      pushMessage(`IDENT CHECK ${target.id}\nCORRELATION LOST`);
+
+      setTimeout(() => {
+        if (token !== eventToken) return;
+        target.element.classList.remove('air-event-query');
+        target.element.classList.add('air-event-unknown');
+        setHeader('UNCORR');
+        pushMessage(`BOGEY ${target.id} / UNCORR\nTRACK VALID`, 'critical');
+      }, 2600);
+
+      setTimeout(() => {
+        if (token !== eventToken) return;
+        target.element.classList.remove('air-event-unknown');
+        target.element.classList.add('air-event-resolved');
+        setHeader('IFF VALID');
+        pushMessage(`IFF CORRELATION\n${target.id} IDENTIFIED`, 'resolved');
+      }, 7200);
+
+      setTimeout(() => {
+        if (token !== eventToken) return;
+        target.element.classList.remove('air-event-resolved');
+        eventMode = null;
+        setHeader('CORRELATED');
+      }, 9800);
+    }
+
+    function scheduleCoast() {
+      setTimeout(() => {
+        if (!eventMode) beginCoast();
+        scheduleCoast();
+      }, Math.round(randomBetween(36000, 65000)));
+    }
+
+    function scheduleUnknown() {
+      setTimeout(() => {
+        if (!eventMode) beginUnknown();
+        scheduleUnknown();
+      }, Math.round(randomBetween(70000, 120000)));
+    }
+
+    window.addEventListener('keydown', event => {
+      if (event.key !== '1' || event.repeat) return;
+      beginUnknown(true);
+    });
+
+    selectTarget(targets[0]);
+    normalTrackMessage(targets[0]);
+    setTimeout(cycleTarget, 5800);
+    scheduleCoast();
+    scheduleUnknown();
+    setInterval(updateLiveValues, 200);
+  }
+
   function weatherTimestamp() {
     const now = new Date();
     const day = String(now.getUTCDate()).padStart(2, '0');
@@ -128,6 +370,7 @@
   }
 
   buildAirControlRail();
+  startAirTrackSystem();
   buildWeatherLayout();
   startWeatherMessageFeed();
 })();
