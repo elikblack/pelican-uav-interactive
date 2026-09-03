@@ -5,80 +5,59 @@
   padding-bottom:8px;
 }
 
+/* Four equal operator-facing status rows. The green block at right is the
+   entire go/no-go annunciator, deliberately stripped of explanatory text. */
 .status-health{
   display:grid;
-  grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
-  gap:10px;
-  padding:10px 12px 8px;
-  border-bottom:1px solid var(--line-soft);
-}
-
-.status-health-main{
-  min-width:0;
-  display:grid;
-  grid-template-rows:auto 1fr auto;
-  padding:5px 8px 6px;
-  border:1px solid rgba(119,201,91,.48);
+  grid-template-rows:repeat(4,1fr);
+  gap:0;
+  margin:10px 12px 0;
+  border-top:1px solid var(--line-soft);
+  border-left:1px solid var(--line-soft);
+  border-right:1px solid var(--line-soft);
   background:#020402;
 }
 
-.status-health-main span,
-.status-health-main small,
-.status-go-list span{
+.status-health-row{
+  min-width:0;
+  min-height:36px;
+  display:grid;
+  grid-template-columns:1fr 42px;
+  align-items:center;
+  gap:10px;
+  padding:0 8px 0 10px;
+  border-bottom:1px solid var(--line-soft);
+}
+
+.status-health-row span{
   color:var(--green);
-  font-size:10px;
-  font-weight:800;
+  font-size:15px;
+  font-weight:900;
   line-height:1;
   letter-spacing:.055em;
 }
 
-.status-health-main span{opacity:.72}
-.status-health-main small{opacity:.7}
-
-.status-health-main strong{
-  align-self:center;
-  color:var(--green);
-  font-size:35px;
-  font-weight:900;
-  line-height:.9;
-  letter-spacing:.015em;
-}
-
-.status-go-list{
-  min-width:0;
-  display:grid;
-  grid-template-rows:repeat(3,1fr);
-  border-top:1px solid var(--line-soft);
-}
-
-.status-go-list>div{
-  display:grid;
-  grid-template-columns:1fr auto;
-  align-items:center;
-  gap:8px;
-  padding:0 3px;
-  border-bottom:1px solid var(--line-soft);
-}
-
-.status-go-list strong{
-  color:var(--green);
-  font-size:18px;
-  font-weight:900;
-  line-height:1;
-  letter-spacing:.04em;
+.status-health-indicator{
+  display:block;
+  width:34px;
+  height:14px;
+  justify-self:end;
+  background:var(--green);
+  box-shadow:0 0 4px rgba(119,201,91,.18);
 }
 
 /* Keep the original four useful engineering values, but make them read as
-   one dense telemetry block instead of four equal dashboard cards. */
+   one dense telemetry block instead of four equal dashboard cards. The larger
+   top annunciator stack intentionally pushes this block farther down. */
 .status-cards{
   grid-template-columns:1fr!important;
   gap:0!important;
-  padding:6px 12px 0!important;
+  padding:14px 12px 0!important;
 }
 
 .status-card{
-  height:45px!important;
-  padding:5px 2px 5px!important;
+  height:42px!important;
+  padding:4px 2px 4px!important;
   grid-template-columns:1fr auto!important;
   grid-template-rows:auto 6px!important;
   gap:3px 8px!important;
