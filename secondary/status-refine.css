@@ -5,39 +5,55 @@
   padding-bottom:8px;
 }
 
-/* Four equal operator-facing status rows. The green block at right is the
-   entire go/no-go annunciator, deliberately stripped of explanatory text. */
+/* Four equal operator-facing status rows. The existing HEALTH block becomes
+   the first row and the three GO rows follow it. The filled green rectangle
+   at right is the entire annunciator. */
 .status-health{
   display:grid;
-  grid-template-rows:repeat(4,1fr);
+  grid-template-rows:repeat(4,36px);
   gap:0;
   margin:10px 12px 0;
+  padding:0;
   border-top:1px solid var(--line-soft);
   border-left:1px solid var(--line-soft);
   border-right:1px solid var(--line-soft);
+  border-bottom:0;
   background:#020402;
 }
 
-.status-health-row{
+.status-health-main{
   min-width:0;
-  min-height:36px;
+  min-height:0;
   display:grid;
   grid-template-columns:1fr 42px;
+  grid-template-rows:1fr;
   align-items:center;
   gap:10px;
   padding:0 8px 0 10px;
+  border:0;
   border-bottom:1px solid var(--line-soft);
+  background:transparent;
 }
 
-.status-health-row span{
+.status-health-main span,
+.status-go-list span{
   color:var(--green);
   font-size:15px;
   font-weight:900;
   line-height:1;
   letter-spacing:.055em;
+  opacity:1;
 }
 
-.status-health-indicator{
+.status-health-main strong,
+.status-health-main small,
+.status-go-list strong{
+  display:none!important;
+}
+
+.status-health-main::after,
+.status-go-list>div::after{
+  content:"";
   display:block;
   width:34px;
   height:14px;
@@ -46,9 +62,26 @@
   box-shadow:0 0 4px rgba(119,201,91,.18);
 }
 
+.status-go-list{
+  display:contents;
+  border:0;
+}
+
+.status-go-list>div{
+  min-width:0;
+  min-height:0;
+  display:grid;
+  grid-template-columns:1fr 42px;
+  align-items:center;
+  gap:10px;
+  padding:0 8px 0 10px;
+  border:0;
+  border-bottom:1px solid var(--line-soft);
+}
+
 /* Keep the original four useful engineering values, but make them read as
    one dense telemetry block instead of four equal dashboard cards. The larger
-   top annunciator stack intentionally pushes this block farther down. */
+   annunciator stack intentionally pushes this block farther down. */
 .status-cards{
   grid-template-columns:1fr!important;
   gap:0!important;
