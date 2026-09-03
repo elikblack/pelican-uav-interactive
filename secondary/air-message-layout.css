@@ -29,9 +29,11 @@
 }
 
 /* Current track/event summary sits centered in the open radar territory,
-   between the module's left edge and the fixed right-hand data rail. */
+   between the module's left edge and the fixed right-hand data rail. The
+   frame is part of the instrument, so it stays green; the text follows the
+   message tone used by the history rail. */
 .air-message-summary{
-  --summary-color:#a6ec7d;
+  --summary-text:#e3c15a;
   position:absolute;
   left:calc((100% - 260px) / 2);
   right:auto;
@@ -42,9 +44,9 @@
   box-sizing:border-box;
   height:32px;
   padding:0 10px;
-  border:1px solid var(--summary-color);
+  border:1px solid #a6ec7d;
   background:#020402;
-  color:var(--summary-color);
+  color:var(--summary-text);
   display:flex;
   align-items:center;
   justify-content:flex-start;
@@ -54,13 +56,13 @@
   pointer-events:none;
   font:900 14px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:-.025em;
-  text-shadow:0 0 3px color-mix(in srgb,var(--summary-color) 28%,transparent);
+  text-shadow:0 0 3px color-mix(in srgb,var(--summary-text) 28%,transparent);
 }
 
-.air-message-summary[data-tone="warning"]{--summary-color:#e3c15a}
-.air-message-summary[data-tone="critical"]{--summary-color:#df5b55}
 .air-message-summary[data-tone="normal"],
-.air-message-summary[data-tone="resolved"]{--summary-color:#a6ec7d}
+.air-message-summary[data-tone="warning"]{--summary-text:#e3c15a}
+.air-message-summary[data-tone="critical"]{--summary-text:#df5b55}
+.air-message-summary[data-tone="resolved"]{--summary-text:#a6ec7d}
 
 /* The old bracketed header remains as the private state source for the
    existing radar script, but no longer occupies operator-facing space. */
