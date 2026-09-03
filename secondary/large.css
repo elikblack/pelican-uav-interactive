@@ -58,35 +58,6 @@
   grid-template-columns:2fr 1fr 2fr;
 }
 
-/* ---------- Ground station status ---------- */
-.status-cards{
-  padding:12px 14px 7px;
-  column-gap:18px;
-}
-
-.status-card{
-  height:80px;
-  padding:9px 0 10px;
-}
-
-.status-card span,
-.status-summary span,
-.trend-heading span{
-  font-size:16px;
-  line-height:1;
-}
-
-.status-card strong{
-  font-size:25px;
-  line-height:.95;
-}
-
-.status-lower{padding-top:5px}
-.trend-heading{height:22px}
-.trend-heading strong{font-size:20px}
-.status-summary>div{gap:1px}
-.status-summary strong{font-size:20px}
-
 /* ---------- Tactical airspace plot ---------- */
 .air-geo-label{font-size:16px}
 .air-zone-label{font-size:14px}
@@ -246,11 +217,3 @@
 .wx-intensity{min-height:18px}
 .wx-mode strong{font-size:14px}
 .wx-swatch{width:22px;height:9px}
-
-.weather-alert{
-  height:62px;
-  grid-template-columns:46px 1fr 100px;
-}
-.weather-alert span{font-size:15px;line-height:1}
-.weather-alert strong{font-size:16px;line-height:1}
-.alert-icon{font-size:38px!important}
