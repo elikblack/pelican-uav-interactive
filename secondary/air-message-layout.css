@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Datatype:wdth,wght@50..150,100..900&display=swap");
+
 /* Final message/legend layout for the Preflight air radar. */
 
 /* The old horizontal legend becomes a compact instrument key beneath the
@@ -64,6 +66,24 @@
 .air-message-summary[data-tone="critical"]{--summary-text:#df5b55}
 .air-message-summary[data-tone="resolved"]{--summary-text:#a6ec7d}
 
+/* The right-hand rail belongs to the surrounding module rather than being a
+   bright framed card. Keep its only outer divider at the same dim green used
+   elsewhere in the interface. */
+.air-module .radar-side-data{
+  border-left:1px solid var(--line-soft)!important;
+}
+
+/* Datatype gives the four primary readouts chunky instrument weight while
+   preserving fixed character widths. A slightly condensed width keeps the
+   large values from crowding the narrow rail. */
+.air-module .radar-side-data>div:nth-child(-n+4)>strong::after{
+  font-family:"Datatype",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
+  font-weight:900!important;
+  font-variation-settings:"wdth" 78,"wght" 900!important;
+  letter-spacing:0!important;
+  font-variant-numeric:tabular-nums slashed-zero;
+}
+
 /* The old bracketed header remains as the private state source for the
    existing radar script, but no longer occupies operator-facing space. */
 .air-module .radar-side-data .air-alert>b{
@@ -71,6 +91,9 @@
 }
 
 .air-module .radar-side-data .air-alert{
+  box-sizing:border-box;
+  padding-top:7px!important;
+  border-top:1px solid var(--line-soft)!important;
   overflow:hidden!important;
 }
 
