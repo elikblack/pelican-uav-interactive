@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="air.css">
   <link rel="stylesheet" href="large.css">
   <link rel="stylesheet" href="preflight-refine.css">
+  <link rel="stylesheet" href="air-message-layout.css">
 </head>
 <body>
   <div id="screen-fit">
@@ -82,7 +83,7 @@
             <svg class="weather-sector" viewBox="0 0 620 330" role="img" aria-label="Forward looking airborne weather radar">
               <defs><linearGradient id="wxShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#071008" stop-opacity=".15"/><stop offset="1" stop-color="#020503" stop-opacity=".7"/></linearGradient></defs>
               <rect x="0" y="0" width="620" height="330" fill="url(#wxShade)"/>
-              <g class="wx-heading-scale"><path d="M38 30H582"/><path d="M72 30v9M140 30v9M208 30v9M276 30v13M344 30v13M412 30v9M480 30v9M548 30v9"/><text x="72" y="22">30</text><text x="140" y="22">31</text><text x="208" y="22">32</text><text x="276" y="22">33</text><text x="344" y="22">34</text><text x="412" y="22">35</text><text x="480" y="22">36</text><text x="548" y="22">37</text><path class="wx-heading-bug" d="M310 17v23M301 17h18"/></g>
+              <g class="wx-heading-scale"><path d="M38 30H582"/><path d="M72 30v9M140 30v9M208 30v9M276 30v13M344 30v13M412 30v9M480 30v9M548 30v9"/><text x="72" y="22">30</text><text x="140" y="22">31</text><text x="208" y="22">32</text><text x="276" y="22">33</text><text x="344" y="22">34</text><text x="412" y="22">35</text><text x="480" y="22">36</text><text x="548" y="22">37</text><path class="wx-heading-bug" d="M310 17v23M301 12h18"/></g>
               <g class="wx-sector-grid"><path d="M310 312L42 62M310 312L578 62"/><path d="M310 312V42" class="wx-centerline"/><path d="M220 312A90 90 0 0 1 400 312"/><path d="M145 312A165 165 0 0 1 475 312"/><path d="M70 312A240 240 0 0 1 550 312"/><path d="M5 312A305 305 0 0 1 615 312"/></g>
               <g class="wx-range-labels"><text x="320" y="226">10</text><text x="320" y="151">20</text><text x="320" y="77">30</text><text x="584" y="68">40 NM</text></g>
               <g class="wx-ownship" transform="translate(310 294)"><path d="M0 -28L5 -8L25 3L25 9L5 4L4 23L12 29L12 33L0 29L-12 33L-12 29L-4 23L-5 4L-25 9L-25 3L-5 -8Z"/><path d="M-34 0H34M0 -42V38" class="wx-ownship-cross"/></g>
@@ -100,6 +101,7 @@
   <script src="../shared/state.js"></script>
   <script src="secondary.js"></script>
   <script src="preflight-refine.js"></script>
+  <script src="air-message-layout.js"></script>
   <script src="weather-sequence.js"></script>
 </body>
 </html>
