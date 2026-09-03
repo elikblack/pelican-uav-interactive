@@ -116,6 +116,19 @@
   background:#020402;
 }
 
+/* GS POSN was useful period cruft, but it was consuming prime vertical space.
+   Remove the strip and coordinates, and let the live message list occupy it. */
+.air-module .radar-side-data::before,
+.air-module .radar-side-data::after{
+  display:none!important;
+  content:none!important;
+}
+
+.air-module .radar-side-data .air-alert{
+  top:188px!important;
+  bottom:2px!important;
+}
+
 /* ---------- Weather radar ---------- */
 
 .weather-sector-body{
