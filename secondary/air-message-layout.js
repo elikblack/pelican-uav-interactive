@@ -9,7 +9,7 @@
   if (!module || !body || !controlRail || !legend || !alert || !header || !feed) return;
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const MESSAGE_ROW_HEIGHT = 58;
+  const MESSAGE_ROW_HEIGHT = 44;
 
   /* Move the existing legend rather than duplicating its state/key definitions. */
   controlRail.appendChild(legend);
@@ -46,21 +46,24 @@
     const next = nextText.padEnd(width, ' ').split('');
     let index = 0;
 
+    /* The blank advances one character ahead of the replacement, producing a
+       visible little erase head instead of an instantaneous character swap. */
     const timer = setInterval(() => {
       if (token !== summaryToken) {
         clearInterval(timer);
         return;
       }
 
-      current[index] = next[index];
-      summary.textContent = current.join('').replace(/\s+$/, '');
+      if (index > 0) current[index - 1] = next[index - 1];
+      if (index < width) current[index] = ' ';
+      summary.textContent = current.join('');
       index += 1;
 
-      if (index >= width) {
+      if (index > width) {
         clearInterval(timer);
         summary.textContent = nextText;
       }
-    }, 24);
+    }, 32);
   }
 
   const headerObserver = new MutationObserver(() => {
