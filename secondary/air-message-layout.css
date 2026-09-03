@@ -87,11 +87,25 @@
   line-height:1.03!important;
 }
 
-.air-message-line{
-  display:block;
+/* air.css used a broad descendant selector to manufacture the legacy
+   [MESSAGE LIST 1/3] label from any span inside the alert area. The new
+   two-line message renderer also uses spans, so explicitly retire that old
+   pseudo-content for message lines and restore their real text. */
+.air-module .radar-side-data .air-alert .air-message-line{
+  display:block!important;
   height:19px;
+  margin:0!important;
   overflow:hidden;
+  color:inherit!important;
   white-space:pre;
+  transform:none!important;
+  font:800 17px/1.03 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
+  letter-spacing:-.045em!important;
+}
+
+.air-module .radar-side-data .air-alert .air-message-line::before{
+  content:none!important;
+  display:none!important;
 }
 
 @media (prefers-reduced-motion:reduce){
