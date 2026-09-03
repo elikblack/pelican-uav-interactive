@@ -14,29 +14,36 @@
     return Object.keys(identities).find(id => text.includes(id)) || null;
   }
 
+  function wholeDegrees(value) {
+    const number = parseFloat(value || '');
+    return Number.isFinite(number) ? `${Math.round(number).toString().padStart(3, '0')}°` : '';
+  }
+
   function liveFields() {
     const values = [...rail.querySelectorAll(':scope > div:not(.air-alert) > strong')].slice(0, 4);
-    const clean = value => (value || '').replace('°T', '').replace('°', '').replace('kt', '').replace('NM', '');
+    const raw = values.map(node => node && node.dataset.liveValue || '');
+    const speed = parseFloat(raw[1]);
+    const range = parseFloat(raw[3]);
 
     return {
-      hdg: clean(values[0] && values[0].dataset.liveValue),
-      spd: clean(values[1] && values[1].dataset.liveValue),
-      brg: clean(values[2] && values[2].dataset.liveValue),
-      rng: clean(values[3] && values[3].dataset.liveValue)
+      hdg: wholeDegrees(raw[0]),
+      spd: Number.isFinite(speed) ? `${Math.round(speed)}KT` : '',
+      brg: wholeDegrees(raw[2]),
+      rng: Number.isFinite(range) ? `${range.toFixed(1)}NM` : ''
     };
   }
 
   function kinematicSuffix(fields) {
     const parts = [];
-    if (fields.hdg) parts.push(`H${fields.hdg}`);
-    if (fields.spd) parts.push(`S${fields.spd}`);
+    if (fields.hdg) parts.push(`HDG ${fields.hdg}`);
+    if (fields.spd) parts.push(`SPD ${fields.spd}`);
     return parts.join('  ');
   }
 
   function positionSuffix(fields) {
     const parts = [];
-    if (fields.brg) parts.push(`B${fields.brg}`);
-    if (fields.rng) parts.push(`R${fields.rng}`);
+    if (fields.brg) parts.push(`BRG ${fields.brg}`);
+    if (fields.rng) parts.push(`RNG ${fields.rng}`);
     return parts.join('  ');
   }
 
