@@ -7,7 +7,7 @@
   gap:0;
   margin:8px 12px 0;
   padding:0;
-  border:1px solid var(--line-soft);
+  border:0;
   background:#020402;
 }
 
@@ -21,6 +21,7 @@
   gap:10px;
   padding:0 8px 0 10px;
   border:0;
+  border-bottom:1px solid var(--line-soft);
   background:transparent;
 }
 
@@ -66,6 +67,10 @@
   background:transparent;
   font:inherit;
   text-align:left;
+}
+
+.status-go-list>div{
+  border-bottom:1px solid var(--line-soft);
 }
 
 .status-maintenance{
