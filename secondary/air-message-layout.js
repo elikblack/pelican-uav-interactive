@@ -11,7 +11,6 @@
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const MESSAGE_ROW_HEIGHT = 44;
 
-  /* Move the existing legend rather than duplicating its state/key definitions. */
   controlRail.appendChild(legend);
 
   const summary = document.createElement('div');
@@ -40,30 +39,21 @@
       return;
     }
 
-    const currentText = summary.textContent;
-    const width = Math.max(currentText.length, nextText.length);
-    const current = currentText.padEnd(width, ' ').split('');
-    const next = nextText.padEnd(width, ' ').split('');
-    let index = 0;
+    summary.textContent = '';
 
-    /* The blank advances one character ahead of the replacement, producing a
-       visible little erase head instead of an instantaneous character swap. */
-    const timer = setInterval(() => {
-      if (token !== summaryToken) {
-        clearInterval(timer);
-        return;
-      }
-
-      if (index > 0) current[index - 1] = next[index - 1];
-      if (index < width) current[index] = ' ';
-      summary.textContent = current.join('');
-      index += 1;
-
-      if (index > width) {
-        clearInterval(timer);
-        summary.textContent = nextText;
-      }
-    }, 32);
+    setTimeout(() => {
+      if (token !== summaryToken) return;
+      let index = 0;
+      const timer = setInterval(() => {
+        if (token !== summaryToken) {
+          clearInterval(timer);
+          return;
+        }
+        index += 1;
+        summary.textContent = nextText.slice(0, index);
+        if (index >= nextText.length) clearInterval(timer);
+      }, 32);
+    }, 85);
   }
 
   const headerObserver = new MutationObserver(() => {
@@ -105,7 +95,6 @@
     }, 25);
   }
 
-  /* Convert anything already present before this refinement layer loaded. */
   [...feed.querySelectorAll(':scope > .air-message-entry')].forEach(entry => {
     splitMessage(entry, false);
   });
