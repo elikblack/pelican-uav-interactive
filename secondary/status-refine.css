@@ -111,6 +111,7 @@
   grid-template-columns:1fr!important;
   gap:5px!important;
   padding:8px 12px 0!important;
+  margin-top:1.25em;
 }
 
 .status-card{
