@@ -17,12 +17,6 @@
     preload.src = src;
   });
 
-  // secondary.js still creates the original weather layer. Replace it here so
-  // the 40-frame sequence can be tuned independently while the old assets stay
-  // available for comparison during development.
-  const legacyFrame = weatherPane.querySelector('.weather-frame-layer');
-  if (legacyFrame) legacyFrame.remove();
-
   const frame = document.createElement('img');
   frame.className = 'weather-frame-layer weather-frame-sequence';
   frame.alt = '';
