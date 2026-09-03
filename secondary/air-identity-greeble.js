@@ -1,6 +1,7 @@
 (() => {
   const feed = document.getElementById('air-message-feed');
-  if (!feed) return;
+  const rail = document.querySelector('.air-module .radar-side-data');
+  if (!feed || !rail) return;
 
   const identities = {
     A17: { type: 'C172', hex: 'A4D91C' },
@@ -13,15 +14,30 @@
     return Object.keys(identities).find(id => text.includes(id)) || null;
   }
 
-  function compactBearingRange(line) {
-    const bearing = line.match(/BRG\s+(\d{1,3})°?/i);
-    const range = line.match(/RNG\s+([0-9.]+)NM/i);
-    if (!bearing && !range) return '';
+  function liveFields() {
+    const values = [...rail.querySelectorAll(':scope > div:not(.air-alert) > strong')].slice(0, 4);
+    const clean = value => (value || '').replace('°T', '').replace('°', '').replace('kt', '').replace('NM', '');
 
-    const fields = [];
-    if (bearing) fields.push(`B${bearing[1].padStart(3, '0')}`);
-    if (range) fields.push(`R${range[1]}`);
-    return fields.join('  ');
+    return {
+      hdg: clean(values[0] && values[0].dataset.liveValue),
+      spd: clean(values[1] && values[1].dataset.liveValue),
+      brg: clean(values[2] && values[2].dataset.liveValue),
+      rng: clean(values[3] && values[3].dataset.liveValue)
+    };
+  }
+
+  function kinematicSuffix(fields) {
+    const parts = [];
+    if (fields.hdg) parts.push(`H${fields.hdg}`);
+    if (fields.spd) parts.push(`S${fields.spd}`);
+    return parts.join('  ');
+  }
+
+  function positionSuffix(fields) {
+    const parts = [];
+    if (fields.brg) parts.push(`B${fields.brg}`);
+    if (fields.rng) parts.push(`R${fields.rng}`);
+    return parts.join('  ');
   }
 
   function enrich(entry) {
@@ -33,36 +49,32 @@
     if (!id) return;
 
     const identity = identities[id];
-    const lines = raw.split('\n');
-    const first = lines[0] || '';
-    const second = lines.slice(1).join(' ') || '';
-    const brgRng = compactBearingRange(second);
+    const fields = liveFields();
+    const kin = kinematicSuffix(fields);
+    const pos = positionSuffix(fields);
 
-    let lineOne;
-    let lineTwo;
+    let state = 'TRACK';
+    let type = identity.type;
+    let hex = identity.hex;
 
     if (/BOGEY|UNCORR/i.test(raw)) {
-      lineOne = `${id} BOGEY / UNCORR  ----`;
-      lineTwo = `HEX ------  TRACK VALID`;
+      state = 'BOGEY / UNCORR';
+      type = '----';
+      hex = '------';
     } else if (/IDENT CHECK/i.test(raw)) {
-      lineOne = `${id} IDENT CHECK  ${identity.type}`;
-      lineTwo = `HEX ${identity.hex}  CORR LOST`;
+      state = 'IDENT CHECK';
     } else if (/IFF CORRELATION|IDENTIFIED/i.test(raw)) {
-      lineOne = `${id} IFF CORR  ${identity.type}`;
-      lineTwo = `HEX ${identity.hex}  IDENTIFIED`;
+      state = 'IFF CORR';
     } else if (/REACQUIRED/i.test(raw)) {
-      lineOne = `${id} REACQUIRED  ${identity.type}`;
-      lineTwo = `HEX ${identity.hex}  SURV VALID`;
+      state = 'REACQUIRED';
     } else if (/COAST/i.test(raw)) {
-      lineOne = `${id} COAST  ${identity.type}`;
-      lineTwo = `HEX ${identity.hex}  POS EXTRAP`;
+      state = 'COAST';
     } else if (/CORRELATED/i.test(raw)) {
-      lineOne = `${id} CORRELATED  ${identity.type}`;
-      lineTwo = `HEX ${identity.hex}${brgRng ? `  ${brgRng}` : ''}`;
-    } else {
-      lineOne = `${first}  ${identity.type}`;
-      lineTwo = `HEX ${identity.hex}${second ? `  ${second}` : ''}`;
+      state = 'CORRELATED';
     }
+
+    const lineOne = `${id} ${state}  ${type}${kin ? `  ${kin}` : ''}`;
+    const lineTwo = `HEX ${hex}${pos ? `  ${pos}` : ''}`;
 
     entry.dataset.identityGreeble = '1';
     entry.textContent = `${lineOne}\n${lineTwo}`;
