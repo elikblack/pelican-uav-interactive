@@ -21,7 +21,7 @@
 
 .air-module .airspace-plot{
   left:122px!important;
-  right:240px!important;
+  right:256px!important;
   top:0!important;
   bottom:0!important;
 }
@@ -85,7 +85,7 @@
 
 .air-module .radar-legend{
   left:12px;
-  right:244px;
+  right:260px;
   bottom:7px;
   height:32px;
   box-sizing:border-box;
@@ -104,12 +104,13 @@
 }
 
 /* The data rail is attached to the upper-right edge and reads as a divider,
-   not a framed card: only the left edge gets a green rule. */
+   not a framed card: only the left edge gets a green rule. A few extra pixels
+   give the larger live messages room to form complete thoughts. */
 .air-module .radar-side-data{
   top:0!important;
   right:-12px!important;
   bottom:-46px!important;
-  width:244px;
+  width:260px;
   border:0!important;
   border-left:2px solid rgba(119,201,91,.92)!important;
   box-shadow:none!important;
@@ -125,8 +126,65 @@
 }
 
 .air-module .radar-side-data .air-alert{
+  left:7px!important;
+  right:2px!important;
   top:188px!important;
   bottom:2px!important;
+  overflow:visible;
+}
+
+/* The four large values are now supplied by the active radar track. */
+.air-module .radar-side-data>div:nth-child(-n+4)>strong::after{
+  content:attr(data-live-value)!important;
+}
+
+/* The old track boxes were permanent decoration. The new one represents the
+   contact the system is actually examining. */
+.air-module .air-contact .track-box{opacity:0!important}
+.air-active-target-box{
+  display:none;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-dasharray:5 3;
+  vector-effect:non-scaling-stroke;
+  pointer-events:none;
+}
+.air-contact.air-selected .air-active-target-box{display:block}
+.air-contact.air-selected{color:#a6ec7d}
+.air-contact.air-event-coast{opacity:.46!important}
+.air-contact.air-event-query,
+.air-contact.air-event-unknown{color:#e3c15a!important}
+.air-contact.air-event-unknown .air-active-target-box{
+  stroke-width:2.6;
+  stroke-dasharray:7 3;
+}
+.air-contact.air-event-resolved{color:#a6ec7d!important}
+
+/* Bigger, simpler operator messages. They now carry the state narrative rather
+   than a steady stream of receiver-level trivia. */
+.air-module .radar-side-data .air-alert>b{
+  font-size:14px!important;
+  line-height:1!important;
+  margin-bottom:6px!important;
+}
+.air-message-entry{
+  box-sizing:border-box;
+  margin:0 0 7px!important;
+  padding:1px 0 6px;
+  border-bottom:1px solid rgba(227,193,90,.16);
+  color:#e3c15a;
+  white-space:pre-wrap;
+  font:800 17px/1.03 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
+  letter-spacing:-.045em!important;
+}
+.air-message-entry.air-message-critical{
+  color:#df5b55!important;
+  border-bottom-color:rgba(223,91,85,.28);
+}
+.air-message-entry.air-message-resolved{
+  color:#a6ec7d!important;
+  border-bottom-color:rgba(166,236,125,.18);
 }
 
 /* ---------- Weather radar ---------- */
