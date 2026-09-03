@@ -1,0 +1,99 @@
+/* Final message/legend layout for the Preflight air radar. */
+
+/* The old horizontal legend becomes a compact instrument key beneath the
+   upper-left control cluster. */
+.air-control-rail .radar-legend{
+  position:static!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  grid-column:1/-1;
+  width:100%;
+  height:auto;
+  margin:3px 0 0;
+  padding:4px 2px 0;
+  background:transparent;
+  display:flex!important;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+  gap:4px!important;
+  overflow:visible;
+  font-size:10.5px!important;
+  line-height:1!important;
+}
+
+.air-control-rail .radar-legend span{
+  display:block;
+  white-space:nowrap;
+}
+
+/* Current track/event summary occupies the old bottom legend territory. */
+.air-message-summary{
+  --summary-color:#a6ec7d;
+  position:absolute;
+  left:122px;
+  right:260px;
+  bottom:-39px;
+  z-index:10;
+  box-sizing:border-box;
+  height:32px;
+  padding:0 9px;
+  border:2px solid var(--summary-color);
+  background:#020402;
+  color:var(--summary-color);
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  white-space:pre;
+  pointer-events:none;
+  font:900 14px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:-.025em;
+  text-shadow:0 0 3px color-mix(in srgb,var(--summary-color) 28%,transparent);
+}
+
+.air-message-summary[data-tone="warning"]{--summary-color:#e3c15a}
+.air-message-summary[data-tone="critical"]{--summary-color:#df5b55}
+.air-message-summary[data-tone="normal"],
+.air-message-summary[data-tone="resolved"]{--summary-color:#a6ec7d}
+
+/* The old bracketed header remains as the private state source for the
+   existing radar script, but no longer occupies operator-facing space. */
+.air-module .radar-side-data .air-alert>b{
+  display:none!important;
+}
+
+.air-module .radar-side-data .air-alert{
+  overflow:hidden!important;
+}
+
+#air-message-feed{
+  height:100%!important;
+  overflow:hidden!important;
+}
+
+/* Fixed-height rows prevent reflow while the two lines are being populated.
+   There are intentionally no separators between history entries. */
+.air-message-entry{
+  box-sizing:border-box;
+  height:58px!important;
+  min-height:58px!important;
+  margin:0!important;
+  padding:4px 0 3px!important;
+  border:0!important;
+  overflow:hidden;
+  white-space:nowrap!important;
+  font-size:17px!important;
+  line-height:1.03!important;
+}
+
+.air-message-line{
+  display:block;
+  height:19px;
+  overflow:hidden;
+  white-space:pre;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .air-message-summary{transition:none}
+}
