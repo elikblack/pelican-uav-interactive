@@ -28,24 +28,27 @@
   white-space:nowrap;
 }
 
-/* Current track/event summary occupies the old bottom legend territory. */
+/* Current track/event summary sits centered in the open radar territory,
+   between the module's left edge and the fixed right-hand data rail. */
 .air-message-summary{
   --summary-color:#a6ec7d;
   position:absolute;
-  left:122px;
-  right:260px;
+  left:calc((100% - 260px) / 2);
+  right:auto;
+  width:min(360px,calc(100% - 284px));
   bottom:-39px;
+  transform:translateX(-50%);
   z-index:10;
   box-sizing:border-box;
   height:32px;
-  padding:0 9px;
+  padding:0 10px;
   border:1px solid var(--summary-color);
   background:#020402;
   color:var(--summary-color);
   display:flex;
   align-items:center;
-  justify-content:center;
-  text-align:center;
+  justify-content:flex-start;
+  text-align:left;
   overflow:hidden;
   white-space:pre;
   pointer-events:none;
