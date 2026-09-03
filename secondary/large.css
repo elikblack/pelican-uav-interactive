@@ -53,10 +53,9 @@
   letter-spacing:.045em;
 }
 
-/* Air radar keeps its original third-width footprint, ground station status
-   is halved, and weather radar takes the released space. */
+/* Balanced radar wings with a narrow status spine. */
 .secondary-grid{
-  grid-template-columns:2fr 1fr 3fr;
+  grid-template-columns:2fr 1fr 2fr;
 }
 
 /* ---------- Ground station status ---------- */
