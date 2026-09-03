@@ -142,99 +142,6 @@
     `;
   }
 
-  function startAirMessageFeed() {
-    const feed = document.getElementById('air-message-feed');
-    if (!feed) return;
-
-    const messages = [
-      '1  CORRIDOR TRACK\n   BRG 176  RNG 4.2NM\n   CPA 3.1NM  TUP 35:57',
-      '2  TRACK UPDATE\n   T03 CORRELATED\n   ALT FL080  TRK 247',
-      '3  SENSOR NOTICE\n   COAST N42 AGE 01.2\n   AUTO REACQ ENABLED',
-      '4  IFF CORRELATION\n   A17 CODE 3124\n   QUALITY 086',
-      '5  RANGE FILTER\n   FL025+ ACTIVE\n   07 TRACKS DISPLAYED',
-      '6  WIND DATA\n   DRF 014°  006KT\n   SOURCE AUTO',
-      '7  TRACK T11\n   BRG 091  RNG 3.3NM\n   ALT FL055  SPD 191KT',
-      '8  SECTOR ENTRY\n   N31  R-2307\n   MONITOR ONLY',
-      '9  POSITION REF\n   GS POSN VALID\n   DATUM LOCAL',
-      '0  CORRIDOR WARN\n   T03 LIMIT 2.8NM\n   VECTOR REVIEW'
-    ];
-
-    const entryStyle = [
-      'box-sizing:border-box',
-      'margin:0 0 5px',
-      'color:#e3c15a',
-      'white-space:pre-wrap',
-      'font:800 7.5px/1.12 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace',
-      'letter-spacing:-.045em',
-      'transform-origin:top left'
-    ].join(';');
-
-    function makeEntry(text) {
-      const entry = document.createElement('div');
-      entry.className = 'air-message-entry';
-      entry.style.cssText = entryStyle;
-      entry.textContent = text;
-      return entry;
-    }
-
-    [messages[4], messages[3], messages[2], messages[1], messages[0]].forEach(message => {
-      feed.appendChild(makeEntry(message));
-    });
-
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let nextMessage = 5;
-
-    function typeEntry(entry, text) {
-      if (reducedMotion) {
-        entry.textContent = text;
-        return;
-      }
-
-      entry.textContent = '';
-      let index = 0;
-      const timer = setInterval(() => {
-        index += 1;
-        entry.textContent = text.slice(0, index);
-        if (index >= text.length) clearInterval(timer);
-      }, 22);
-    }
-
-    function addMessage() {
-      const text = messages[nextMessage % messages.length];
-      nextMessage += 1;
-
-      const oldEntries = [...feed.children];
-      const entry = makeEntry('');
-      feed.insertBefore(entry, feed.firstChild);
-
-      const shift = entry.getBoundingClientRect().height + 5;
-      if (!reducedMotion) {
-        oldEntries.forEach(oldEntry => {
-          oldEntry.animate(
-            [
-              { transform: `translateY(${-shift}px)` },
-              { transform: 'translateY(0)' }
-            ],
-            { duration: 280, easing: 'steps(4,end)' }
-          );
-        });
-      }
-
-      typeEntry(entry, text);
-
-      setTimeout(() => {
-        while (feed.children.length > 5) {
-          feed.lastElementChild.remove();
-        }
-      }, reducedMotion ? 0 : 320);
-
-      const nextDelay = 8000 + Math.round(Math.random() * 4000);
-      setTimeout(addMessage, nextDelay);
-    }
-
-    setTimeout(addMessage, 5500);
-  }
-
   function curveWeatherHeadingScale() {
     const scale = document.querySelector('.wx-heading-scale');
     if (!scale) return;
@@ -257,36 +164,6 @@
     `;
   }
 
-  function startWeatherFrameAnimation() {
-    const weatherBody = document.querySelector('.weather-sector-body');
-    const weatherSvg = weatherBody && weatherBody.querySelector('.weather-sector');
-    if (!weatherBody || !weatherSvg) return;
-
-    const frames = Array.from({ length: 10 }, (_, index) =>
-      `../shared/assets/weather/weather-radar-frame-${String(index + 1).padStart(2, '0')}.png`
-    );
-
-    frames.forEach(src => {
-      const preload = new Image();
-      preload.src = src;
-    });
-
-    const frame = document.createElement('img');
-    frame.className = 'weather-frame-layer';
-    frame.alt = '';
-    frame.setAttribute('aria-hidden', 'true');
-    frame.src = frames[0];
-    weatherBody.insertBefore(frame, weatherSvg);
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    let frameIndex = 0;
-    setInterval(() => {
-      frameIndex = (frameIndex + 1) % frames.length;
-      frame.src = frames[frameIndex];
-    }, 1320);
-  }
-
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(item => item.classList.remove('active'));
@@ -297,24 +174,13 @@
   const fields = {
     tx: document.getElementById('tx-power'),
     consumption: document.getElementById('power-consumption'),
-    voltage: document.getElementById('system-voltage'),
     thermal: document.getElementById('thermal'),
     margin: document.getElementById('link-margin'),
-    battery: document.getElementById('battery'),
-    rate: document.getElementById('data-rate'),
-    quality: document.getElementById('link-quality'),
-    trend: document.getElementById('trend-value'),
-    uptime: document.getElementById('uptime'),
     txMeter: document.getElementById('tx-meter'),
     powerMeter: document.getElementById('power-meter'),
     thermalMeter: document.getElementById('thermal-meter'),
-    linkMeter: document.getElementById('link-meter'),
-    trace: document.getElementById('power-trace')
+    linkMeter: document.getElementById('link-meter')
   };
-
-  let uptimeSeconds = 12 * 3600 + 47 * 60 + 11;
-  let battery = 92;
-  let traceValues = Array.from({ length: 26 }, (_, i) => 224 + Math.sin(i * .7) * 7 + Math.random() * 5);
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -324,69 +190,28 @@
     return base + (Math.random() - .5) * amount;
   }
 
-  function formatUptime(seconds) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
-  }
-
-  function updateTrace(latest) {
-    traceValues.push(latest);
-    traceValues.shift();
-    const min = 210;
-    const max = 250;
-    const width = 300;
-    const height = 74;
-    const points = traceValues.map((value, i) => {
-      const x = (i / (traceValues.length - 1)) * width;
-      const y = height - ((clamp(value, min, max) - min) / (max - min)) * (height - 10) - 5;
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    }).join(' ');
-    fields.trace.setAttribute('points', points);
-  }
-
   function updateTelemetry() {
     const tx = jitter(25, 1.7);
     const consumption = jitter(232, 8);
-    const voltage = jitter(27.6, .35);
     const thermal = jitter(38, 1.8);
     const margin = jitter(18.2, 1.4);
-    const rate = jitter(8.2, .7);
-    const quality = clamp(Math.round(jitter(92, 5)), 84, 98);
 
     fields.tx.textContent = `${tx.toFixed(1)} W`;
     fields.consumption.textContent = `${Math.round(consumption)} W`;
-    if (fields.voltage) fields.voltage.textContent = `${voltage.toFixed(1)} V`;
     fields.thermal.textContent = `${Math.round(thermal)}°C`;
     fields.margin.textContent = `+${margin.toFixed(1)} dB`;
-    if (fields.battery) fields.battery.textContent = `${battery}%`;
-    fields.rate.textContent = `${rate.toFixed(1)} Mbps`;
-    fields.quality.textContent = `${quality}%`;
-    fields.trend.textContent = `${Math.round(consumption)} W`;
 
     fields.txMeter.style.width = `${clamp(tx / 40 * 100, 35, 90)}%`;
     fields.powerMeter.style.width = `${clamp(consumption / 340 * 100, 40, 90)}%`;
     fields.thermalMeter.style.width = `${clamp(thermal / 70 * 100, 35, 80)}%`;
     fields.linkMeter.style.width = `${clamp((margin + 5) / 30 * 100, 35, 96)}%`;
-
-    updateTrace(consumption);
-  }
-
-  function tickUptime() {
-    uptimeSeconds += 1;
-    fields.uptime.textContent = formatUptime(uptimeSeconds);
   }
 
   buildAirspacePlot();
-  startAirMessageFeed();
   curveWeatherHeadingScale();
-  startWeatherFrameAnimation();
   fitDisplay();
   updateTelemetry();
-  tickUptime();
 
   setInterval(updateTelemetry, 1100);
-  setInterval(tickUptime, 1000);
   window.addEventListener('resize', fitDisplay);
 })();
