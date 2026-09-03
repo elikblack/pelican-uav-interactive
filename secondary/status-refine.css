@@ -3,7 +3,7 @@
 
 .status-health{
   display:grid;
-  grid-template-rows:repeat(4,36px);
+  grid-template-rows:repeat(5,36px);
   gap:0;
   margin:10px 12px 0;
   padding:0;
@@ -57,7 +57,8 @@
 
 .status-go-list{display:contents;border:0}
 
-.status-go-list>div{
+.status-go-list>div,
+.status-maintenance{
   min-width:0;
   min-height:0;
   display:grid;
@@ -67,12 +68,45 @@
   padding:0 8px 0 10px;
   border:0;
   border-bottom:1px solid var(--line-soft);
+  background:transparent;
+  font:inherit;
+  text-align:left;
+}
+
+.status-maintenance{
+  width:100%;
+  color:var(--green);
+  cursor:pointer;
+}
+
+.status-maintenance:focus-visible{
+  outline:1px solid var(--green);
+  outline-offset:-3px;
+}
+
+.status-maintenance .maintenance-indicator{
+  display:grid;
+  place-items:center;
+  width:34px;
+  height:14px;
+  justify-self:end;
+  box-sizing:border-box;
+  background:var(--amber);
+  color:#020402;
+  outline:1px solid var(--green);
+  outline-offset:2px;
+  box-shadow:0 0 4px rgba(215,170,53,.2);
+  font-size:11px;
+  font-weight:900;
+  line-height:1;
+  font-style:normal;
+  letter-spacing:0;
 }
 
 .status-cards{
   grid-template-columns:1fr!important;
   gap:7px!important;
-  padding:15px 12px 0!important;
+  padding:10px 12px 0!important;
 }
 
 .status-card{
