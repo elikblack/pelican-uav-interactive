@@ -1,0 +1,269 @@
+/* Preflight cleanup layer.
+   Loaded after large.css so these are intentional final-layout decisions. */
+
+/* ---------- Local air radar ---------- */
+
+/* The old pseudo-elements were useful while the display was being discovered,
+   but they float over live plot data. Actual controls are now given a rail. */
+.air-module::before,
+.air-module::after,
+.air-module .radar-module-body::before,
+.air-module .radar-module-body::after{
+  display:none!important;
+  content:none!important;
+}
+
+/* Reserve a true footer band for the track legend instead of drawing the plot
+   underneath it. The right-hand data rail keeps the user's tall layout. */
+.air-module .radar-module-body{
+  bottom:46px;
+}
+
+.air-module .airspace-plot{
+  left:122px!important;
+  right:252px!important;
+  top:0!important;
+  bottom:0!important;
+}
+
+.air-control-rail{
+  position:absolute;
+  left:0;
+  top:8px;
+  width:114px;
+  z-index:8;
+  display:grid;
+  grid-template-columns:52px 1fr;
+  gap:5px;
+  pointer-events:none;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  color:rgba(151,232,116,.98);
+}
+
+.air-control-box{
+  box-sizing:border-box;
+  min-height:38px;
+  padding:5px 6px 4px;
+  border:2px solid rgba(119,201,91,.88);
+  background:#020402;
+  white-space:pre;
+  font-size:11px;
+  font-weight:800;
+  line-height:.92;
+  letter-spacing:-.025em;
+  text-shadow:0 0 3px rgba(119,201,91,.16);
+}
+
+.air-control-box.control-id{
+  display:grid;
+  grid-template-columns:1fr;
+  align-content:space-between;
+  min-width:0;
+}
+
+.air-control-box.control-id small{
+  display:block;
+  text-align:right;
+  font:800 8px/.9 inherit;
+}
+
+.air-control-box.control-plot{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:left;
+  font-size:12px;
+  line-height:.92;
+}
+
+.air-control-box.control-wide{
+  grid-column:1/-1;
+}
+
+.air-control-box.control-menu{min-height:44px}
+.air-control-box.control-pulse{width:92px;min-height:42px}
+
+.air-module .radar-legend{
+  left:12px;
+  right:266px;
+  bottom:7px;
+  height:32px;
+  box-sizing:border-box;
+  padding:0 7px;
+  border-top:2px solid rgba(119,201,91,.82);
+  background:#020402;
+  z-index:9;
+  display:grid;
+  grid-template-columns:repeat(4,max-content);
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  font-size:14px;
+  line-height:1;
+  overflow:hidden;
+}
+
+.air-module .radar-side-data{
+  bottom:-38px;
+}
+
+/* ---------- Weather radar ---------- */
+
+.weather-sector-body{
+  left:12px;
+  right:12px;
+  top:41px;
+  bottom:8px;
+  display:grid;
+  grid-template-columns:218px minmax(0,1fr);
+  gap:8px;
+  overflow:visible;
+  background:transparent;
+}
+
+.weather-sector-body:after{display:none}
+.weather-alert{display:none}
+
+.weather-radar-pane{
+  position:relative;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  border:1px solid rgba(119,201,91,.18);
+  background:rgba(1,5,2,.34);
+}
+
+.weather-radar-pane::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:4;
+  pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(119,201,91,.018) 0 1px,transparent 1px 4px);
+  opacity:.75;
+}
+
+.weather-radar-pane .weather-frame-layer{
+  left:50%;
+  top:8px;
+  width:96%;
+  height:calc(100% - 16px);
+}
+
+.weather-radar-pane .weather-sector{
+  inset:0;
+}
+
+.weather-radar-pane .weather-legend-greeble{
+  left:10px;
+  bottom:8px;
+}
+
+.weather-alert-rail{
+  min-width:0;
+  min-height:0;
+  box-sizing:border-box;
+  border:1px solid rgba(215,170,53,.30);
+  background:#020402;
+  display:grid;
+  grid-template-rows:28px minmax(0,1fr) 72px;
+  overflow:hidden;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+}
+
+.weather-alert-heading{
+  display:flex;
+  align-items:center;
+  padding:0 8px;
+  border-bottom:1px solid rgba(215,170,53,.26);
+  color:#e6c55d;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:-.025em;
+}
+
+.weather-message-feed{
+  min-height:0;
+  overflow:hidden;
+  padding:0 7px;
+}
+
+.weather-message-entry{
+  position:relative;
+  box-sizing:border-box;
+  min-height:68px;
+  padding:8px 3px 7px 28px;
+  border-bottom:1px solid rgba(215,170,53,.20);
+  color:#e3c15a;
+  transform-origin:top left;
+}
+
+.weather-message-entry::before{
+  content:"△";
+  position:absolute;
+  left:2px;
+  top:10px;
+  color:#d7aa35;
+  font-size:23px;
+  line-height:1;
+}
+
+.weather-message-entry .wx-msg-type{
+  display:block;
+  margin-bottom:2px;
+  color:rgba(151,232,116,.84);
+  font-size:10px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.01em;
+}
+
+.weather-message-entry .wx-msg-main{
+  display:block;
+  color:#e6c55d;
+  font-size:12px;
+  font-weight:900;
+  line-height:1.02;
+  letter-spacing:-.025em;
+}
+
+.weather-message-entry .wx-msg-sub{
+  display:block;
+  margin-top:3px;
+  color:#d9b84f;
+  font-size:9px;
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-.025em;
+}
+
+.weather-metar-block{
+  box-sizing:border-box;
+  padding:6px 7px 5px;
+  border-top:2px solid rgba(119,201,91,.56);
+  background:rgba(1,5,2,.9);
+  overflow:hidden;
+}
+
+.weather-metar-block span{
+  display:block;
+  margin-bottom:3px;
+  color:var(--green);
+  font-size:10px;
+  font-weight:900;
+  line-height:1;
+}
+
+.weather-metar-block strong{
+  display:block;
+  color:rgba(166,236,125,.92);
+  font-size:8.5px;
+  font-weight:800;
+  line-height:1.08;
+  letter-spacing:-.025em;
+  white-space:normal;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .weather-message-entry{animation:none!important}
+}
