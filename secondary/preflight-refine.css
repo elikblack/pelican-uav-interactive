@@ -291,7 +291,6 @@
   padding:8px 3px 7px 28px;
   border-bottom:1px solid rgba(215,170,53,.20);
   color:#e3c15a;
-  transform-origin:top left;
 }
 
 .weather-message-entry::before{
@@ -310,11 +309,20 @@
 }
 
 .weather-message-entry.wx-info::before{
-  content:"(i)";
-  top:11px;
+  content:"i";
+  display:grid;
+  place-items:center;
+  box-sizing:border-box;
+  left:2px;
+  top:9px;
+  width:16px;
+  height:16px;
+  border:1px solid var(--green);
+  border-radius:50%;
   color:var(--green);
-  font-size:11px;
+  font-size:10px;
   font-weight:900;
+  line-height:1;
 }
 
 .weather-message-entry .wx-msg-type{
@@ -353,8 +361,4 @@
 
 .weather-message-entry.wx-info .wx-msg-sub{
   color:rgba(151,232,116,.72);
-}
-
-@media (prefers-reduced-motion:reduce){
-  .weather-message-entry{animation:none!important}
 }
