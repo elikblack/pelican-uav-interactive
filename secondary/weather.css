@@ -1,18 +1,44 @@
-/* Radar/weather-specific styling only. Tab styling is loaded explicitly by HTML. */
-
-.air-module{visibility:hidden}
+/* Final Preflight weather-radar presentation. */
 
 .weather-sector-body{
   position:absolute;
   left:12px;
   right:12px;
   top:41px;
-  bottom:70px;
-  overflow:hidden;
-  background:rgba(1,5,2,.34);
+  bottom:8px;
+  display:grid;
+  grid-template-columns:218px minmax(0,1fr);
+  gap:0;
+  overflow:visible;
+  background:#020402;
 }
 
-.weather-sector-body:after{
+/* Radar and messages share one visual field; the column split is layout only. */
+.weather-radar-pane{
+  position:relative;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  border:0;
+  box-shadow:none;
+  background:transparent;
+}
+
+.weather-radar-pane::before{
+  content:"GS 478   TAS 476\A194/12";
+  position:absolute;
+  left:8px;
+  top:6px;
+  z-index:5;
+  color:rgba(151,232,116,.86);
+  white-space:pre;
+  font:800 10px/.95 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.025em;
+  text-shadow:0 0 3px rgba(119,201,91,.16);
+  pointer-events:none;
+}
+
+.weather-radar-pane::after{
   content:"";
   position:absolute;
   inset:0;
@@ -24,16 +50,16 @@
 
 .weather-frame-layer{
   position:absolute;
-  left:50%;
-  top:8px;
+  left:49.2%;
+  top:5px;
   z-index:1;
-  width:92%;
-  height:calc(100% - 16px);
+  width:98%;
+  height:calc(100% - 11px);
   transform:translateX(-50%);
   object-fit:contain;
   object-position:center;
   pointer-events:none;
-  opacity:.82;
+  opacity:.84;
   mix-blend-mode:screen;
   image-rendering:crisp-edges;
   image-rendering:pixelated;
@@ -52,11 +78,10 @@
 .wx-heading-scale path,
 .wx-sector-grid path{
   fill:none;
-  stroke:rgba(119,201,91,.28);
   stroke-width:1;
   vector-effect:non-scaling-stroke;
 }
-
+.wx-heading-scale path{stroke:rgba(119,201,91,.22)}
 .wx-heading-scale text{
   fill:var(--text);
   opacity:.8;
@@ -65,7 +90,6 @@
   text-anchor:middle;
   letter-spacing:.03em;
 }
-
 .wx-heading-scale .wx-heading-bug{
   stroke:var(--amber);
   stroke-width:1.5;
@@ -73,26 +97,22 @@
 }
 
 .wx-sector-grid path{
-  stroke-dasharray:4 6;
+  stroke:rgba(119,201,91,.20);
+  stroke-dasharray:3 7;
   opacity:.78;
 }
-
 .wx-sector-grid .wx-centerline{
-  stroke:var(--green);
-  stroke-dasharray:7 7;
+  stroke:rgba(119,201,91,.50);
+  stroke-dasharray:9 6;
   opacity:.48;
 }
-
 .wx-range-labels text{
   fill:var(--green);
-  opacity:.68;
+  opacity:.56;
   font-size:10px;
   font-weight:500;
   letter-spacing:.04em;
 }
-
-/* PNG frame sequence replaces the original hand-built SVG precipitation cells. */
-.weather-returns-sector{display:none}
 
 .wx-ownship>path:first-child{
   fill:#071109;
@@ -100,7 +120,6 @@
   stroke-width:1.6;
   vector-effect:non-scaling-stroke;
 }
-
 .wx-ownship-cross{
   fill:none;
   stroke:var(--green);
@@ -109,101 +128,25 @@
   vector-effect:non-scaling-stroke;
 }
 
+/* Compact right-side threshold legend. */
 .weather-legend-greeble{
   position:absolute;
-  left:10px;
-  bottom:8px;
+  right:7px;
+  bottom:7px;
   z-index:3;
-  min-width:270px;
-  padding:6px 8px 5px;
-  border:1px solid var(--line-soft);
-  background:rgba(1,5,2,.74);
+  width:154px;
+  padding:0;
+  border:0;
+  background:transparent;
   color:var(--green);
   font-size:9px;
   letter-spacing:.055em;
 }
 
-.wx-mode,
-.wx-intensity{
+.wx-mode{
+  box-sizing:border-box;
   display:flex;
   align-items:center;
-  gap:8px;
-  min-height:15px;
-}
-
-.wx-mode span,
-.wx-intensity span{opacity:.62}
-
-.wx-mode strong{
-  color:var(--text);
-  font-size:9px;
-  font-weight:500;
-  margin-right:8px;
-}
-
-.wx-intensity{
-  margin-top:3px;
-  padding-top:4px;
-  border-top:1px solid var(--line-soft);
-}
-
-.wx-swatch{
-  display:block;
-  width:18px;
-  height:7px;
-  border:1px solid rgba(255,255,255,.08);
-}
-.wx-swatch.green{background:#45c96a}
-.wx-swatch.yellow{background:#d4c94b}
-.wx-swatch.red{background:#d95750}
-.wx-swatch.magenta{background:#cf62b8}
-
-/* Final weather-panel roughening. The display should feel like an older radar
-   processor living inside the host UI, not a perfectly framed modern widget. */
-.weather-module .weather-radar-pane{
-  border:0;
-  border-left:1px solid rgba(119,201,91,.20);
-  border-top:1px solid rgba(119,201,91,.12);
-  box-shadow:inset -1px 0 rgba(119,201,91,.07),inset 0 -1px rgba(119,201,91,.10);
-}
-
-.weather-module .weather-radar-pane::before{
-  content:"GS 478   TAS 476\A194/12";
-  position:absolute;
-  left:8px;
-  top:6px;
-  z-index:5;
-  color:rgba(151,232,116,.86);
-  white-space:pre;
-  font:800 10px/.95 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-  letter-spacing:.025em;
-  text-shadow:0 0 3px rgba(119,201,91,.16);
-  pointer-events:none;
-}
-
-.weather-module .weather-radar-pane .weather-frame-layer{
-  left:49.2%;
-  top:5px;
-  width:98%;
-  height:calc(100% - 11px);
-  opacity:.84;
-}
-
-/* Compact right-side legend. The settings bar intentionally reads like a
-   painted annunciator strip rather than a modern card header. */
-.weather-module .weather-radar-pane .weather-legend-greeble{
-  left:auto;
-  right:7px;
-  bottom:7px;
-  min-width:0;
-  width:154px;
-  padding:0;
-  border:0;
-  background:transparent;
-}
-
-.weather-module .weather-radar-pane .wx-mode{
-  box-sizing:border-box;
   min-height:16px;
   padding:2px 4px 1px;
   gap:4px;
@@ -214,18 +157,15 @@
   font:900 7.5px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:-.025em;
 }
-
-.weather-module .weather-radar-pane .wx-mode span,
-.weather-module .weather-radar-pane .wx-mode strong{
+.wx-mode span,
+.wx-mode strong{
   margin:0;
   color:#031005;
   opacity:1;
   font:inherit;
 }
 
-/* Vertical reflectivity thresholds with the numeric labels on the left and
-   their color blocks on the right, closer to the old avionics-panel grammar. */
-.weather-module .weather-radar-pane .wx-intensity{
+.wx-intensity{
   position:relative;
   display:flex;
   flex-direction:column;
@@ -236,9 +176,8 @@
   padding:11px 0 0;
   border:0;
 }
-
-.weather-module .wx-intensity>span{display:none}
-.weather-module .wx-intensity .wx-swatch{
+.wx-intensity>span{display:none}
+.wx-swatch{
   position:relative;
   width:28px;
   height:9px;
@@ -246,22 +185,25 @@
   flex:0 0 9px;
   border:0;
 }
-.weather-module .wx-intensity .wx-swatch::after{
+.wx-swatch.green{background:#45c96a}
+.wx-swatch.yellow{background:#d4c94b}
+.wx-swatch.red{background:#d95750}
+.wx-swatch.magenta{background:#cf62b8}
+.wx-swatch::after{
   position:absolute;
   right:34px;
   top:0;
   color:rgba(166,236,125,.88);
-  background:transparent;
   white-space:nowrap;
   text-align:right;
   font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:-.02em;
 }
-.weather-module .wx-intensity .green::after{content:"20–32"}
-.weather-module .wx-intensity .yellow::after{content:"33–41"}
-.weather-module .wx-intensity .red::after{content:"42–49"}
-.weather-module .wx-intensity .magenta::after{content:"50+"}
-.weather-module .wx-intensity::before{
+.wx-swatch.green::after{content:"20–32"}
+.wx-swatch.yellow::after{content:"33–41"}
+.wx-swatch.red::after{content:"42–49"}
+.wx-swatch.magenta::after{content:"50+"}
+.wx-intensity::before{
   content:"dBZ";
   position:absolute;
   right:1px;
@@ -270,10 +212,9 @@
   font:900 8px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:.02em;
 }
-.weather-module .wx-intensity::after{content:none}
 
 /* Edge readouts deliberately occupy leftover space instead of forming a panel. */
-.weather-module .weather-sector-body::before{
+.weather-sector-body::before{
   content:"082°\A40NM\A11:19";
   position:absolute;
   right:10px;
@@ -288,25 +229,20 @@
   pointer-events:none;
 }
 
-.weather-module .weather-sector-body::after{
+.weather-sector-body::after{
   content:"GAIN A\ACLTR 2";
-  display:block;
-  inset:auto;
+  position:absolute;
   left:234px;
   top:82px;
   z-index:8;
-  width:auto;
-  height:auto;
   color:rgba(151,232,116,.66);
-  background:none;
-  opacity:1;
   white-space:pre;
   font:800 9px/.95 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:.025em;
   pointer-events:none;
 }
 
-.weather-module .weather-radar-pane .weather-legend-greeble::before{
+.weather-legend-greeble::before{
   content:"ANT 1   ECHO AVG";
   position:absolute;
   right:2px;
@@ -318,20 +254,96 @@
   letter-spacing:.03em;
 }
 
-.weather-module .wx-heading-scale path{
-  stroke:rgba(119,201,91,.22);
+/* Open message rail; METAR reports arrive as ordinary information messages. */
+.weather-alert-rail{
+  min-width:0;
+  min-height:0;
+  box-sizing:border-box;
+  border:0;
+  background:transparent;
+  display:grid;
+  grid-template-rows:28px minmax(0,1fr);
+  overflow:hidden;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
 }
-
-.weather-module .wx-sector-grid path{
-  stroke:rgba(119,201,91,.20);
-  stroke-dasharray:3 7;
+.weather-alert-heading{
+  display:flex;
+  align-items:center;
+  padding:0 8px;
+  border:0;
+  color:#e6c55d;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:-.025em;
 }
-
-.weather-module .wx-sector-grid .wx-centerline{
-  stroke:rgba(119,201,91,.50);
-  stroke-dasharray:9 6;
+.weather-message-feed{
+  min-height:0;
+  overflow:hidden;
+  padding:0 7px;
 }
-
-.weather-module .wx-range-labels text{
-  opacity:.56;
+.weather-message-entry{
+  position:relative;
+  box-sizing:border-box;
+  min-height:68px;
+  padding:8px 3px 7px 28px;
+  border-bottom:1px solid rgba(215,170,53,.20);
+  color:#e3c15a;
 }
+.weather-message-entry::before{
+  content:"△";
+  position:absolute;
+  left:2px;
+  top:10px;
+  color:#d7aa35;
+  font-size:23px;
+  line-height:1;
+}
+.weather-message-entry.wx-info{
+  border-bottom-color:rgba(119,201,91,.18);
+  color:rgba(166,236,125,.92);
+}
+.weather-message-entry.wx-info::before{
+  content:"i";
+  display:grid;
+  place-items:center;
+  box-sizing:border-box;
+  left:2px;
+  top:9px;
+  width:16px;
+  height:16px;
+  border:1px solid var(--green);
+  border-radius:50%;
+  color:var(--green);
+  font-size:10px;
+  font-weight:900;
+  line-height:1;
+}
+.wx-msg-type{
+  display:block;
+  margin-bottom:2px;
+  color:rgba(151,232,116,.84);
+  font-size:10px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.01em;
+}
+.wx-msg-main{
+  display:block;
+  color:#e6c55d;
+  font-size:12px;
+  font-weight:900;
+  line-height:1.02;
+  letter-spacing:-.025em;
+}
+.wx-msg-sub{
+  display:block;
+  margin-top:3px;
+  color:#d9b84f;
+  font-size:9px;
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-.025em;
+}
+.weather-message-entry.wx-info .wx-msg-type,
+.weather-message-entry.wx-info .wx-msg-main{color:rgba(166,236,125,.94)}
+.weather-message-entry.wx-info .wx-msg-sub{color:rgba(151,232,116,.72)}
