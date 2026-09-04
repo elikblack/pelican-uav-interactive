@@ -9,7 +9,7 @@
 .secondary-tabs{
   height:96px;
   padding:12px 24px 0;
-  grid-template-columns:repeat(4,minmax(0,1fr)) 48px;
+  grid-template-columns:repeat(4,minmax(0,1fr)) 72px;
   gap:12px;
   align-items:end;
   border-bottom:4px solid var(--green);
@@ -48,12 +48,12 @@
 }
 
 .settings-tab{
-  width:48px;
-  min-width:48px;
+  width:72px;
+  min-width:72px;
   justify-self:end;
 }
 
-/* Keep the compact settings tab, but let the icon breathe inside it. */
+/* Match horizontal breathing room to the icon's vertical breathing room. */
 .settings-tab svg{
   width:30px;
   height:30px;
