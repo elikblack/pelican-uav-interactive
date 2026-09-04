@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Datatype:wdth,wght@50..150,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap");
 
 /* Final message/legend layout for the Preflight air radar. */
 
@@ -73,13 +73,21 @@
   border-left:1px solid var(--line-soft)!important;
 }
 
-/* Datatype gives the four primary readouts chunky instrument weight while
-   preserving fixed character widths. A slightly condensed width keeps the
-   large values from crowding the narrow rail. */
+/* Deliberately make the four primary readout rows narrower than the message
+   section below. This closes the dead space between the tiny labels and large
+   values while preserving the full-width message rail, and leaves a slightly
+   awkward step in the module that feels appropriately retrofitted. */
+.air-module .radar-side-data>div:nth-child(-n+4):not(.air-alert){
+  width:224px;
+  margin-left:auto;
+}
+
+/* Kode Mono keeps the primary values genuinely monospaced while giving them
+   the chunky, squared-off terminal character the instrument wants. */
 .air-module .radar-side-data>div:nth-child(-n+4)>strong::after{
-  font-family:"Datatype",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
-  font-weight:900!important;
-  font-variation-settings:"wdth" 78,"wght" 900!important;
+  font-family:"Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
+  font-weight:700!important;
+  font-variation-settings:normal!important;
   letter-spacing:0!important;
   font-variant-numeric:tabular-nums slashed-zero;
 }
