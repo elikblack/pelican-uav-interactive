@@ -11,8 +11,8 @@
   padding:12px 24px 0;
   grid-template-columns:repeat(4,minmax(0,1fr)) 48px;
   gap:12px;
-  align-items:start;
-  border-bottom:4px solid var(--green);
+  align-items:end;
+  border-bottom:0;
 }
 
 .secondary-tab{
@@ -20,17 +20,21 @@
   padding:0 18px 0 30px;
   font-size:35px;
   letter-spacing:.035em;
-  transform:translateY(8px);
+  transform:none;
 }
 
-/* Four-pixel outer shape, preserving the clipped/chamfered tab construction. */
+/* Four-pixel outer shape, preserving the clipped/chamfered tab construction.
+   Inactive tabs remain open along the bottom edge. */
 .secondary-tab::after{
-  inset:4px;
+  left:4px;
+  right:4px;
+  top:4px;
+  bottom:0;
   clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);
 }
 
 /* Every tab now shares the same baseline. Fill alone marks the active page. */
-.secondary-tab.active{transform:translateY(8px)}
+.secondary-tab.active{transform:none}
 
 .secondary-tab[data-tab="maintenance"]{padding-left:74px}
 .secondary-tab[data-tab="maintenance"]::before{
