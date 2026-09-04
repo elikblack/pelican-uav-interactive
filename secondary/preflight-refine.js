@@ -301,7 +301,6 @@
       { type: 'PRECIP RETURN', main: 'MODERATE BAND', sub: 'BRG 351°  RNG 31NM' }
     ];
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let nextMessage = 4;
 
     function messageText(value) {
@@ -330,19 +329,7 @@
       const message = messages[nextMessage % messages.length];
       nextMessage += 1;
 
-      const entry = makeEntry(message);
-      feed.insertBefore(entry, feed.firstChild);
-
-      if (!reducedMotion) {
-        entry.animate(
-          [
-            { opacity: 0, transform: 'translateY(-12px)' },
-            { opacity: 1, transform: 'translateY(0)' }
-          ],
-          { duration: 300, easing: 'steps(4,end)' }
-        );
-      }
-
+      feed.insertBefore(makeEntry(message), feed.firstChild);
       while (feed.children.length > 4) feed.lastElementChild.remove();
 
       const nextDelay = 5000 + Math.round(Math.random() * 3000);
