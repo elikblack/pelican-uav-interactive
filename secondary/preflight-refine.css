@@ -1,37 +1,26 @@
-/* Preflight cleanup layer.
-   Loaded after large.css so these are intentional final-layout decisions. */
+/* Final Preflight air-radar layout. Weather owns its styling in weather.css. */
 
-/* ---------- Local air radar ---------- */
-
-/* The old pseudo-elements were useful while the display was being discovered,
-   but they float over live plot data. Actual controls are now given a rail. */
-.air-module::before,
-.air-module::after,
-.air-module .radar-module-body::before,
-.air-module .radar-module-body::after{
-  display:none!important;
-  content:none!important;
-}
-
-/* Reserve a true footer band for the track legend instead of drawing the plot
-   underneath it. The right-hand data rail keeps the user's tall layout. */
 .air-module .radar-module-body{
+  position:absolute;
+  left:12px;
+  right:12px;
+  top:41px;
   bottom:46px;
+  display:block;
 }
 
-/* Give the SVG an explicit rendered box rather than relying on the
-   left/right/top/bottom + auto sizing rules for replaced elements. Safari,
-   especially iOS Safari, can resolve that combination against the SVG's
-   intrinsic aspect ratio and show what looks like a zoomed/cropped corner. */
+/* Explicit rendered dimensions avoid Safari resolving the SVG against its
+   intrinsic aspect ratio and showing a zoomed/cropped corner. */
 .air-module .airspace-plot{
-  left:122px!important;
-  right:auto!important;
-  top:0!important;
-  bottom:auto!important;
-  width:calc(100% - 378px)!important;
-  height:100%!important;
-  max-width:none!important;
-  max-height:none!important;
+  position:absolute;
+  left:122px;
+  right:auto;
+  top:0;
+  bottom:auto;
+  width:calc(100% - 378px);
+  height:100%;
+  max-width:none;
+  max-height:none;
   display:block;
 }
 
@@ -85,76 +74,44 @@
   line-height:.92;
 }
 
-.air-control-box.control-wide{
-  grid-column:1/-1;
-}
-
+.air-control-box.control-wide{grid-column:1/-1}
 .air-control-box.control-menu{min-height:44px}
 .air-control-box.control-pulse{width:92px;min-height:42px}
 
-.air-module .radar-legend{
-  left:12px;
-  right:260px;
-  bottom:7px;
-  height:32px;
-  box-sizing:border-box;
-  padding:0 7px;
-  border-top:0;
-  background:#020402;
-  z-index:9;
-  display:grid;
-  grid-template-columns:repeat(4,max-content);
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-  font-size:14px;
-  line-height:1;
-  overflow:hidden;
-}
-
-/* The data rail is attached to the upper-right edge and reads as a divider,
-   not a framed card: only the left edge gets a green rule. A few extra pixels
-   give the larger live messages room to form complete thoughts. */
+/* The data rail is attached to the module edge rather than framed as a card. */
 .air-module .radar-side-data{
-  top:0!important;
-  right:-12px!important;
-  bottom:-46px!important;
+  position:absolute;
+  top:0;
+  right:-12px;
+  bottom:-46px;
   width:260px;
-  border:0!important;
-  border-left:2px solid rgba(119,201,91,.92)!important;
-  box-shadow:none!important;
+  height:auto;
+  padding:5px 7px 6px;
+  z-index:6;
+  border:0;
+  border-left:1px solid var(--line-soft);
   background:#020402;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  overflow:hidden;
+  box-shadow:none;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  color:var(--green);
 }
 
-/* GS POSN was useful period cruft, but it was consuming prime vertical space.
-   Remove the strip and coordinates, and let the live message list occupy it. */
-.air-module .radar-side-data::before,
-.air-module .radar-side-data::after{
-  display:none!important;
-  content:none!important;
-}
-
-.air-module .radar-side-data .air-alert{
-  left:7px!important;
-  right:2px!important;
-  top:188px!important;
-  bottom:2px!important;
-  overflow:visible;
-}
-
-/* The four large values are now supplied by the active radar track. Keep the
-   numerals genuinely monospaced so changing telemetry never shifts the row. */
+/* Live values supplied by the selected radar track replace the static fallback. */
 .air-module .radar-side-data>div:nth-child(-n+4)>strong::after{
-  content:attr(data-live-value)!important;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
-  font-weight:800!important;
-  letter-spacing:.015em!important;
+  content:attr(data-live-value);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-weight:800;
+  letter-spacing:.015em;
   font-variant-numeric:tabular-nums slashed-zero;
 }
 
-/* The old track boxes were permanent decoration. The new one represents the
-   contact the system is actually examining. */
-.air-module .air-contact .track-box{opacity:0!important}
+/* The old track boxes were permanent decoration. The new box follows the
+   contact the processor is actually examining. */
+.air-module .air-contact .track-box{opacity:0}
 .air-active-target-box{
   display:none;
   fill:none;
@@ -174,194 +131,3 @@
   stroke-dasharray:7 3;
 }
 .air-contact.air-event-resolved{color:#a6ec7d!important}
-
-/* Bigger, simpler operator messages. They now carry the state narrative rather
-   than a steady stream of receiver-level trivia. */
-.air-module .radar-side-data .air-alert>b{
-  font-size:14px!important;
-  line-height:1!important;
-  margin-bottom:6px!important;
-}
-.air-message-entry{
-  box-sizing:border-box;
-  margin:0 0 7px!important;
-  padding:1px 0 6px;
-  border-bottom:1px solid rgba(227,193,90,.16);
-  color:#e3c15a;
-  white-space:pre-wrap;
-  font:800 17px/1.03 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
-  letter-spacing:-.045em!important;
-}
-.air-message-entry.air-message-critical{
-  color:#df5b55!important;
-  border-bottom-color:rgba(223,91,85,.28);
-}
-.air-message-entry.air-message-resolved{
-  color:#a6ec7d!important;
-  border-bottom-color:rgba(166,236,125,.18);
-}
-
-/* ---------- Weather radar ---------- */
-
-.weather-sector-body{
-  left:12px;
-  right:12px;
-  top:41px;
-  bottom:8px;
-  display:grid;
-  grid-template-columns:218px minmax(0,1fr);
-  gap:0;
-  overflow:visible;
-  background:#020402;
-}
-
-.weather-sector-body:after{display:none}
-.weather-alert{display:none}
-
-/* Radar and messages share one visual field. The column boundary is layout
-   only, not a visible frame or gutter. */
-.weather-module .weather-radar-pane{
-  position:relative;
-  min-width:0;
-  min-height:0;
-  overflow:hidden;
-  border:0;
-  box-shadow:none;
-  background:transparent;
-}
-
-.weather-radar-pane::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:4;
-  pointer-events:none;
-  background:repeating-linear-gradient(0deg,rgba(119,201,91,.018) 0 1px,transparent 1px 4px);
-  opacity:.75;
-}
-
-.weather-radar-pane .weather-frame-layer{
-  left:50%;
-  top:8px;
-  width:96%;
-  height:calc(100% - 16px);
-}
-
-.weather-radar-pane .weather-sector{
-  inset:0;
-}
-
-.weather-radar-pane .weather-legend-greeble{
-  left:10px;
-  bottom:8px;
-}
-
-/* Open message rail: no outer frame, no dedicated METAR footer. Weather
-   reports now arrive as ordinary information messages and use the full rail. */
-.weather-alert-rail{
-  min-width:0;
-  min-height:0;
-  box-sizing:border-box;
-  border:0;
-  background:transparent;
-  display:grid;
-  grid-template-rows:28px minmax(0,1fr);
-  overflow:hidden;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-}
-
-.weather-alert-heading{
-  display:flex;
-  align-items:center;
-  padding:0 8px;
-  border:0;
-  color:#e6c55d;
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:-.025em;
-}
-
-.weather-message-feed{
-  min-height:0;
-  overflow:hidden;
-  padding:0 7px;
-}
-
-.weather-message-entry{
-  position:relative;
-  box-sizing:border-box;
-  min-height:68px;
-  padding:8px 3px 7px 28px;
-  border-bottom:1px solid rgba(215,170,53,.20);
-  color:#e3c15a;
-}
-
-.weather-message-entry::before{
-  content:"△";
-  position:absolute;
-  left:2px;
-  top:10px;
-  color:#d7aa35;
-  font-size:23px;
-  line-height:1;
-}
-
-.weather-message-entry.wx-info{
-  border-bottom-color:rgba(119,201,91,.18);
-  color:rgba(166,236,125,.92);
-}
-
-.weather-message-entry.wx-info::before{
-  content:"i";
-  display:grid;
-  place-items:center;
-  box-sizing:border-box;
-  left:2px;
-  top:9px;
-  width:16px;
-  height:16px;
-  border:1px solid var(--green);
-  border-radius:50%;
-  color:var(--green);
-  font-size:10px;
-  font-weight:900;
-  line-height:1;
-}
-
-.weather-message-entry .wx-msg-type{
-  display:block;
-  margin-bottom:2px;
-  color:rgba(151,232,116,.84);
-  font-size:10px;
-  font-weight:800;
-  line-height:1;
-  letter-spacing:.01em;
-}
-
-.weather-message-entry .wx-msg-main{
-  display:block;
-  color:#e6c55d;
-  font-size:12px;
-  font-weight:900;
-  line-height:1.02;
-  letter-spacing:-.025em;
-}
-
-.weather-message-entry .wx-msg-sub{
-  display:block;
-  margin-top:3px;
-  color:#d9b84f;
-  font-size:9px;
-  font-weight:800;
-  line-height:1.05;
-  letter-spacing:-.025em;
-}
-
-.weather-message-entry.wx-info .wx-msg-type,
-.weather-message-entry.wx-info .wx-msg-main{
-  color:rgba(166,236,125,.94);
-}
-
-.weather-message-entry.wx-info .wx-msg-sub{
-  color:rgba(151,232,116,.72);
-}
