@@ -168,14 +168,16 @@
 }
 
 .weather-module .weather-radar-pane::before{
-  content:"WX PROC 2   STAB / ON";
+  content:"GS 478   TAS 476\A194/12";
   position:absolute;
   left:8px;
   top:6px;
   z-index:5;
-  color:rgba(151,232,116,.48);
-  font:800 9px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-  letter-spacing:.035em;
+  color:rgba(151,232,116,.86);
+  white-space:pre;
+  font:800 10px/.95 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.025em;
+  text-shadow:0 0 3px rgba(119,201,91,.16);
   pointer-events:none;
 }
 
@@ -200,9 +202,89 @@
 }
 
 .weather-module .weather-radar-pane .wx-intensity{
+  position:relative;
   margin-top:2px;
-  padding-top:3px;
+  padding:4px 24px 1px 0;
   border-top:1px solid rgba(119,201,91,.12);
+  gap:5px;
+}
+
+/* Replace the clean PRECIP palette with explicit receiver thresholds. */
+.weather-module .wx-intensity>span{display:none}
+.weather-module .wx-intensity .wx-swatch{
+  position:relative;
+  width:14px;
+  height:8px;
+  margin-right:31px;
+  flex:0 0 14px;
+}
+.weather-module .wx-intensity .wx-swatch::after{
+  position:absolute;
+  left:18px;
+  top:-2px;
+  color:rgba(166,236,125,.82);
+  background:transparent;
+  white-space:nowrap;
+  font:800 9px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:-.02em;
+}
+.weather-module .wx-intensity .green::after{content:"20–32"}
+.weather-module .wx-intensity .yellow::after{content:"33–41"}
+.weather-module .wx-intensity .red::after{content:"42–49"}
+.weather-module .wx-intensity .magenta::after{content:"50+"}
+.weather-module .wx-intensity::after{
+  content:"dBZ";
+  position:absolute;
+  right:1px;
+  bottom:2px;
+  color:rgba(151,232,116,.48);
+  font:800 8px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.02em;
+}
+
+/* Edge readouts deliberately occupy leftover space instead of forming a panel. */
+.weather-module .weather-sector-body::before{
+  content:"082°\A40NM\A11:19";
+  position:absolute;
+  right:10px;
+  top:5px;
+  z-index:8;
+  color:rgba(151,232,116,.88);
+  white-space:pre;
+  text-align:right;
+  font:900 11px/.98 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.01em;
+  text-shadow:0 0 3px rgba(119,201,91,.14);
+  pointer-events:none;
+}
+
+.weather-module .weather-sector-body::after{
+  content:"GAIN A\ACLTR 2";
+  display:block;
+  inset:auto;
+  left:234px;
+  top:82px;
+  z-index:8;
+  width:auto;
+  height:auto;
+  color:rgba(151,232,116,.66);
+  background:none;
+  opacity:1;
+  white-space:pre;
+  font:800 9px/.95 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.025em;
+  pointer-events:none;
+}
+
+.weather-module .weather-radar-pane .weather-legend-greeble::before{
+  content:"ANT 1   ECHO AVG";
+  position:absolute;
+  left:5px;
+  top:-14px;
+  color:rgba(151,232,116,.56);
+  white-space:nowrap;
+  font:800 8px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.03em;
 }
 
 .weather-module .wx-heading-scale path{
