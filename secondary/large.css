@@ -12,7 +12,7 @@
   grid-template-columns:repeat(4,minmax(0,1fr)) 48px;
   gap:12px;
   align-items:end;
-  border-bottom:0;
+  border-bottom:4px solid var(--green);
 }
 
 .secondary-tab{
@@ -24,7 +24,8 @@
 }
 
 /* Four-pixel outer shape, preserving the clipped/chamfered tab construction.
-   Inactive tabs remain open along the bottom edge. */
+   Inactive tabs remain open along the bottom edge; the rail below them is a
+   separate structural line, not part of the tab outline. */
 .secondary-tab::after{
   left:4px;
   right:4px;
