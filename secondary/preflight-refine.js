@@ -20,15 +20,11 @@
     const svg = module && module.querySelector('.airspace-plot');
     const rail = module && module.querySelector('.radar-side-data');
     const alert = rail && rail.querySelector('.air-alert');
-    const staleFeed = document.getElementById('air-message-feed');
-    if (!module || !svg || !rail || !alert || !staleFeed) return;
-
-    const feed = staleFeed.cloneNode(false);
-    staleFeed.replaceWith(feed);
+    const feed = document.getElementById('air-message-feed');
+    if (!module || !svg || !rail || !alert || !feed) return;
 
     const header = alert.querySelector('b');
     const valueNodes = [...rail.querySelectorAll(':scope > div:not(.air-alert) > strong')].slice(0, 4);
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const svgNS = 'http://www.w3.org/2000/svg';
 
     const targets = [
@@ -132,19 +128,7 @@
     }
 
     function pushMessage(text, tone = 'normal') {
-      const entry = makeMessage(text, tone);
-      feed.insertBefore(entry, feed.firstChild);
-
-      if (!reducedMotion) {
-        entry.animate(
-          [
-            { opacity: 0, transform: 'translateY(-8px)' },
-            { opacity: 1, transform: 'translateY(0)' }
-          ],
-          { duration: 220, easing: 'steps(3,end)' }
-        );
-      }
-
+      feed.insertBefore(makeMessage(text, tone), feed.firstChild);
       while (feed.children.length > 4) feed.lastElementChild.remove();
     }
 
