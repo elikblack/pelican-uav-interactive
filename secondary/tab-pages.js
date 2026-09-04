@@ -56,5 +56,10 @@
   const nav = display.querySelector('.secondary-tabs');
   if (nav) nav.setAttribute('role', 'tablist');
 
+  const maintenanceStatus = display.querySelector('.status-maintenance');
+  if (maintenanceStatus) {
+    maintenanceStatus.addEventListener('click', () => activatePage('maintenance'));
+  }
+
   activatePage('preflight');
 })();
