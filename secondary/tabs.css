@@ -2,7 +2,7 @@
   height:64px;
   padding:8px 16px 0;
   display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr)) 64px;
+  grid-template-columns:repeat(4,minmax(0,1fr)) 64px;
   gap:8px;
   position:relative;
   z-index:8;
@@ -20,15 +20,18 @@
   padding:0 18px 0 24px;
   border:0;
   clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 10px);
-  background:var(--line-soft);
+  background:var(--green);
   color:var(--green);
   opacity:.72;
   font:700 14px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:.08em;
   text-align:left;
-  transform:translateY(3px);
+  transform:none;
 }
 
+/* Inactive tabs use the same green for type and outline. The active state is
+   distinguished only by filling that existing shape, rather than changing
+   its position or adding another visual treatment. */
 .secondary-tab::after{
   content:"";
   position:absolute;
@@ -44,7 +47,7 @@
   opacity:1;
   background:var(--green);
   box-shadow:none;
-  transform:translateY(0);
+  transform:none;
 }
 
 .secondary-tab.active::after{content:none}
