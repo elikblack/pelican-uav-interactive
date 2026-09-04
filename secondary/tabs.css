@@ -8,7 +8,7 @@
   position:relative;
   z-index:8;
   background:#010201;
-  border-bottom:1px solid var(--line);
+  border-bottom:0;
 }
 
 .secondary-tab{
@@ -31,12 +31,15 @@
   transform:none;
 }
 
-/* Inactive tabs use the same green for type and outline. All tabs share one
-   bottom baseline; fill alone distinguishes the active state. */
+/* Inactive tabs use the same green for type and outline, but stay open along
+   the bottom edge. The active state is the same shape filled solid. */
 .secondary-tab::after{
   content:"";
   position:absolute;
-  inset:2px;
+  left:2px;
+  right:2px;
+  top:2px;
+  bottom:0;
   z-index:-1;
   clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 8px);
   background:#010201;
