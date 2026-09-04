@@ -9,8 +9,9 @@
 .secondary-tabs{
   height:96px;
   padding:12px 24px 0;
-  grid-template-columns:repeat(5,minmax(0,1fr)) 96px;
+  grid-template-columns:repeat(4,minmax(0,1fr)) 48px;
   gap:12px;
+  align-items:start;
   border-bottom:4px solid var(--green);
 }
 
@@ -19,7 +20,7 @@
   padding:0 18px 0 30px;
   font-size:35px;
   letter-spacing:.035em;
-  transform:translateY(0);
+  transform:translateY(8px);
 }
 
 /* Four-pixel outer shape, preserving the clipped/chamfered tab construction. */
@@ -28,7 +29,7 @@
   clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px);
 }
 
-/* Inactive tabs sit proud. Active tab drops into the 4px baseline. */
+/* Every tab now shares the same baseline. Fill alone marks the active page. */
 .secondary-tab.active{transform:translateY(8px)}
 
 .secondary-tab[data-tab="maintenance"]{padding-left:74px}
@@ -39,6 +40,12 @@
   height:27px;
   border-width:2px;
   font-size:19px;
+}
+
+.settings-tab{
+  width:48px;
+  min-width:48px;
+  justify-self:end;
 }
 
 .settings-tab svg{
@@ -179,41 +186,3 @@
   font-size:12px;
   line-height:.95;
 }
-.air-module::before{
-  width:84px;
-  height:38px;
-  padding:5px 6px 3px;
-}
-.air-module::after{
-  content:"AIR\A PLOT";
-  left:118px;
-  width:78px;
-  height:38px;
-  padding:5px 6px 3px;
-}
-.air-module .radar-module-body::before{
-  width:126px;
-  height:44px;
-  padding:5px 6px 3px;
-}
-.air-module .radar-module-body::after{
-  top:91px;
-  width:100px;
-  height:42px;
-  padding:5px 6px 3px;
-}
-
-/* ---------- Weather ---------- */
-.wx-heading-scale text{font-size:19px}
-.wx-range-labels text{font-size:17px}
-
-.weather-legend-greeble{
-  min-width:330px;
-  padding:6px 8px;
-  font-size:14px;
-  line-height:1;
-}
-.wx-mode,
-.wx-intensity{min-height:18px}
-.wx-mode strong{font-size:14px}
-.wx-swatch{width:22px;height:9px}
