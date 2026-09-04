@@ -2,27 +2,26 @@
 
 /* Final message/legend layout for the Preflight air radar. */
 
-/* The old horizontal legend becomes a compact instrument key beneath the
-   upper-left control cluster. */
+/* Compact instrument key beneath the upper-left control cluster. */
 .air-control-rail .radar-legend{
-  position:static!important;
-  left:auto!important;
-  right:auto!important;
-  bottom:auto!important;
+  position:static;
   grid-column:1/-1;
   width:100%;
   height:auto;
   margin:3px 0 0;
   padding:4px 2px 0;
+  border:0;
   background:transparent;
-  display:flex!important;
+  display:flex;
   flex-direction:column;
   align-items:flex-start;
   justify-content:flex-start;
-  gap:4px!important;
+  gap:4px;
   overflow:visible;
-  font-size:10.5px!important;
-  line-height:1!important;
+  font-size:10.5px;
+  font-weight:700;
+  line-height:1;
+  letter-spacing:.03em;
 }
 
 .air-control-rail .radar-legend span{
@@ -30,15 +29,11 @@
   white-space:nowrap;
 }
 
-/* Current track/event summary sits centered in the open radar territory,
-   between the module's left edge and the fixed right-hand data rail. The
-   frame is part of the instrument, so it stays green; the text follows the
-   message tone used by the history rail. */
+/* Current track/event summary sits in the open radar territory. */
 .air-message-summary{
   --summary-text:#e3c15a;
   position:absolute;
   left:calc((100% - 260px) / 2);
-  right:auto;
   width:min(360px,calc(100% - 284px));
   bottom:-39px;
   transform:translateX(-50%);
@@ -66,88 +61,70 @@
 .air-message-summary[data-tone="critical"]{--summary-text:#df5b55}
 .air-message-summary[data-tone="resolved"]{--summary-text:#a6ec7d}
 
-/* The right-hand rail belongs to the surrounding module rather than being a
-   bright framed card. Keep its only outer divider at the same dim green used
-   elsewhere in the interface. */
-.air-module .radar-side-data{
-  border-left:1px solid var(--line-soft)!important;
-}
-
-/* Deliberately make the four primary readout rows narrower than the message
-   section below. This closes the dead space between the tiny labels and large
-   values while preserving the full-width message rail, and leaves a slightly
-   awkward step in the module that feels appropriately retrofitted. */
+/* The four primary readout rows are deliberately narrower than the message
+   section beneath them, leaving the slightly awkward retrofit step. */
 .air-module .radar-side-data>div:nth-child(-n+4):not(.air-alert){
   width:224px;
   margin-left:auto;
 }
 
-/* Kode Mono keeps the primary values genuinely monospaced while giving them
-   the chunky, squared-off terminal character the instrument wants. */
 .air-module .radar-side-data>div:nth-child(-n+4)>strong::after{
-  font-family:"Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
-  font-weight:700!important;
-  font-variation-settings:normal!important;
-  letter-spacing:0!important;
+  font-family:"Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-weight:700;
+  font-variation-settings:normal;
+  letter-spacing:0;
   font-variant-numeric:tabular-nums slashed-zero;
 }
 
-/* The old bracketed header remains as the private state source for the
-   existing radar script, but no longer occupies operator-facing space. */
-.air-module .radar-side-data .air-alert>b{
-  display:none!important;
-}
+/* The bracketed header is a private state channel for the radar scripts. */
+.air-module .radar-side-data .air-alert>b{display:none}
 
 .air-module .radar-side-data .air-alert{
+  position:absolute;
+  left:7px;
+  right:2px;
+  top:188px;
+  bottom:2px;
   box-sizing:border-box;
-  padding-top:7px!important;
-  border-top:1px solid var(--line-soft)!important;
-  overflow:hidden!important;
+  margin:0;
+  padding:7px 1px 0;
+  border:0;
+  border-top:1px solid var(--line-soft);
+  background:transparent;
+  display:block;
+  overflow:hidden;
+  color:#e3c15a;
 }
 
 #air-message-feed{
-  height:100%!important;
-  overflow:hidden!important;
+  height:100%;
+  overflow:hidden;
 }
 
-/* Fixed-height rows prevent reflow while the two lines are being populated.
-   The type scale now matches the AIR PLOT control instead of competing with
-   the large target readouts. There are intentionally no separators. */
+/* Fixed-height rows prevent reflow while the two lines are populated. */
 .air-message-entry{
   box-sizing:border-box;
-  height:44px!important;
-  min-height:44px!important;
-  margin:0!important;
-  padding:3px 0 2px!important;
-  border:0!important;
+  height:44px;
+  min-height:44px;
+  margin:0;
+  padding:3px 0 2px;
+  border:0;
   overflow:hidden;
-  white-space:nowrap!important;
-  font-size:12px!important;
-  font-weight:800!important;
-  line-height:1!important;
+  color:#e3c15a;
+  white-space:nowrap;
+  font:800 12px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:-.025em;
 }
 
-/* air.css used a broad descendant selector to manufacture the legacy
-   [MESSAGE LIST 1/3] label from any span inside the alert area. The new
-   two-line message renderer also uses spans, so explicitly retire that old
-   pseudo-content for message lines and restore their real text. */
-.air-module .radar-side-data .air-alert .air-message-line{
-  display:block!important;
+.air-message-entry.air-message-critical{color:#df5b55}
+.air-message-entry.air-message-resolved{color:#a6ec7d}
+
+.air-message-line{
+  display:block;
   height:14px;
-  margin:0!important;
+  margin:0;
   overflow:hidden;
-  color:inherit!important;
+  color:inherit;
   white-space:pre;
-  transform:none!important;
-  font:800 12px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace!important;
-  letter-spacing:-.025em!important;
-}
-
-.air-module .radar-side-data .air-alert .air-message-line::before{
-  content:none!important;
-  display:none!important;
-}
-
-@media (prefers-reduced-motion:reduce){
-  .air-message-summary{transition:none}
+  font:inherit;
 }
