@@ -1,0 +1,379 @@
+/* Experimental Mission page concept.
+   Isolated under .mission-concept so the entire experiment can be removed
+   without disturbing the locked Preflight or tab-bar styles. */
+
+.mission-concept{
+  min-height:0;
+  position:relative;
+  z-index:4;
+  display:grid;
+  grid-template-rows:58px minmax(0,1fr) 34px;
+  gap:8px;
+  padding:8px 16px 12px;
+  background:#010201;
+  color:var(--green);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+}
+
+.mission-top-strip,
+.mission-bottom-strip{
+  min-width:0;
+  display:grid;
+  align-items:stretch;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:#020402;
+  overflow:hidden;
+}
+
+.mission-top-strip{grid-template-columns:210px 168px 240px 1fr 188px 174px}
+.mission-bottom-strip{grid-template-columns:1.25fr 1fr 1fr 1fr}
+
+.mission-top-cell,
+.mission-bottom-cell{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:4px 13px 3px;
+  border-left:1px solid var(--line-soft);
+  overflow:hidden;
+  white-space:nowrap;
+}
+.mission-top-cell:first-child,
+.mission-bottom-cell:first-child{border-left:0}
+
+.mission-top-cell span,
+.mission-bottom-cell span{
+  color:rgba(151,232,116,.58);
+  font-size:9px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.09em;
+}
+.mission-top-cell strong{
+  margin-top:3px;
+  color:#a6ec7d;
+  font:800 21px/.95 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:-.015em;
+}
+
+.mission-top-cell.mission-execute{
+  background:var(--green);
+  color:#020402;
+}
+.mission-top-cell.mission-execute span,
+.mission-top-cell.mission-execute strong{color:#020402}
+
+.mission-top-cell.mission-phase strong{color:var(--amber)}
+
+.mission-main-grid{
+  min-width:0;
+  min-height:0;
+  display:grid;
+  grid-template-columns:430px minmax(0,1fr) 420px;
+  gap:12px;
+}
+
+.mission-panel{
+  position:relative;
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:#020402;
+}
+
+.mission-panel-heading{
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 11px;
+  border-bottom:1px solid var(--line-soft);
+  color:var(--green);
+  font-size:13px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.07em;
+}
+.mission-panel-heading small{
+  color:rgba(151,232,116,.52);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.05em;
+}
+
+/* ---------- Route / flight-plan sidecar ---------- */
+.mission-route-panel{display:grid;grid-template-rows:34px minmax(0,1fr)}
+.mission-route-body{
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 154px;
+  overflow:hidden;
+}
+
+.mission-route-map{
+  width:100%;
+  height:100%;
+  background:
+    linear-gradient(rgba(86,112,132,.025),rgba(86,112,132,.008)),
+    #020402;
+}
+.mission-route-map .mission-map-line{
+  fill:none;
+  stroke:rgba(126,153,176,.32);
+  stroke-width:1.25;
+  stroke-dasharray:4 6;
+  vector-effect:non-scaling-stroke;
+}
+.mission-route-map .mission-route-path{
+  fill:none;
+  stroke:#77c95b;
+  stroke-width:2.2;
+  vector-effect:non-scaling-stroke;
+}
+.mission-route-map .mission-route-complete{
+  fill:none;
+  stroke:rgba(119,201,91,.34);
+  stroke-width:2.2;
+  vector-effect:non-scaling-stroke;
+}
+.mission-route-map .mission-wp{fill:#020402;stroke:#77c95b;stroke-width:1.6;vector-effect:non-scaling-stroke}
+.mission-route-map .mission-wp.active{fill:#d7aa35;stroke:#d7aa35}
+.mission-route-map .mission-map-label{fill:rgba(166,236,125,.78);font-size:9px;font-weight:800;letter-spacing:.03em}
+.mission-route-map .mission-map-dim{fill:rgba(166,190,210,.48);font-size:8px;font-weight:700}
+.mission-route-map .mission-ownship{fill:#a6ec7d;stroke:#a6ec7d;stroke-width:1}
+
+.mission-waypoints{
+  min-width:0;
+  padding:5px 0 0;
+  border-left:1px solid var(--line-soft);
+  display:grid;
+  align-content:start;
+}
+.mission-waypoint{
+  min-height:42px;
+  padding:5px 7px;
+  border-bottom:1px solid rgba(119,201,91,.11);
+}
+.mission-waypoint span{
+  display:block;
+  color:rgba(151,232,116,.56);
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.05em;
+}
+.mission-waypoint strong{
+  display:block;
+  margin-top:2px;
+  color:rgba(166,236,125,.82);
+  font-size:12px;
+  line-height:1;
+  font-weight:900;
+}
+.mission-waypoint.active{
+  border-left:4px solid var(--amber);
+  padding-left:5px;
+  background:rgba(215,170,53,.05);
+}
+.mission-waypoint.active span,
+.mission-waypoint.active strong{color:var(--amber)}
+.mission-waypoint.complete{opacity:.44}
+
+/* ---------- Aircraft state / flight director ---------- */
+.mission-flight-panel{
+  display:grid;
+  grid-template-rows:34px 72px minmax(0,1fr) 47px;
+}
+
+.mission-flight-values{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  border-bottom:1px solid var(--line-soft);
+}
+.mission-flight-value{
+  min-width:0;
+  padding:7px 10px 4px;
+  border-left:1px solid var(--line-soft);
+}
+.mission-flight-value:first-child{border-left:0}
+.mission-flight-value span{
+  display:block;
+  color:rgba(151,232,116,.54);
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.mission-flight-value strong{
+  display:block;
+  margin-top:4px;
+  color:#a6ec7d;
+  font:800 34px/.86 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:-.04em;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+.mission-flight-value small{
+  margin-left:3px;
+  color:rgba(151,232,116,.62);
+  font:800 10px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+}
+
+.mission-profile-wrap{
+  position:relative;
+  min-height:0;
+  overflow:hidden;
+}
+.mission-profile{
+  width:100%;
+  height:100%;
+  display:block;
+}
+.mission-profile .profile-grid{
+  fill:none;
+  stroke:rgba(126,153,176,.19);
+  stroke-width:1;
+  stroke-dasharray:3 6;
+  vector-effect:non-scaling-stroke;
+}
+.mission-profile .profile-envelope{
+  fill:rgba(119,201,91,.045);
+  stroke:rgba(119,201,91,.25);
+  stroke-width:1;
+  vector-effect:non-scaling-stroke;
+}
+.mission-profile .profile-terrain{fill:rgba(86,112,132,.12);stroke:rgba(126,153,176,.34);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.mission-profile .profile-route{fill:none;stroke:#77c95b;stroke-width:2.3;vector-effect:non-scaling-stroke}
+.mission-profile .profile-aircraft{fill:#a6ec7d;stroke:#a6ec7d;stroke-width:1}
+.mission-profile .profile-mark{fill:#020402;stroke:#77c95b;stroke-width:1.4;vector-effect:non-scaling-stroke}
+.mission-profile text{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+.mission-profile .profile-label{fill:rgba(166,236,125,.74);font-size:10px;font-weight:800;letter-spacing:.03em}
+.mission-profile .profile-dim{fill:rgba(166,190,210,.48);font-size:9px;font-weight:700}
+.mission-profile .profile-amber{fill:#d7aa35;font-size:10px;font-weight:900}
+
+.mission-flight-footer{
+  min-width:0;
+  display:grid;
+  grid-template-columns:160px 1fr 155px;
+  align-items:center;
+  border-top:1px solid var(--line-soft);
+}
+.mission-mode-box{
+  height:100%;
+  display:grid;
+  place-items:center;
+  background:var(--green);
+  color:#020402;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:.055em;
+}
+.mission-progress{
+  min-width:0;
+  padding:0 13px;
+}
+.mission-progress-label{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:4px;
+  color:rgba(151,232,116,.60);
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.05em;
+}
+.mission-progress-track{
+  height:8px;
+  border:1px solid rgba(119,201,91,.38);
+  background:#010201;
+}
+.mission-progress-track i{display:block;width:46%;height:100%;background:var(--green)}
+.mission-xtrack{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:center;
+  padding-right:10px;
+  border-left:1px solid var(--line-soft);
+}
+.mission-xtrack span{color:rgba(151,232,116,.52);font-size:8px;font-weight:800;letter-spacing:.06em}
+.mission-xtrack strong{margin-top:2px;color:#a6ec7d;font:800 18px/1 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+
+/* ---------- C2 / autonomy sidecar ---------- */
+.mission-system-panel{display:grid;grid-template-rows:34px minmax(0,1fr)}
+.mission-system-body{
+  min-height:0;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr);
+}
+.mission-system-table{display:grid}
+.mission-system-row{
+  min-height:34px;
+  display:grid;
+  grid-template-columns:112px minmax(0,1fr) 82px;
+  align-items:center;
+  padding:0 8px;
+  border-bottom:1px solid rgba(119,201,91,.12);
+}
+.mission-system-row span{
+  color:rgba(151,232,116,.54);
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.07em;
+}
+.mission-system-row strong{
+  min-width:0;
+  color:#a6ec7d;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+.mission-system-row b{
+  justify-self:end;
+  color:rgba(166,236,125,.70);
+  font:800 12px/1 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  white-space:nowrap;
+}
+.mission-system-row.warning strong,
+.mission-system-row.warning b{color:var(--amber)}
+
+.mission-event-queue{
+  min-height:0;
+  padding:7px 9px 0;
+  overflow:hidden;
+}
+.mission-event-queue>span{
+  display:block;
+  margin-bottom:5px;
+  color:rgba(151,232,116,.52);
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.mission-event{
+  min-height:33px;
+  display:grid;
+  grid-template-columns:58px 1fr;
+  align-items:center;
+  border-top:1px solid rgba(119,201,91,.11);
+}
+.mission-event:first-of-type{border-top:1px solid var(--line-soft)}
+.mission-event time{color:var(--amber);font-size:10px;font-weight:900}
+.mission-event strong{color:rgba(166,236,125,.78);font-size:10px;font-weight:800;letter-spacing:.015em}
+
+.mission-bottom-cell{
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-between;
+  padding-top:0;
+  padding-bottom:0;
+}
+.mission-bottom-cell strong{
+  color:rgba(166,236,125,.82);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.035em;
+}
+.mission-bottom-cell.mission-bottom-good strong{color:#a6ec7d}
+.mission-bottom-cell.mission-bottom-next strong{color:var(--amber)}
