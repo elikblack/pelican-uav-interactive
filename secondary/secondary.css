@@ -2,7 +2,7 @@
   width:1920px;
   height:480px;
   display:grid;
-  grid-template-rows:64px 1fr;
+  grid-template-rows:96px 1fr;
   background:#010201;
   color:var(--text);
   overflow:hidden;
@@ -14,7 +14,7 @@
 .secondary-grid{
   min-height:0;
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:2fr 1fr 2fr;
   gap:12px;
   padding:8px 16px 12px;
   position:relative;
@@ -22,8 +22,8 @@
   background:#010201;
 }
 
-/* Tab-page shell. PREFLIGHT keeps the existing grid; the other pages are
-   intentionally bare placeholders until their actual modules are designed. */
+/* Tab-page shell. PREFLIGHT keeps the live three-module grid; the other pages
+   remain intentionally bare until their actual modules are designed. */
 .secondary-page[hidden]{display:none!important}
 .secondary-placeholder-page{
   min-height:0;
@@ -50,7 +50,7 @@
   min-width:0;
   min-height:0;
   overflow:hidden;
-  border:1px solid var(--line);
+  border:2px solid var(--line);
   background:var(--panel);
 }
 
@@ -64,97 +64,7 @@
   padding:0 14px;
   border-bottom:1px solid var(--line-soft);
   color:var(--green);
-  font-size:14px;
+  font-size:24px;
   font-weight:700;
-  letter-spacing:.08em;
+  letter-spacing:.045em;
 }
-
-.radar-module-body{
-  position:absolute;
-  left:12px;
-  right:12px;
-  top:41px;
-  bottom:42px;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 152px;
-  gap:8px;
-  align-items:center;
-}
-
-.radar-scope{
-  width:100%;
-  height:100%;
-  overflow:visible;
-}
-
-.radar-grid-svg{
-  fill:none;
-  stroke:rgba(119,201,91,.24);
-  stroke-width:1;
-  stroke-dasharray:3 5;
-}
-.radar-grid-svg .minor-axis{opacity:.42}
-
-.radar-sweep{transform-origin:195px 160px;animation:radarSweep 6.8s linear infinite}
-.weather-sweep{animation-duration:7.6s;animation-delay:-2.1s}
-.sweep-edge{fill:none;stroke:var(--green);stroke-width:1.2;opacity:.7}
-.cardinals text{fill:var(--green);font-size:12px;text-anchor:middle;font-weight:500;opacity:.82}
-.radar-origin{fill:#061008;stroke:var(--green);stroke-width:1.5}
-
-.radar-contact{fill:var(--green);stroke:none;animation:contactPulse 2.8s ease-in-out infinite}
-.radar-contact text{font-size:10px;fill:var(--green);stroke:none;font-weight:500}
-.contact-b{animation-delay:-1.1s}.contact-c{animation-delay:-1.8s}.contact-d{animation-delay:-.5s}
-
-.radar-side-data{
-  height:90%;
-  align-self:center;
-  padding-left:12px;
-  border-left:1px solid var(--line-soft);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.radar-side-data>div{
-  min-height:35px;
-  padding:4px 2px 5px;
-  border-bottom:1px solid var(--line-soft);
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-.radar-side-data span{
-  color:var(--green);
-  opacity:.72;
-  font-size:10px;
-  letter-spacing:.06em;
-}
-
-.radar-side-data strong{
-  color:var(--text);
-  font-size:12px;
-  font-weight:500;
-  letter-spacing:.025em;
-}
-.radar-side-data .scan-line{border-bottom:0;margin-top:auto}
-
-.radar-legend{
-  position:absolute;
-  left:14px;
-  right:14px;
-  bottom:8px;
-  height:27px;
-  border-top:1px solid var(--line-soft);
-  display:flex;
-  align-items:flex-end;
-  gap:26px;
-  font-size:10px;
-  letter-spacing:.03em;
-}
-.radar-legend .friendly{color:var(--green)}
-.radar-legend .neutral{color:var(--muted)}
-.radar-legend .unknown{color:var(--amber)}
-
-@keyframes radarSweep{to{transform:rotate(360deg)}}
-@keyframes contactPulse{0%,100%{opacity:.62}50%{opacity:1}}
