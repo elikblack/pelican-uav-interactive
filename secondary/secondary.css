@@ -22,6 +22,29 @@
   background:#010201;
 }
 
+/* Tab-page shell. PREFLIGHT keeps the existing grid; the other pages are
+   intentionally bare placeholders until their actual modules are designed. */
+.secondary-page[hidden]{display:none!important}
+.secondary-placeholder-page{
+  min-height:0;
+  position:relative;
+  z-index:4;
+  display:grid;
+  place-items:center;
+  padding:8px 16px 12px;
+  background:#010201;
+}
+.secondary-access-message{
+  color:rgba(151,232,116,.76);
+  font:800 25px/1.15 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.055em;
+  text-align:center;
+}
+.secondary-access-message strong{
+  color:var(--amber);
+  font:inherit;
+}
+
 .secondary-module{
   position:relative;
   min-width:0;
