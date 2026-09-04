@@ -1,6 +1,5 @@
 (() => {
   const display = document.getElementById('secondary-display');
-  const tabs = [...document.querySelectorAll('.secondary-tab')];
 
   function fitDisplay() {
     const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 480);
@@ -128,8 +127,8 @@
         <div><span>FILTER</span><strong>FL025+</strong></div>
         <div><span>TRACKS</span><strong>07 ACTIVE</strong></div>
         <div class="air-alert">
-          <b style="display:block;margin:0 0 3px;color:#e6c55d;font:800 8px/.95 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace;letter-spacing:-.04em">[MESSAGE LIST]</b>
-          <div id="air-message-feed" style="height:calc(100% - 11px);overflow:hidden"></div>
+          <b>[MESSAGE LIST]</b>
+          <div id="air-message-feed"></div>
         </div>
       </div>
     `;
@@ -163,13 +162,6 @@
       <path class="wx-heading-bug" d="M310 4v30M301 12h18" />
     `;
   }
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(item => item.classList.remove('active'));
-      tab.classList.add('active');
-    });
-  });
 
   const fields = {
     tx: document.getElementById('tx-power'),
