@@ -53,9 +53,10 @@
   justify-self:end;
 }
 
+/* Keep the compact settings tab, but let the icon breathe inside it. */
 .settings-tab svg{
-  width:36px;
-  height:36px;
+  width:30px;
+  height:30px;
 }
 
 .secondary-module{border-width:2px}
