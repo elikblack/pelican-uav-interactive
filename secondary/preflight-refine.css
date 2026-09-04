@@ -253,14 +253,16 @@
   bottom:8px;
 }
 
+/* Open message rail: no outer frame, no dedicated METAR footer. Weather
+   reports now arrive as ordinary information messages and use the full rail. */
 .weather-alert-rail{
   min-width:0;
   min-height:0;
   box-sizing:border-box;
-  border:1px solid rgba(215,170,53,.30);
+  border:0;
   background:#020402;
   display:grid;
-  grid-template-rows:28px minmax(0,1fr) 72px;
+  grid-template-rows:28px minmax(0,1fr);
   overflow:hidden;
   font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
 }
@@ -269,7 +271,7 @@
   display:flex;
   align-items:center;
   padding:0 8px;
-  border-bottom:1px solid rgba(215,170,53,.26);
+  border:0;
   color:#e6c55d;
   font-size:11px;
   font-weight:900;
@@ -302,6 +304,19 @@
   line-height:1;
 }
 
+.weather-message-entry.wx-info{
+  border-bottom-color:rgba(119,201,91,.18);
+  color:rgba(166,236,125,.92);
+}
+
+.weather-message-entry.wx-info::before{
+  content:"(i)";
+  top:11px;
+  color:var(--green);
+  font-size:11px;
+  font-weight:900;
+}
+
 .weather-message-entry .wx-msg-type{
   display:block;
   margin-bottom:2px;
@@ -331,31 +346,13 @@
   letter-spacing:-.025em;
 }
 
-.weather-metar-block{
-  box-sizing:border-box;
-  padding:6px 7px 5px;
-  border-top:2px solid rgba(119,201,91,.56);
-  background:rgba(1,5,2,.9);
-  overflow:hidden;
+.weather-message-entry.wx-info .wx-msg-type,
+.weather-message-entry.wx-info .wx-msg-main{
+  color:rgba(166,236,125,.94);
 }
 
-.weather-metar-block span{
-  display:block;
-  margin-bottom:3px;
-  color:var(--green);
-  font-size:10px;
-  font-weight:900;
-  line-height:1;
-}
-
-.weather-metar-block strong{
-  display:block;
-  color:rgba(166,236,125,.92);
-  font-size:8.5px;
-  font-weight:800;
-  line-height:1.08;
-  letter-spacing:-.025em;
-  white-space:normal;
+.weather-message-entry.wx-info .wx-msg-sub{
+  color:rgba(151,232,116,.72);
 }
 
 @media (prefers-reduced-motion:reduce){
