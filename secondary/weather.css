@@ -189,58 +189,88 @@
   opacity:.84;
 }
 
+/* Compact right-side legend. The settings bar intentionally reads like a
+   painted annunciator strip rather than a modern card header. */
 .weather-module .weather-radar-pane .weather-legend-greeble{
-  left:7px;
-  bottom:6px;
+  left:auto;
+  right:7px;
+  bottom:7px;
   min-width:0;
-  width:318px;
-  padding:5px 7px 4px;
+  width:154px;
+  padding:0;
   border:0;
-  border-left:2px solid rgba(119,201,91,.48);
-  border-top:1px solid rgba(119,201,91,.20);
-  background:rgba(1,5,2,.66);
+  background:transparent;
 }
 
+.weather-module .weather-radar-pane .wx-mode{
+  box-sizing:border-box;
+  min-height:16px;
+  padding:2px 4px 1px;
+  gap:4px;
+  background:rgba(119,201,91,.90);
+  color:#031005;
+  white-space:nowrap;
+  overflow:hidden;
+  font:900 7.5px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:-.025em;
+}
+
+.weather-module .weather-radar-pane .wx-mode span,
+.weather-module .weather-radar-pane .wx-mode strong{
+  margin:0;
+  color:#031005;
+  opacity:1;
+  font:inherit;
+}
+
+/* Vertical reflectivity thresholds with the numeric labels on the left and
+   their color blocks on the right, closer to the old avionics-panel grammar. */
 .weather-module .weather-radar-pane .wx-intensity{
   position:relative;
-  margin-top:2px;
-  padding:4px 24px 1px 0;
-  border-top:1px solid rgba(119,201,91,.12);
-  gap:5px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:3px;
+  min-height:0;
+  margin:4px 2px 0 0;
+  padding:11px 0 0;
+  border:0;
 }
 
-/* Replace the clean PRECIP palette with explicit receiver thresholds. */
 .weather-module .wx-intensity>span{display:none}
 .weather-module .wx-intensity .wx-swatch{
   position:relative;
-  width:14px;
-  height:8px;
-  margin-right:31px;
-  flex:0 0 14px;
+  width:28px;
+  height:9px;
+  margin:0;
+  flex:0 0 9px;
+  border:0;
 }
 .weather-module .wx-intensity .wx-swatch::after{
   position:absolute;
-  left:18px;
-  top:-2px;
-  color:rgba(166,236,125,.82);
+  right:34px;
+  top:0;
+  color:rgba(166,236,125,.88);
   background:transparent;
   white-space:nowrap;
-  font:800 9px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  text-align:right;
+  font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:-.02em;
 }
 .weather-module .wx-intensity .green::after{content:"20–32"}
 .weather-module .wx-intensity .yellow::after{content:"33–41"}
 .weather-module .wx-intensity .red::after{content:"42–49"}
 .weather-module .wx-intensity .magenta::after{content:"50+"}
-.weather-module .wx-intensity::after{
+.weather-module .wx-intensity::before{
   content:"dBZ";
   position:absolute;
   right:1px;
-  bottom:2px;
-  color:rgba(151,232,116,.48);
-  font:800 8px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  top:0;
+  color:rgba(151,232,116,.54);
+  font:900 8px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:.02em;
 }
+.weather-module .wx-intensity::after{content:none}
 
 /* Edge readouts deliberately occupy leftover space instead of forming a panel. */
 .weather-module .weather-sector-body::before{
@@ -279,10 +309,11 @@
 .weather-module .weather-radar-pane .weather-legend-greeble::before{
   content:"ANT 1   ECHO AVG";
   position:absolute;
-  left:5px;
-  top:-14px;
+  right:2px;
+  top:-13px;
   color:rgba(151,232,116,.56);
   white-space:nowrap;
+  text-align:right;
   font:800 8px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:.03em;
 }
