@@ -1,0 +1,192 @@
+/* Experimental Payload page concept. Kept isolated under .payload-concept. */
+.payload-concept{
+  min-height:0;
+  position:relative;
+  z-index:4;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) 72px;
+  padding:8px 16px 12px;
+  background:#010201;
+  color:var(--green);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+}
+
+.payload-view{
+  position:relative;
+  min-height:0;
+  overflow:hidden;
+  border:1px solid rgba(119,201,91,.34);
+  background:
+    radial-gradient(circle at 52% 46%,rgba(130,144,114,.08) 0 11%,transparent 12%),
+    linear-gradient(168deg,#111812 0 33%,#182018 34% 51%,#0b100c 52% 100%);
+}
+
+.payload-view::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    repeating-linear-gradient(0deg,rgba(119,201,91,.018) 0 1px,transparent 1px 4px),
+    linear-gradient(90deg,transparent 0 49.9%,rgba(119,201,91,.035) 50%,transparent 50.1%);
+}
+
+.payload-scene{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:.66;
+}
+.payload-scene .scene-structure{fill:#253025;stroke:#3a4738;stroke-width:2}
+.payload-scene .scene-dark{fill:#0d120e}
+.payload-scene .scene-road{fill:none;stroke:#455047;stroke-width:20;opacity:.42}
+.payload-scene .scene-road-edge{fill:none;stroke:#6b7568;stroke-width:2;opacity:.26}
+.payload-scene .scene-label{fill:#d9b85a;stroke:#10150f;stroke-width:2.2;paint-order:stroke;font-size:22px;font-weight:900;letter-spacing:.08em}
+
+.payload-top-left,
+.payload-top-center,
+.payload-top-right,
+.payload-left-stack,
+.payload-right-stack,
+.payload-center-readout{
+  position:absolute;
+  z-index:4;
+  pointer-events:none;
+}
+
+.payload-top-left{left:18px;top:14px}
+.payload-top-center{left:50%;top:13px;transform:translateX(-50%);display:flex;gap:26px;align-items:flex-start}
+.payload-top-right{right:22px;top:14px;text-align:right}
+
+.payload-mode-label{
+  display:block;
+  color:#9dec78;
+  font-size:20px;
+  font-weight:900;
+  line-height:1.02;
+  letter-spacing:.08em;
+  text-shadow:0 0 4px rgba(119,201,91,.22);
+}
+.payload-mode-label.small{font-size:14px;color:rgba(151,232,116,.76);letter-spacing:.06em}
+.payload-mode-label.amber{color:var(--amber)}
+
+.payload-fov{
+  position:absolute;
+  z-index:4;
+  left:50%;
+  top:92px;
+  width:300px;
+  height:28px;
+  transform:translateX(-50%);
+  border-top:2px solid var(--green);
+  color:#a6ec7d;
+  text-align:center;
+  font:900 22px/1 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+}
+.payload-fov::before,
+.payload-fov::after{content:"";position:absolute;top:-2px;width:2px;height:14px;background:var(--green)}
+.payload-fov::before{left:0}.payload-fov::after{right:0}
+
+.payload-reticle{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:5;
+  width:76px;
+  height:76px;
+  transform:translate(-50%,-50%);
+}
+.payload-reticle::before,
+.payload-reticle::after{content:"";position:absolute;background:rgba(119,201,91,.88)}
+.payload-reticle::before{left:37px;top:7px;width:2px;height:62px}
+.payload-reticle::after{left:7px;top:37px;width:62px;height:2px}
+.payload-reticle i{position:absolute;left:31px;top:31px;width:14px;height:14px;border:1px solid rgba(119,201,91,.72);border-radius:50%}
+
+.payload-left-stack{
+  left:18px;
+  top:112px;
+  display:grid;
+  gap:14px;
+}
+.payload-sensor-glyph{
+  width:78px;
+  height:78px;
+  position:relative;
+  border:1px solid rgba(119,201,91,.42);
+}
+.payload-sensor-glyph::before{content:"";position:absolute;left:15px;top:16px;width:42px;height:42px;border:3px solid var(--green);border-radius:50%}
+.payload-sensor-glyph::after{content:"";position:absolute;left:31px;top:8px;width:12px;height:58px;border-left:3px solid var(--green);transform:rotate(22deg)}
+.payload-bearing{
+  display:grid;
+  place-items:center;
+  width:78px;
+  height:78px;
+  border:1px solid rgba(119,201,91,.26);
+  border-radius:50%;
+  color:#a6ec7d;
+  font:900 18px/1 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+}
+
+.payload-right-stack{
+  right:18px;
+  top:105px;
+  bottom:98px;
+  width:80px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:flex-end;
+  color:rgba(166,236,125,.86);
+  font:900 16px/1 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+}
+.payload-scale{
+  position:absolute;
+  right:20px;
+  top:118px;
+  bottom:108px;
+  width:20px;
+  border-right:2px solid rgba(119,201,91,.78);
+  background:repeating-linear-gradient(to bottom,transparent 0 31px,rgba(119,201,91,.70) 31px 33px,transparent 33px 64px);
+}
+
+.payload-center-readout{
+  left:50%;
+  bottom:94px;
+  transform:translateX(-50%);
+  color:#d9b85a;
+  text-align:center;
+  font:900 21px/1.05 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.04em;
+  text-shadow:0 0 3px #000;
+}
+.payload-center-readout small{display:block;margin-top:4px;color:rgba(166,236,125,.78);font-size:14px}
+
+.payload-no-target{
+  position:absolute;
+  right:130px;
+  bottom:48px;
+  z-index:5;
+  color:#63d2d8;
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:.03em;
+}
+
+.payload-bottom-strip{
+  min-width:0;
+  display:grid;
+  grid-template-columns:1.2fr 1fr 1fr 1.2fr;
+  border-top:2px solid rgba(119,201,91,.74);
+  background:#020402;
+}
+.payload-bottom-cell{
+  min-width:0;
+  padding:8px 14px 7px;
+  border-left:1px solid var(--line-soft);
+  overflow:hidden;
+}
+.payload-bottom-cell:first-child{border-left:0}
+.payload-bottom-cell span{display:block;color:rgba(151,232,116,.58);font-size:11px;font-weight:900;letter-spacing:.07em}
+.payload-bottom-cell strong{display:block;margin-top:5px;color:#a6ec7d;font:800 24px/.95 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;white-space:nowrap}
+.payload-bottom-cell.amber strong{color:var(--amber)}
