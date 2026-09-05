@@ -8,8 +8,7 @@
 
   page.innerHTML = `
     <div class="mission-top-strip" aria-label="Mission execution summary">
-      <div class="mission-top-cell mission-execute"><span>MISSION STATE</span><strong>EXECUTE</strong></div>
-      <div class="mission-top-cell mission-phase"><span>PHASE</span><strong>TRANSIT</strong></div>
+      <div class="mission-top-cell mission-execute"><span>MISSION / PHASE</span><strong>EXECUTE · TRANSIT</strong></div>
       <div class="mission-top-cell"><span>ACTIVE LEG</span><strong>WP04 → WP05</strong></div>
       <div class="mission-top-cell"><span>LEG ETE</span><strong id="mission-leg-ete">00:08:42</strong></div>
     </div>
@@ -33,7 +32,6 @@
 
             <path class="mission-ownship" d="M0 -9L6 7L0 4L-6 7Z" transform="translate(188 141) rotate(48)"/>
 
-            <text class="mission-map-label" x="38" y="238">WP01</text>
             <text class="mission-map-label" x="130" y="148">WP04</text>
             <text class="mission-map-label" x="224" y="118">WP05</text>
             <text class="mission-map-label" x="285" y="82">WP06</text>
@@ -41,13 +39,11 @@
 
             <text class="mission-map-dim" x="24" y="28">ROUTE 17B</text>
             <text class="mission-map-dim" x="270" y="239">TRK 044°T</text>
-            <text class="mission-map-dim" x="291" y="28">RNG 40NM</text>
           </svg>
 
           <div class="mission-waypoints" aria-label="Flight plan sequence">
-            <div class="mission-waypoint complete"><span>WP03 / PASSED</span><strong>15:39Z</strong></div>
             <div class="mission-waypoint active"><span>WP04 / ACTIVE</span><strong id="mission-wp-range">23.6 NM</strong></div>
-            <div class="mission-waypoint"><span>WP05 / TURN</span><strong>HDG 061°</strong></div>
+            <div class="mission-waypoint"><span>WP05 / NEXT</span><strong>TURN 061°</strong></div>
           </div>
         </div>
       </section>
@@ -75,7 +71,6 @@
 
             <text class="profile-dim" x="18" y="28">14,000</text>
             <text class="profile-dim" x="18" y="122">10,000</text>
-            <text class="profile-dim" x="18" y="196">TERRAIN</text>
             <text class="profile-label" x="155" y="75">WP04</text>
             <text class="profile-label" x="515" y="67">WP05</text>
             <text class="profile-label" x="695" y="63">WP06</text>
@@ -100,14 +95,12 @@
           <div class="mission-system-table">
             <div class="mission-system-row"><span>NAV / MODE</span><strong>GPS/INS · MISSION</strong><b>VALID</b></div>
             <div class="mission-system-row"><span>C2 LINK</span><strong>PRIMARY</strong><b id="mission-link">+18.4 dB</b></div>
-            <div class="mission-system-row"><span>LATENCY</span><strong>CMD / TLM</strong><b id="mission-latency">084 ms</b></div>
             <div class="mission-system-row warning"><span>ENDURANCE</span><strong>EST REMAIN</strong><b id="mission-endurance">05:42</b></div>
           </div>
 
           <div class="mission-event-queue">
-            <span>NEXT MISSION EVENTS</span>
+            <span>NEXT MISSION EVENT</span>
             <div class="mission-event"><time>+08:42</time><strong>WP05 AUTO TURN / HDG 061°</strong></div>
-            <div class="mission-event"><time>+17:10</time><strong>WP06 HOLD / 8 MIN</strong></div>
           </div>
         </div>
       </section>
@@ -115,7 +108,6 @@
 
     <div class="mission-bottom-strip" aria-label="Mission execution status">
       <div class="mission-bottom-cell mission-bottom-good"><span>EXECUTION</span><strong>NORMAL</strong></div>
-      <div class="mission-bottom-cell"><span>RECOVERY</span><strong>AVAILABLE / AUTO</strong></div>
       <div class="mission-bottom-cell mission-bottom-next"><span>NEXT ACTION</span><strong>WP05 AUTO TURN</strong></div>
     </div>
   `;
@@ -128,7 +120,6 @@
     altitude: document.getElementById('mission-altitude'),
     xtrack: document.getElementById('mission-xtrack'),
     link: document.getElementById('mission-link'),
-    latency: document.getElementById('mission-latency'),
     endurance: document.getElementById('mission-endurance'),
     progressLabel: document.getElementById('mission-progress-label'),
     progressBar: document.getElementById('mission-progress-bar')
@@ -166,7 +157,6 @@
     const altitude = 12480 + Math.sin(elapsedSeconds / 8.8) * 24;
     const xtrack = 0.03 + Math.abs(Math.sin(elapsedSeconds / 12.4)) * 0.018;
     const link = 18.4 + Math.sin(elapsedSeconds / 6.3) * 0.6;
-    const latency = 84 + Math.sin(elapsedSeconds / 3.8) * 8;
 
     fields.ete.textContent = clock(ete);
     fields.range.textContent = `${range.toFixed(1)} NM`;
@@ -175,7 +165,6 @@
     fields.altitude.innerHTML = `${Math.round(altitude).toLocaleString('en-US')}<small>FT</small>`;
     fields.xtrack.textContent = `${xtrack.toFixed(2)} NM`;
     fields.link.textContent = `+${link.toFixed(1)} dB`;
-    fields.latency.textContent = `${String(Math.round(latency)).padStart(3, '0')} ms`;
     fields.endurance.textContent = hoursMinutes(enduranceMinutes);
     fields.progressLabel.textContent = `${Math.round(progress)}%`;
     fields.progressBar.style.width = `${progress}%`;
