@@ -1,17 +1,39 @@
 (() => {
-  const CHANNEL_NAME = 'pelican-uav-interactive-v2';
+  const CHANNEL_NAME = 'pelican-uav-interactive-v3';
   const listeners = new Set();
+
+  // Keep this deliberately small. Shared state describes underlying facts,
+  // not the labels individual displays choose to show.
   let state = {
-    mission: { status: 'IDLE', requestId: null },
-    aircraft: { status: 'READY' },
-    selectedTrack: null,
-    alerts: []
+    power: {
+      busVoltage: 27.8,
+      loadWatts: 232
+    },
+    link: {
+      marginDb: 18.2,
+      latencyMs: 84
+    },
+    diagnostics: {
+      stationTempC: 38,
+      activeFaults: 0
+    }
   };
 
   const clone = value => JSON.parse(JSON.stringify(value));
   const channel = typeof BroadcastChannel === 'function'
     ? new BroadcastChannel(CHANNEL_NAME)
     : null;
+
+  function merge(base, patch) {
+    if (!patch || typeof patch !== 'object' || Array.isArray(patch)) return clone(patch);
+    const next = { ...(base || {}) };
+    Object.entries(patch).forEach(([key, value]) => {
+      next[key] = value && typeof value === 'object' && !Array.isArray(value)
+        ? merge(next[key], value)
+        : clone(value);
+    });
+    return next;
+  }
 
   function notify(source = 'local') {
     const snapshot = clone(state);
@@ -25,7 +47,7 @@
   }
 
   function update(patch, source = 'local') {
-    replace({ ...state, ...patch }, source, true);
+    replace(merge(state, patch), source, true);
   }
 
   function subscribe(listener) {
