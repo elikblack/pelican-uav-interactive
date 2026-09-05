@@ -7,7 +7,7 @@
   position:relative;
   z-index:4;
   display:grid;
-  grid-template-rows:64px minmax(0,1fr) 40px;
+  grid-template-rows:68px minmax(0,1fr) 44px;
   gap:10px;
   padding:8px 16px 12px;
   background:#010201;
@@ -26,8 +26,8 @@
   overflow:hidden;
 }
 
-.mission-top-strip{grid-template-columns:210px 210px minmax(0,1fr) 250px}
-.mission-bottom-strip{grid-template-columns:1.35fr 1fr 1.2fr}
+.mission-top-strip{grid-template-columns:330px minmax(0,1fr) 270px}
+.mission-bottom-strip{grid-template-columns:1fr 1fr}
 
 .mission-top-cell,
 .mission-bottom-cell{
@@ -35,7 +35,7 @@
   display:flex;
   flex-direction:column;
   justify-content:center;
-  padding:6px 16px 5px;
+  padding:7px 18px 6px;
   border-left:1px solid var(--line-soft);
   overflow:hidden;
   white-space:nowrap;
@@ -45,16 +45,16 @@
 
 .mission-top-cell span,
 .mission-bottom-cell span{
-  color:rgba(151,232,116,.62);
-  font-size:12px;
+  color:rgba(151,232,116,.64);
+  font-size:13px;
   font-weight:800;
   line-height:1;
-  letter-spacing:.08em;
+  letter-spacing:.075em;
 }
 .mission-top-cell strong{
-  margin-top:5px;
+  margin-top:6px;
   color:#a6ec7d;
-  font:800 27px/.92 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font:800 30px/.92 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:-.015em;
 }
 
@@ -64,7 +64,6 @@
 }
 .mission-top-cell.mission-execute span,
 .mission-top-cell.mission-execute strong{color:#020402}
-.mission-top-cell.mission-phase strong{color:var(--amber)}
 
 .mission-main-grid{
   min-width:0;
@@ -84,31 +83,31 @@
 }
 
 .mission-panel-heading{
-  height:42px;
+  height:44px;
   display:flex;
   align-items:center;
   justify-content:space-between;
   padding:0 14px;
   border-bottom:1px solid var(--line-soft);
   color:var(--green);
-  font-size:18px;
+  font-size:20px;
   font-weight:900;
   line-height:1;
-  letter-spacing:.055em;
+  letter-spacing:.05em;
 }
 .mission-panel-heading small{
-  color:rgba(151,232,116,.56);
-  font-size:12px;
+  color:rgba(151,232,116,.58);
+  font-size:13px;
   font-weight:800;
-  letter-spacing:.04em;
+  letter-spacing:.035em;
 }
 
 /* ---------- Route / flight-plan ---------- */
-.mission-route-panel{display:grid;grid-template-rows:42px minmax(0,1fr)}
+.mission-route-panel{display:grid;grid-template-rows:44px minmax(0,1fr)}
 .mission-route-body{
   min-height:0;
   display:grid;
-  grid-template-rows:minmax(0,1fr) 78px;
+  grid-template-rows:minmax(0,1fr) 82px;
   overflow:hidden;
 }
 
@@ -140,37 +139,37 @@
 }
 .mission-route-map .mission-wp{fill:#020402;stroke:#77c95b;stroke-width:1.8;vector-effect:non-scaling-stroke}
 .mission-route-map .mission-wp.active{fill:#d7aa35;stroke:#d7aa35}
-.mission-route-map .mission-map-label{fill:rgba(166,236,125,.82);font-size:12px;font-weight:800;letter-spacing:.025em}
-.mission-route-map .mission-map-dim{fill:rgba(166,190,210,.52);font-size:11px;font-weight:700}
+.mission-route-map .mission-map-label{fill:rgba(166,236,125,.84);font-size:13px;font-weight:800;letter-spacing:.02em}
+.mission-route-map .mission-map-dim{fill:rgba(166,190,210,.54);font-size:12px;font-weight:700}
 .mission-route-map .mission-ownship{fill:#a6ec7d;stroke:#a6ec7d;stroke-width:1}
 
 .mission-waypoints{
   min-width:0;
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
   border-top:1px solid var(--line-soft);
 }
 .mission-waypoint{
   min-width:0;
-  padding:10px 12px 8px;
+  padding:11px 14px 8px;
   border-left:1px solid rgba(119,201,91,.12);
   overflow:hidden;
 }
 .mission-waypoint:first-child{border-left:0}
 .mission-waypoint span{
   display:block;
-  color:rgba(151,232,116,.60);
-  font-size:11px;
+  color:rgba(151,232,116,.62);
+  font-size:12px;
   font-weight:800;
   line-height:1;
-  letter-spacing:.045em;
+  letter-spacing:.04em;
   white-space:nowrap;
 }
 .mission-waypoint strong{
   display:block;
-  margin-top:6px;
-  color:rgba(166,236,125,.86);
-  font-size:17px;
+  margin-top:7px;
+  color:rgba(166,236,125,.88);
+  font-size:19px;
   line-height:1;
   font-weight:900;
   white-space:nowrap;
@@ -181,12 +180,11 @@
 }
 .mission-waypoint.active span,
 .mission-waypoint.active strong{color:var(--amber)}
-.mission-waypoint.complete{opacity:.48}
 
 /* ---------- Aircraft state / flight director ---------- */
 .mission-flight-panel{
   display:grid;
-  grid-template-rows:42px 94px minmax(0,1fr) 58px;
+  grid-template-rows:44px 98px minmax(0,1fr) 60px;
 }
 
 .mission-flight-values{
@@ -196,30 +194,30 @@
 }
 .mission-flight-value{
   min-width:0;
-  padding:10px 14px 7px;
+  padding:11px 15px 7px;
   border-left:1px solid var(--line-soft);
 }
 .mission-flight-value:first-child{border-left:0}
 .mission-flight-value span{
   display:block;
-  color:rgba(151,232,116,.58);
-  font-size:13px;
+  color:rgba(151,232,116,.60);
+  font-size:14px;
   font-weight:900;
-  letter-spacing:.07em;
+  letter-spacing:.065em;
 }
 .mission-flight-value strong{
   display:block;
-  margin-top:7px;
+  margin-top:8px;
   color:#a6ec7d;
-  font:800 46px/.84 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font:800 50px/.84 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:-.035em;
   font-variant-numeric:tabular-nums;
   white-space:nowrap;
 }
 .mission-flight-value small{
   margin-left:5px;
-  color:rgba(151,232,116,.65);
-  font:800 14px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  color:rgba(151,232,116,.67);
+  font:800 15px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
 }
 
 .mission-profile-wrap{
@@ -246,14 +244,14 @@
 .mission-profile .profile-aircraft{fill:#a6ec7d;stroke:#a6ec7d;stroke-width:1}
 .mission-profile .profile-mark{fill:#020402;stroke:#77c95b;stroke-width:1.6;vector-effect:non-scaling-stroke}
 .mission-profile text{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
-.mission-profile .profile-label{fill:rgba(166,236,125,.78);font-size:13px;font-weight:800;letter-spacing:.025em}
-.mission-profile .profile-dim{fill:rgba(166,190,210,.52);font-size:12px;font-weight:700}
-.mission-profile .profile-amber{fill:#d7aa35;font-size:14px;font-weight:900}
+.mission-profile .profile-label{fill:rgba(166,236,125,.80);font-size:14px;font-weight:800;letter-spacing:.02em}
+.mission-profile .profile-dim{fill:rgba(166,190,210,.54);font-size:13px;font-weight:700}
+.mission-profile .profile-amber{fill:#d7aa35;font-size:15px;font-weight:900}
 
 .mission-flight-footer{
   min-width:0;
   display:grid;
-  grid-template-columns:180px 1fr 175px;
+  grid-template-columns:190px 1fr 185px;
   align-items:center;
   border-top:1px solid var(--line-soft);
 }
@@ -263,22 +261,22 @@
   place-items:center;
   background:var(--green);
   color:#020402;
-  font-size:19px;
+  font-size:20px;
   font-weight:900;
-  letter-spacing:.05em;
+  letter-spacing:.045em;
 }
-.mission-progress{min-width:0;padding:0 16px}
+.mission-progress{min-width:0;padding:0 17px}
 .mission-progress-label{
   display:flex;
   justify-content:space-between;
-  margin-bottom:6px;
-  color:rgba(151,232,116,.64);
-  font-size:11px;
+  margin-bottom:7px;
+  color:rgba(151,232,116,.66);
+  font-size:12px;
   font-weight:800;
-  letter-spacing:.045em;
+  letter-spacing:.04em;
 }
 .mission-progress-track{
-  height:10px;
+  height:11px;
   border:1px solid rgba(119,201,91,.38);
   background:#010201;
 }
@@ -289,14 +287,14 @@
   flex-direction:column;
   align-items:flex-end;
   justify-content:center;
-  padding-right:14px;
+  padding-right:15px;
   border-left:1px solid var(--line-soft);
 }
-.mission-xtrack span{color:rgba(151,232,116,.56);font-size:11px;font-weight:800;letter-spacing:.05em}
-.mission-xtrack strong{margin-top:4px;color:#a6ec7d;font:800 24px/1 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+.mission-xtrack span{color:rgba(151,232,116,.58);font-size:12px;font-weight:800;letter-spacing:.045em}
+.mission-xtrack strong{margin-top:4px;color:#a6ec7d;font:800 26px/1 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
 
 /* ---------- C2 / autonomy ---------- */
-.mission-system-panel{display:grid;grid-template-rows:42px minmax(0,1fr)}
+.mission-system-panel{display:grid;grid-template-rows:44px minmax(0,1fr)}
 .mission-system-body{
   min-height:0;
   display:grid;
@@ -304,31 +302,31 @@
 }
 .mission-system-table{display:grid}
 .mission-system-row{
-  min-height:53px;
+  min-height:62px;
   display:grid;
-  grid-template-columns:100px minmax(0,1fr) 96px;
+  grid-template-columns:100px minmax(0,1fr) 100px;
   align-items:center;
-  padding:0 12px;
+  padding:0 13px;
   border-bottom:1px solid rgba(119,201,91,.12);
 }
 .mission-system-row span{
-  color:rgba(151,232,116,.58);
-  font-size:11px;
+  color:rgba(151,232,116,.60);
+  font-size:12px;
   font-weight:900;
   line-height:1.05;
-  letter-spacing:.06em;
+  letter-spacing:.055em;
 }
 .mission-system-row strong{
   min-width:0;
   color:#a6ec7d;
-  font-size:16px;
+  font-size:18px;
   font-weight:900;
   white-space:nowrap;
 }
 .mission-system-row b{
   justify-self:end;
-  color:rgba(166,236,125,.76);
-  font:800 17px/1 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  color:rgba(166,236,125,.78);
+  font:800 19px/1 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   white-space:nowrap;
 }
 .mission-system-row.warning strong,
@@ -336,27 +334,27 @@
 
 .mission-event-queue{
   min-height:0;
-  padding:12px 12px 0;
+  padding:16px 13px 0;
   overflow:hidden;
 }
 .mission-event-queue>span{
   display:block;
-  margin-bottom:8px;
-  color:rgba(151,232,116,.56);
-  font-size:11px;
+  margin-bottom:10px;
+  color:rgba(151,232,116,.58);
+  font-size:12px;
   font-weight:900;
-  letter-spacing:.07em;
+  letter-spacing:.065em;
 }
 .mission-event{
-  min-height:55px;
+  min-height:68px;
   display:grid;
-  grid-template-columns:72px 1fr;
+  grid-template-columns:78px 1fr;
   align-items:center;
   border-top:1px solid rgba(119,201,91,.13);
 }
 .mission-event:first-of-type{border-top:1px solid var(--line-soft)}
-.mission-event time{color:var(--amber);font-size:13px;font-weight:900}
-.mission-event strong{color:rgba(166,236,125,.82);font-size:13px;font-weight:800;line-height:1.12;letter-spacing:.01em}
+.mission-event time{color:var(--amber);font-size:14px;font-weight:900}
+.mission-event strong{color:rgba(166,236,125,.84);font-size:14px;font-weight:800;line-height:1.14;letter-spacing:.01em}
 
 .mission-bottom-cell{
   flex-direction:row;
@@ -366,10 +364,10 @@
   padding-bottom:0;
 }
 .mission-bottom-cell strong{
-  color:rgba(166,236,125,.86);
-  font-size:15px;
+  color:rgba(166,236,125,.88);
+  font-size:17px;
   font-weight:900;
-  letter-spacing:.025em;
+  letter-spacing:.02em;
 }
 .mission-bottom-cell.mission-bottom-good strong{color:#a6ec7d}
 .mission-bottom-cell.mission-bottom-next strong{color:var(--amber)}
