@@ -4,6 +4,10 @@
 
   const rank = { good: 0, caution: 1, fault: 2 };
 
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
   function worst(...states) {
     return states.reduce((current, next) => rank[next] > rank[current] ? next : current, 'good');
   }
@@ -67,6 +71,43 @@
     row.setAttribute('aria-label', `${label}: ${text}`);
   }
 
+  // secondary.js predates shared telemetry and keeps private references to these
+  // three cards. Replacing each card once lets that legacy jitter continue on
+  // detached nodes while the visible cards become consumers of shared facts.
+  // TX POWER intentionally remains local until another display actually needs it.
+  function takeOverSharedSecondaryMeters() {
+    ['power-consumption', 'thermal', 'link-margin'].forEach(id => {
+      const value = document.getElementById(id);
+      const card = value?.closest('.status-card');
+      if (!card || card.dataset.sharedTelemetry === 'true') return;
+      const replacement = card.cloneNode(true);
+      replacement.dataset.sharedTelemetry = 'true';
+      card.replaceWith(replacement);
+    });
+  }
+
+  function renderSecondaryMeters(state) {
+    const consumption = document.getElementById('power-consumption');
+    const thermal = document.getElementById('thermal');
+    const margin = document.getElementById('link-margin');
+    const powerMeter = document.getElementById('power-meter');
+    const thermalMeter = document.getElementById('thermal-meter');
+    const linkMeter = document.getElementById('link-meter');
+    if (!consumption || !thermal || !margin) return;
+
+    const loadWatts = Number(state.power?.loadWatts);
+    const tempC = Number(state.diagnostics?.stationTempC);
+    const marginDb = Number(state.link?.marginDb);
+
+    consumption.textContent = `${Math.round(loadWatts)} W`;
+    thermal.textContent = `${Math.round(tempC)}°C`;
+    margin.textContent = `${marginDb >= 0 ? '+' : ''}${marginDb.toFixed(1)} dB`;
+
+    if (powerMeter) powerMeter.style.width = `${clamp(loadWatts / 340 * 100, 40, 90)}%`;
+    if (thermalMeter) thermalMeter.style.width = `${clamp(tempC / 70 * 100, 35, 80)}%`;
+    if (linkMeter) linkMeter.style.width = `${clamp((marginDb + 5) / 30 * 100, 35, 96)}%`;
+  }
+
   function renderSecondary(state) {
     const module = document.querySelector('.status-module');
     if (!module) return false;
@@ -86,6 +127,7 @@
     setSecondaryRow(powerRow, power);
     setSecondaryRow(systemsRow, systems);
     setSecondaryRow(healthRow, health, 'GOOD');
+    renderSecondaryMeters(state);
 
     const healthText = healthRow?.querySelector('small');
     if (healthText) {
@@ -142,5 +184,6 @@
     renderPrimary(state);
   }
 
+  takeOverSharedSecondaryMeters();
   shared.subscribe(render);
 })();
