@@ -8,19 +8,6 @@
 
   page.innerHTML = `
     <div class="payload-view">
-      <svg class="payload-scene" viewBox="0 0 1888 290" preserveAspectRatio="none" aria-hidden="true">
-        <path class="scene-road" d="M-40 258C320 212 610 220 880 178S1450 96 1930 128"/>
-        <path class="scene-road-edge" d="M-40 246C320 201 610 209 880 167S1450 85 1930 117"/>
-        <rect class="scene-structure" x="220" y="70" width="260" height="112"/>
-        <rect class="scene-dark" x="250" y="88" width="78" height="76"/>
-        <rect class="scene-dark" x="349" y="88" width="96" height="76"/>
-        <rect class="scene-structure" x="1090" y="52" width="280" height="132"/>
-        <rect class="scene-dark" x="1130" y="74" width="78" height="94"/>
-        <rect class="scene-dark" x="1235" y="74" width="96" height="94"/>
-        <rect class="scene-structure" x="1480" y="104" width="170" height="92"/>
-        <text class="scene-label" x="810" y="170" transform="rotate(-8 810 170)">ROUTE 6 / SECTOR B</text>
-      </svg>
-
       <div class="payload-top-left">
         <span class="payload-mode-label">EO / AUTO</span>
         <span class="payload-mode-label small">UTC <b id="payload-utc">22:30:14</b></span>
