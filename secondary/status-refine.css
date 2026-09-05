@@ -160,8 +160,13 @@
   transition:width .8s ease;
 }
 
+.status-card[data-shared-telemetry="true"] .meter b{
+  width:var(--shared-meter-width)!important;
+}
+
 .status-card span,
-.status-card strong{
+.status-card strong,
+.status-card[data-shared-telemetry="true"]::after{
   position:absolute;
   top:50%;
   z-index:3;
@@ -180,7 +185,8 @@
   letter-spacing:.04em;
 }
 
-.status-card strong{
+.status-card strong,
+.status-card[data-shared-telemetry="true"]::after{
   right:7px;
   color:var(--green);
   font-size:13px;
@@ -189,3 +195,6 @@
   font-variant-numeric:tabular-nums;
   mix-blend-mode:difference;
 }
+
+.status-card[data-shared-telemetry="true"] strong{visibility:hidden}
+.status-card[data-shared-telemetry="true"]::after{content:attr(data-shared-value)}
