@@ -71,41 +71,35 @@
     row.setAttribute('aria-label', `${label}: ${text}`);
   }
 
-  // secondary.js predates shared telemetry and keeps private references to these
-  // three cards. Replacing each card once lets that legacy jitter continue on
-  // detached nodes while the visible cards become consumers of shared facts.
-  // TX POWER intentionally remains local until another display actually needs it.
-  function takeOverSharedSecondaryMeters() {
-    ['power-consumption', 'thermal', 'link-margin'].forEach(id => {
-      const value = document.getElementById(id);
-      const card = value?.closest('.status-card');
-      if (!card || card.dataset.sharedTelemetry === 'true') return;
-      const replacement = card.cloneNode(true);
-      replacement.dataset.sharedTelemetry = 'true';
-      card.replaceWith(replacement);
-    });
+  function setSharedMeter(id, text, width) {
+    const value = document.getElementById(id);
+    const card = value?.closest('.status-card');
+    if (!card) return;
+    card.dataset.sharedTelemetry = 'true';
+    card.dataset.sharedValue = text;
+    card.style.setProperty('--shared-meter-width', `${width}%`);
   }
 
   function renderSecondaryMeters(state) {
-    const consumption = document.getElementById('power-consumption');
-    const thermal = document.getElementById('thermal');
-    const margin = document.getElementById('link-margin');
-    const powerMeter = document.getElementById('power-meter');
-    const thermalMeter = document.getElementById('thermal-meter');
-    const linkMeter = document.getElementById('link-meter');
-    if (!consumption || !thermal || !margin) return;
-
     const loadWatts = Number(state.power?.loadWatts);
     const tempC = Number(state.diagnostics?.stationTempC);
     const marginDb = Number(state.link?.marginDb);
 
-    consumption.textContent = `${Math.round(loadWatts)} W`;
-    thermal.textContent = `${Math.round(tempC)}°C`;
-    margin.textContent = `${marginDb >= 0 ? '+' : ''}${marginDb.toFixed(1)} dB`;
-
-    if (powerMeter) powerMeter.style.width = `${clamp(loadWatts / 340 * 100, 40, 90)}%`;
-    if (thermalMeter) thermalMeter.style.width = `${clamp(tempC / 70 * 100, 35, 80)}%`;
-    if (linkMeter) linkMeter.style.width = `${clamp((marginDb + 5) / 30 * 100, 35, 96)}%`;
+    setSharedMeter(
+      'power-consumption',
+      `${Math.round(loadWatts)} W`,
+      clamp(loadWatts / 340 * 100, 40, 90)
+    );
+    setSharedMeter(
+      'thermal',
+      `${Math.round(tempC)}°C`,
+      clamp(tempC / 70 * 100, 35, 80)
+    );
+    setSharedMeter(
+      'link-margin',
+      `${marginDb >= 0 ? '+' : ''}${marginDb.toFixed(1)} dB`,
+      clamp((marginDb + 5) / 30 * 100, 35, 96)
+    );
   }
 
   function renderSecondary(state) {
@@ -184,6 +178,5 @@
     renderPrimary(state);
   }
 
-  takeOverSharedSecondaryMeters();
   shared.subscribe(render);
 })();
