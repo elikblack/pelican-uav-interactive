@@ -52,6 +52,24 @@
   box-shadow:0 0 4px rgba(119,201,91,.18);
 }
 
+.status-health-main.is-caution span,
+.status-go-list>div.is-caution span{color:var(--amber)}
+.status-health-main.is-caution::after,
+.status-go-list>div.is-caution::after{
+  background:var(--amber);
+  outline-color:var(--amber);
+  box-shadow:0 0 4px rgba(215,170,53,.18);
+}
+
+.status-health-main.is-fault span,
+.status-go-list>div.is-fault span{color:var(--red)}
+.status-health-main.is-fault::after,
+.status-go-list>div.is-fault::after{
+  background:var(--red);
+  outline-color:var(--red);
+  box-shadow:0 0 4px rgba(217,87,80,.2);
+}
+
 .status-go-list{display:contents;border:0}
 
 .status-go-list>div,
