@@ -10,84 +10,77 @@
     <div class="mission-top-strip" aria-label="Mission execution summary">
       <div class="mission-top-cell mission-execute"><span>MISSION STATE</span><strong>EXECUTE</strong></div>
       <div class="mission-top-cell mission-phase"><span>PHASE</span><strong>TRANSIT</strong></div>
-      <div class="mission-top-cell"><span>AIR VEHICLE</span><strong>ACFT 17</strong></div>
       <div class="mission-top-cell"><span>ACTIVE LEG</span><strong>WP04 → WP05</strong></div>
       <div class="mission-top-cell"><span>LEG ETE</span><strong id="mission-leg-ete">00:08:42</strong></div>
-      <div class="mission-top-cell"><span>MISSION ELAPSED</span><strong id="mission-elapsed">01:17:26</strong></div>
     </div>
 
     <div class="mission-main-grid">
       <section class="mission-panel mission-route-panel" aria-label="Route and flight plan">
         <header class="mission-panel-heading">ROUTE / FLIGHT PLAN <small>SEQ 04 / 09</small></header>
         <div class="mission-route-body">
-          <svg class="mission-route-map" viewBox="0 0 270 265" role="img" aria-label="Mission route overview">
-            <path class="mission-map-line" d="M18 44L252 44M18 91L252 91M18 138L252 138M18 185L252 185M18 232L252 232M55 17V250M118 17V250M181 17V250M244 17V250"/>
-            <path class="mission-map-line" d="M30 218L244 54M41 37L230 226"/>
-            <path class="mission-route-complete" d="M38 226L73 193L104 167"/>
-            <path class="mission-route-path" d="M104 167L145 139L187 102L228 62"/>
+          <svg class="mission-route-map" viewBox="0 0 400 260" role="img" aria-label="Mission route overview">
+            <path class="mission-map-line" d="M25 45H375M25 95H375M25 145H375M25 195H375M70 20V240M155 20V240M240 20V240M325 20V240"/>
+            <path class="mission-map-line" d="M36 220L360 48M52 32L348 224"/>
+            <path class="mission-route-complete" d="M55 218L108 184L155 158"/>
+            <path class="mission-route-path" d="M155 158L214 128L275 92L340 50"/>
 
-            <circle class="mission-wp" cx="38" cy="226" r="5"/>
-            <circle class="mission-wp" cx="73" cy="193" r="5"/>
-            <circle class="mission-wp active" cx="104" cy="167" r="6"/>
-            <circle class="mission-wp" cx="145" cy="139" r="5"/>
-            <circle class="mission-wp" cx="187" cy="102" r="5"/>
-            <circle class="mission-wp" cx="228" cy="62" r="5"/>
+            <circle class="mission-wp" cx="55" cy="218" r="6"/>
+            <circle class="mission-wp" cx="108" cy="184" r="6"/>
+            <circle class="mission-wp active" cx="155" cy="158" r="7"/>
+            <circle class="mission-wp" cx="214" cy="128" r="6"/>
+            <circle class="mission-wp" cx="275" cy="92" r="6"/>
+            <circle class="mission-wp" cx="340" cy="50" r="6"/>
 
-            <path class="mission-ownship" d="M0 -8L5 6L0 4L-5 6Z" transform="translate(126 151) rotate(46)"/>
+            <path class="mission-ownship" d="M0 -9L6 7L0 4L-6 7Z" transform="translate(188 141) rotate(48)"/>
 
-            <text class="mission-map-label" x="23" y="240">WP01</text>
-            <text class="mission-map-label" x="58" y="207">WP02</text>
-            <text class="mission-map-label" x="82" y="157">WP04</text>
-            <text class="mission-map-label" x="151" y="132">WP05</text>
-            <text class="mission-map-label" x="193" y="94">WP06</text>
-            <text class="mission-map-label" x="206" y="52">REC</text>
+            <text class="mission-map-label" x="38" y="238">WP01</text>
+            <text class="mission-map-label" x="130" y="148">WP04</text>
+            <text class="mission-map-label" x="224" y="118">WP05</text>
+            <text class="mission-map-label" x="285" y="82">WP06</text>
+            <text class="mission-map-label" x="315" y="39">REC</text>
 
-            <text class="mission-map-dim" x="16" y="25">ROUTE 17B</text>
-            <text class="mission-map-dim" x="174" y="247">TRK 044°T</text>
-            <text class="mission-map-dim" x="172" y="17">RNG 40NM</text>
+            <text class="mission-map-dim" x="24" y="28">ROUTE 17B</text>
+            <text class="mission-map-dim" x="270" y="239">TRK 044°T</text>
+            <text class="mission-map-dim" x="291" y="28">RNG 40NM</text>
           </svg>
 
           <div class="mission-waypoints" aria-label="Flight plan sequence">
-            <div class="mission-waypoint complete"><span>WP03 / PASSED</span><strong>15:39:12Z</strong></div>
+            <div class="mission-waypoint complete"><span>WP03 / PASSED</span><strong>15:39Z</strong></div>
             <div class="mission-waypoint active"><span>WP04 / ACTIVE</span><strong id="mission-wp-range">23.6 NM</strong></div>
             <div class="mission-waypoint"><span>WP05 / TURN</span><strong>HDG 061°</strong></div>
-            <div class="mission-waypoint"><span>WP06 / HOLD</span><strong>08+00</strong></div>
-            <div class="mission-waypoint"><span>WP07 / ON STA</span><strong>ALT 120</strong></div>
           </div>
         </div>
       </section>
 
       <section class="mission-panel mission-flight-panel" aria-label="Aircraft flight state">
-        <header class="mission-panel-heading">AIRCRAFT STATE / FLIGHT DIRECTOR <small>NAV SOLUTION VALID</small></header>
+        <header class="mission-panel-heading">AIRCRAFT STATE / FLIGHT DIRECTOR <small>NAV VALID</small></header>
 
         <div class="mission-flight-values">
           <div class="mission-flight-value"><span>HDG</span><strong id="mission-heading">176.2°</strong></div>
           <div class="mission-flight-value"><span>GS</span><strong id="mission-speed">312<small>KT</small></strong></div>
           <div class="mission-flight-value"><span>ALT MSL</span><strong id="mission-altitude">12,480<small>FT</small></strong></div>
-          <div class="mission-flight-value"><span>VERT SPD</span><strong id="mission-vs">+120<small>FPM</small></strong></div>
         </div>
 
         <div class="mission-profile-wrap">
           <svg class="mission-profile" viewBox="0 0 900 205" role="img" aria-label="Mission vertical profile">
-            <path class="profile-grid" d="M0 38H900M0 76H900M0 114H900M0 152H900M150 0V205M300 0V205M450 0V205M600 0V205M750 0V205"/>
-            <path class="profile-envelope" d="M20 54H880V103H20Z"/>
+            <path class="profile-grid" d="M0 42H900M0 84H900M0 126H900M0 168H900M180 0V205M360 0V205M540 0V205M720 0V205"/>
+            <path class="profile-envelope" d="M25 54H875V105H25Z"/>
             <path class="profile-terrain" d="M0 181L70 172L118 176L184 156L235 163L301 145L356 151L423 137L477 148L535 140L596 153L652 144L720 161L780 151L844 167L900 158V205H0Z"/>
-            <path class="profile-route" d="M25 93L150 91L285 88L420 82L560 84L700 79L875 78"/>
+            <path class="profile-route" d="M30 94L180 91L360 85L540 83L720 79L870 78"/>
 
-            <circle class="profile-mark" cx="150" cy="91" r="4"/>
-            <circle class="profile-mark" cx="420" cy="82" r="4"/>
-            <circle class="profile-mark" cx="700" cy="79" r="4"/>
-            <path class="profile-aircraft" d="M0 -7L6 5L0 3L-6 5Z" transform="translate(355 84) rotate(90)"/>
+            <circle class="profile-mark" cx="180" cy="91" r="5"/>
+            <circle class="profile-mark" cx="540" cy="83" r="5"/>
+            <circle class="profile-mark" cx="720" cy="79" r="5"/>
+            <path class="profile-aircraft" d="M0 -8L7 6L0 4L-7 6Z" transform="translate(410 84) rotate(90)"/>
 
-            <text class="profile-dim" x="16" y="23">14,000</text>
-            <text class="profile-dim" x="16" y="112">10,000</text>
-            <text class="profile-dim" x="16" y="196">TERRAIN</text>
-            <text class="profile-label" x="131" y="78">WP04</text>
-            <text class="profile-label" x="401" y="69">WP05</text>
-            <text class="profile-label" x="681" y="66">WP06</text>
-            <text class="profile-amber" x="367" y="71">ACFT 17</text>
-            <text class="profile-dim" x="677" y="189">MIN CLR 4.1K</text>
-            <text class="profile-dim" x="757" y="23">ALT BAND 12–14K</text>
+            <text class="profile-dim" x="18" y="28">14,000</text>
+            <text class="profile-dim" x="18" y="122">10,000</text>
+            <text class="profile-dim" x="18" y="196">TERRAIN</text>
+            <text class="profile-label" x="155" y="75">WP04</text>
+            <text class="profile-label" x="515" y="67">WP05</text>
+            <text class="profile-label" x="695" y="63">WP06</text>
+            <text class="profile-amber" x="425" y="69">ACFT 17</text>
+            <text class="profile-dim" x="690" y="190">MIN CLR 4.1K</text>
           </svg>
         </div>
 
@@ -105,52 +98,43 @@
         <header class="mission-panel-heading">AUTONOMY / C2 <small>SUPERVISORY</small></header>
         <div class="mission-system-body">
           <div class="mission-system-table">
-            <div class="mission-system-row"><span>NAV SOURCE</span><strong>GPS / INS</strong><b>VALID</b></div>
-            <div class="mission-system-row"><span>CMD MODE</span><strong>MISSION NAV</strong><b>ARMED</b></div>
+            <div class="mission-system-row"><span>NAV / MODE</span><strong>GPS/INS · MISSION</strong><b>VALID</b></div>
             <div class="mission-system-row"><span>C2 LINK</span><strong>PRIMARY</strong><b id="mission-link">+18.4 dB</b></div>
             <div class="mission-system-row"><span>LATENCY</span><strong>CMD / TLM</strong><b id="mission-latency">084 ms</b></div>
-            <div class="mission-system-row"><span>ENDURANCE</span><strong>EST REMAIN</strong><b id="mission-endurance">05:42</b></div>
-            <div class="mission-system-row warning"><span>NEXT LIMIT</span><strong>FUEL BINGO</strong><b>01:20</b></div>
+            <div class="mission-system-row warning"><span>ENDURANCE</span><strong>EST REMAIN</strong><b id="mission-endurance">05:42</b></div>
           </div>
 
           <div class="mission-event-queue">
-            <span>MISSION EVENT QUEUE</span>
+            <span>NEXT MISSION EVENTS</span>
             <div class="mission-event"><time>+08:42</time><strong>WP05 AUTO TURN / HDG 061°</strong></div>
             <div class="mission-event"><time>+17:10</time><strong>WP06 HOLD / 8 MIN</strong></div>
-            <div class="mission-event"><time>+31:44</time><strong>ON-STATION ENTRY</strong></div>
-            <div class="mission-event"><time>+47:00</time><strong>RECOVERY WINDOW CHECK</strong></div>
           </div>
         </div>
       </section>
     </div>
 
     <div class="mission-bottom-strip" aria-label="Mission execution status">
-      <div class="mission-bottom-cell mission-bottom-good"><span>EXECUTION</span><strong>NORMAL / NO ACTIVE CONSTRAINTS</strong></div>
+      <div class="mission-bottom-cell mission-bottom-good"><span>EXECUTION</span><strong>NORMAL</strong></div>
       <div class="mission-bottom-cell"><span>RECOVERY</span><strong>AVAILABLE / AUTO</strong></div>
       <div class="mission-bottom-cell mission-bottom-next"><span>NEXT ACTION</span><strong>WP05 AUTO TURN</strong></div>
-      <div class="mission-bottom-cell"><span>DATA AGE</span><strong id="mission-data-age">0.2 s</strong></div>
     </div>
   `;
 
   const fields = {
-    elapsed: document.getElementById('mission-elapsed'),
     ete: document.getElementById('mission-leg-ete'),
     range: document.getElementById('mission-wp-range'),
     heading: document.getElementById('mission-heading'),
     speed: document.getElementById('mission-speed'),
     altitude: document.getElementById('mission-altitude'),
-    vs: document.getElementById('mission-vs'),
     xtrack: document.getElementById('mission-xtrack'),
     link: document.getElementById('mission-link'),
     latency: document.getElementById('mission-latency'),
     endurance: document.getElementById('mission-endurance'),
-    dataAge: document.getElementById('mission-data-age'),
     progressLabel: document.getElementById('mission-progress-label'),
     progressBar: document.getElementById('mission-progress-bar')
   };
 
   const startedAt = Date.now();
-  const baseElapsed = 1 * 3600 + 17 * 60 + 26;
   const baseEte = 8 * 60 + 42;
   const baseRange = 23.6;
   const baseEndurance = 5 * 60 + 42;
@@ -180,24 +164,19 @@
     const heading = 176.2 + Math.sin(elapsedSeconds / 7.5) * 0.7;
     const speed = 312 + Math.sin(elapsedSeconds / 5.2) * 2.4;
     const altitude = 12480 + Math.sin(elapsedSeconds / 8.8) * 24;
-    const verticalSpeed = 120 + Math.sin(elapsedSeconds / 4.7) * 38;
     const xtrack = 0.03 + Math.abs(Math.sin(elapsedSeconds / 12.4)) * 0.018;
     const link = 18.4 + Math.sin(elapsedSeconds / 6.3) * 0.6;
     const latency = 84 + Math.sin(elapsedSeconds / 3.8) * 8;
-    const dataAge = 0.16 + Math.abs(Math.sin(elapsedSeconds / 2.9)) * 0.14;
 
-    fields.elapsed.textContent = clock(baseElapsed + elapsedSeconds);
     fields.ete.textContent = clock(ete);
     fields.range.textContent = `${range.toFixed(1)} NM`;
     fields.heading.textContent = `${heading.toFixed(1)}°`;
     fields.speed.innerHTML = `${Math.round(speed)}<small>KT</small>`;
     fields.altitude.innerHTML = `${Math.round(altitude).toLocaleString('en-US')}<small>FT</small>`;
-    fields.vs.innerHTML = `${verticalSpeed >= 0 ? '+' : ''}${Math.round(verticalSpeed)}<small>FPM</small>`;
     fields.xtrack.textContent = `${xtrack.toFixed(2)} NM`;
     fields.link.textContent = `+${link.toFixed(1)} dB`;
     fields.latency.textContent = `${String(Math.round(latency)).padStart(3, '0')} ms`;
     fields.endurance.textContent = hoursMinutes(enduranceMinutes);
-    fields.dataAge.textContent = `${dataAge.toFixed(1)} s`;
     fields.progressLabel.textContent = `${Math.round(progress)}%`;
     fields.progressBar.style.width = `${progress}%`;
   }
