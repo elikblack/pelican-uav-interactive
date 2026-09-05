@@ -1,12 +1,12 @@
 (() => {
   const display = document.getElementById('secondary-display');
   const tabs = [...document.querySelectorAll('.secondary-tab[data-tab]')];
-  const preflight = display && display.querySelector('.secondary-grid');
-  if (!display || !preflight || !tabs.length) return;
+  const statusPage = display && display.querySelector('.secondary-grid');
+  if (!display || !statusPage || !tabs.length) return;
 
-  preflight.classList.add('secondary-page');
-  preflight.dataset.page = 'preflight';
-  preflight.id = 'secondary-page-preflight';
+  statusPage.classList.add('secondary-page');
+  statusPage.dataset.page = 'status';
+  statusPage.id = 'secondary-page-status';
 
   const pageTitles = {
     mission: 'MISSION',
@@ -61,5 +61,5 @@
     maintenanceStatus.addEventListener('click', () => activatePage('maintenance'));
   }
 
-  activatePage('preflight');
+  activatePage('status');
 })();
