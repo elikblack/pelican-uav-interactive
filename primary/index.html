@@ -6,23 +6,24 @@
   <title>Pelican UAV Interactive — Primary</title>
   <link rel="stylesheet" href="../shared/ui-base.css">
   <link rel="stylesheet" href="primary.css">
+  <link rel="stylesheet" href="ops-refine.css?v=20260906-1">
   <link rel="stylesheet" href="effects.css" data-effects-css>
   <link rel="stylesheet" href="grid.css" data-grid-css>
 </head>
 <body>
   <div id="screen-fit">
-    <main id="primary-display" class="display display-primary" aria-label="Mission planning display">
+    <main id="primary-display" class="display display-primary" aria-label="Mission control display">
       <header class="topbar">
         <div class="brand-block">
           <div class="brand-title" data-bind="labels.title">GROUND CONTROL</div>
-          <div class="brand-subtitle" data-bind="labels.subtitle">MISSION PLANNING</div>
+          <div class="brand-subtitle" data-bind="labels.subtitle">MISSION CONTROL</div>
         </div>
 
         <div class="status-ribbon" aria-label="System status">
           <div class="ribbon-cell"><span>SYSTEM</span><strong data-bind="labels.system">READY</strong></div>
           <div class="ribbon-cell"><span>DATALINK</span><strong data-bind="labels.link">GOOD</strong></div>
           <div class="ribbon-cell"><span>GPS</span><strong data-bind="labels.gps">LOCK</strong></div>
-          <div class="ribbon-cell"><span>MISSION</span><strong data-bind="labels.mode">SETUP</strong></div>
+          <div class="ribbon-cell"><span>MISSION</span><strong data-bind="labels.mode">EXECUTE</strong></div>
           <div class="ribbon-cell"><span>AREA</span><strong data-bind="labels.area">ALPHA</strong></div>
         </div>
 
@@ -36,9 +37,29 @@
 
       <section class="workspace">
         <aside class="rail left-rail">
-          <section class="panel platform-panel">
-            <div class="panel-heading"><span data-panel-title="platform">PLATFORM STATUS</span><b>•••</b></div>
-            <div class="status-table" data-panel-rows="platform"></div>
+          <section class="panel flight-panel">
+            <div class="panel-heading"><span>AIRCRAFT STATE</span><b>•••</b></div>
+            <div class="flight-state">
+              <div class="flight-major-grid">
+                <div class="flight-major">
+                  <span>ALTITUDE</span>
+                  <strong id="flight-altitude">12,480</strong>
+                  <small>FT MSL</small>
+                </div>
+                <div class="flight-major">
+                  <span>GROUND SPEED</span>
+                  <strong id="flight-speed">188</strong>
+                  <small>KT</small>
+                </div>
+              </div>
+              <div class="flight-detail-grid">
+                <div class="flight-detail"><span>HEADING</span><strong id="flight-heading">092°</strong></div>
+                <div class="flight-detail"><span>VERT SPEED</span><strong id="flight-vspeed">+120 FPM</strong></div>
+                <div class="flight-detail"><span>ENDURANCE</span><strong id="flight-endurance">03:42</strong></div>
+                <div class="flight-detail"><span>NAV SOURCE</span><strong>GPS / INS</strong></div>
+              </div>
+              <div class="flight-mode-strip"><span>FLIGHT MODE</span><strong>AUTO / NAV</strong><b>AIRBORNE</b></div>
+            </div>
           </section>
 
           <section class="panel mission-panel">
@@ -49,15 +70,15 @@
                 <div><span>TYPE</span><strong data-bind="mission.type">RECONNAISSANCE</strong></div>
                 <div><span>LAUNCH</span><strong data-bind="mission.launch">MANUAL</strong></div>
                 <div><span>START POINT</span><strong data-bind="mission.start">STAGING AREA</strong></div>
-                <div><span>EST. DURATION</span><strong data-bind="mission.duration">--:--</strong></div>
-                <div class="mission-state" data-bind="mission.state">NOT STARTED</div>
+                <div><span>EST. DURATION</span><strong data-bind="mission.duration">00:38</strong></div>
+                <div class="mission-state" data-bind="mission.state">IN PROGRESS</div>
               </div>
               <div class="waypoint-column">
                 <div id="waypoint-list" class="waypoint-list" aria-live="polite"></div>
                 <div class="aoi-item"><span class="aoi-symbol"></span><b>AOI</b><em>SURVEY AREA</em></div>
               </div>
             </div>
-            <div class="review-row"><span>REVIEW PLAN</span><b>›</b></div>
+            <div class="review-row"><span>PLAN DETAILS</span><b>›</b></div>
           </section>
         </aside>
 
@@ -76,19 +97,44 @@
               </svg>
             </div>
           </div>
-          <div class="map-overlay top-left"><span>SAT</span><b>PLAN</b></div>
-          <div class="route-progress-readout"><span>ROUTE PREVIEW</span><b id="route-progress">00%</b></div>
+          <div class="map-overlay top-left"><span>SAT</span><b>MISSION</b></div>
+          <div class="route-progress-readout"><span>ROUTE</span><b id="route-progress">00%</b></div>
         </section>
 
         <aside class="rail right-rail">
-          <section class="panel sensors-panel">
-            <div class="panel-heading"><span data-panel-title="sensors">SENSORS</span><b>•••</b></div>
-            <div class="status-table" data-panel-rows="sensors"></div>
+          <section class="panel task-panel">
+            <div class="panel-heading"><span>CURRENT TASK</span><b>•••</b></div>
+            <div class="task-body">
+              <div class="task-hero">
+                <span>ACTIVE TASK</span>
+                <strong id="ops-task-name">SURVEY AREA 01</strong>
+                <small>AREA RECON</small>
+              </div>
+              <div class="task-rows">
+                <div class="task-row"><span>STATE</span><strong class="amber" id="ops-task-state">IN TRANSIT</strong></div>
+                <div class="task-row"><span>PASS</span><strong>2 / 4</strong></div>
+                <div class="task-row"><span>SENSOR</span><strong>EO / IR</strong></div>
+                <div class="task-row"><span>PRIORITY</span><strong>ROUTINE</strong></div>
+              </div>
+              <div class="task-next"><span>NEXT</span><strong id="ops-task-next">WPT 1 · 0.0 NM</strong></div>
+            </div>
           </section>
 
-          <section class="panel payload-panel">
-            <div class="panel-heading"><span data-panel-title="payload">PAYLOAD</span><b>•••</b></div>
-            <div class="status-table" data-panel-rows="payload"></div>
+          <section class="panel nav-route-panel">
+            <div class="panel-heading"><span>NAV / ROUTE</span><b>•••</b></div>
+            <div class="nav-route-body">
+              <div class="nav-leg"><span>ACTIVE LEG</span><strong id="ops-active-leg">STG &gt; WPT 1</strong></div>
+              <div class="nav-metrics">
+                <div class="nav-metric"><span>COURSE</span><strong id="ops-course">092°</strong></div>
+                <div class="nav-metric"><span>XTK</span><strong id="ops-xtk">0.03 NM</strong></div>
+                <div class="nav-metric"><span>DIST NEXT</span><strong id="ops-distance">0.0 NM</strong></div>
+                <div class="nav-metric"><span>ETE</span><strong id="ops-ete">00:00</strong></div>
+              </div>
+              <div class="nav-progress">
+                <div class="nav-progress-label"><span>ROUTE PROGRESS</span><strong id="ops-route-progress">00%</strong></div>
+                <div class="nav-progress-track"><b id="ops-route-progress-bar"></b></div>
+              </div>
+            </div>
           </section>
 
           <section class="panel datalink-panel">
@@ -115,8 +161,9 @@
   </div>
 
   <script src="../shared/state.js?v=20260905-1"></script>
-  <script src="config.js"></script>
+  <script src="config.js?v=20260906-1"></script>
   <script src="primary.js"></script>
+  <script src="ops-refine.js?v=20260906-1"></script>
   <script src="../shared/status-sync.js?v=20260905-3"></script>
   <script src="grid.js"></script>
 </body>
