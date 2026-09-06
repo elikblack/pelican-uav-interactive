@@ -2,6 +2,8 @@
   const page = document.getElementById('secondary-page-mission');
   if (!page) return;
 
+  const shared = window.UAV_SHARED;
+
   page.classList.remove('secondary-placeholder-page');
   page.classList.add('mission-concept');
   page.setAttribute('aria-label', 'Mission execution display concept');
@@ -30,7 +32,7 @@
             <circle class="mission-wp" cx="275" cy="92" r="6"/>
             <circle class="mission-wp" cx="340" cy="50" r="6"/>
 
-            <path class="mission-ownship" d="M0 -9L6 7L0 4L-6 7Z" transform="translate(188 141) rotate(48)"/>
+            <path id="mission-route-ownship" class="mission-ownship" d="M0 -9L6 7L0 4L-6 7Z" transform="translate(188 141) rotate(92)"/>
 
             <text class="mission-map-label" x="130" y="148">WP04</text>
             <text class="mission-map-label" x="224" y="118">WP05</text>
@@ -49,11 +51,11 @@
       </section>
 
       <section class="mission-panel mission-flight-panel" aria-label="Aircraft flight state">
-        <header class="mission-panel-heading">AIRCRAFT STATE / FLIGHT DIRECTOR <small>NAV VALID</small></header>
+        <header class="mission-panel-heading">AIRCRAFT STATE / FLIGHT DIRECTOR <small id="mission-nav-valid">NAV VALID</small></header>
 
         <div class="mission-flight-values">
-          <div class="mission-flight-value"><span>HDG</span><strong id="mission-heading">176.2°</strong></div>
-          <div class="mission-flight-value"><span>GS</span><strong id="mission-speed">312<small>KT</small></strong></div>
+          <div class="mission-flight-value"><span>HDG</span><strong id="mission-heading">092.0°</strong></div>
+          <div class="mission-flight-value"><span>GS</span><strong id="mission-speed">188<small>KT</small></strong></div>
           <div class="mission-flight-value"><span>ALT MSL</span><strong id="mission-altitude">12,480<small>FT</small></strong></div>
         </div>
 
@@ -93,9 +95,9 @@
         <header class="mission-panel-heading">AUTONOMY / C2 <small>SUPERVISORY</small></header>
         <div class="mission-system-body">
           <div class="mission-system-table">
-            <div class="mission-system-row"><span>NAV / MODE</span><strong>GPS/INS · MISSION</strong><b>VALID</b></div>
-            <div class="mission-system-row"><span>C2 LINK</span><strong>PRIMARY</strong><b id="mission-link">+18.4 dB</b></div>
-            <div class="mission-system-row warning"><span>ENDURANCE</span><strong>EST REMAIN</strong><b id="mission-endurance">05:42</b></div>
+            <div class="mission-system-row"><span>NAV / MODE</span><strong id="mission-nav-source">GPS/INS · MISSION</strong><b id="mission-nav-state">VALID</b></div>
+            <div class="mission-system-row"><span>C2 LINK</span><strong>PRIMARY</strong><b id="mission-link">+18.2 dB</b></div>
+            <div class="mission-system-row warning"><span>ENDURANCE</span><strong>EST REMAIN</strong><b id="mission-endurance">03:42</b></div>
           </div>
 
           <div class="mission-event-queue">
@@ -121,6 +123,10 @@
     xtrack: document.getElementById('mission-xtrack'),
     link: document.getElementById('mission-link'),
     endurance: document.getElementById('mission-endurance'),
+    navValid: document.getElementById('mission-nav-valid'),
+    navSource: document.getElementById('mission-nav-source'),
+    navState: document.getElementById('mission-nav-state'),
+    ownship: document.getElementById('mission-route-ownship'),
     progressLabel: document.getElementById('mission-progress-label'),
     progressBar: document.getElementById('mission-progress-bar')
   };
@@ -128,7 +134,6 @@
   const startedAt = Date.now();
   const baseEte = 8 * 60 + 42;
   const baseRange = 23.6;
-  const baseEndurance = 5 * 60 + 42;
 
   function clock(totalSeconds) {
     const value = Math.max(0, Math.round(totalSeconds));
@@ -138,9 +143,44 @@
     return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   }
 
-  function hoursMinutes(totalMinutes) {
-    const value = Math.max(0, Math.round(totalMinutes));
-    return `${String(Math.floor(value / 60)).padStart(2, '0')}:${String(value % 60).padStart(2, '0')}`;
+  function hoursMinutes(totalSeconds) {
+    const value = Math.max(0, Math.round(totalSeconds));
+    const hours = Math.floor(value / 3600);
+    const minutes = Math.floor((value % 3600) / 60);
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  }
+
+  function formatNavSource(source) {
+    return String(source || 'UNKNOWN').replaceAll('_', '/');
+  }
+
+  function renderShared(state) {
+    const aircraft = state?.aircraft;
+    if (aircraft) {
+      const heading = Number(aircraft.headingDeg);
+      const speed = Number(aircraft.groundSpeedKt);
+      const altitude = Number(aircraft.altitudeFt);
+      const endurance = Number(aircraft.enduranceSeconds);
+
+      if (Number.isFinite(heading)) {
+        fields.heading.textContent = `${heading.toFixed(1)}°`;
+        if (fields.ownship) fields.ownship.setAttribute('transform', `translate(188 141) rotate(${heading.toFixed(1)})`);
+      }
+      if (Number.isFinite(speed)) fields.speed.innerHTML = `${Math.round(speed)}<small>KT</small>`;
+      if (Number.isFinite(altitude)) fields.altitude.innerHTML = `${Math.round(altitude).toLocaleString('en-US')}<small>FT</small>`;
+      if (Number.isFinite(endurance)) fields.endurance.textContent = hoursMinutes(endurance);
+    }
+
+    const navigation = state?.navigation;
+    if (navigation) {
+      const valid = Boolean(navigation.valid);
+      fields.navValid.textContent = valid ? 'NAV VALID' : 'NAV INVALID';
+      fields.navSource.textContent = `${formatNavSource(navigation.source)} · MISSION`;
+      fields.navState.textContent = valid ? 'VALID' : 'INVALID';
+    }
+
+    const margin = Number(state?.link?.marginDb);
+    if (Number.isFinite(margin)) fields.link.textContent = `${margin >= 0 ? '+' : ''}${margin.toFixed(1)} dB`;
   }
 
   function updateMission() {
@@ -150,26 +190,16 @@
     const ete = Math.max(0, baseEte - slowSeconds);
     const range = Math.max(0, baseRange - slowSeconds * 0.0105);
     const progress = Math.min(99, 46 + slowSeconds * 0.018);
-    const enduranceMinutes = baseEndurance - slowSeconds / 60;
-
-    const heading = 176.2 + Math.sin(elapsedSeconds / 7.5) * 0.7;
-    const speed = 312 + Math.sin(elapsedSeconds / 5.2) * 2.4;
-    const altitude = 12480 + Math.sin(elapsedSeconds / 8.8) * 24;
     const xtrack = 0.03 + Math.abs(Math.sin(elapsedSeconds / 12.4)) * 0.018;
-    const link = 18.4 + Math.sin(elapsedSeconds / 6.3) * 0.6;
 
     fields.ete.textContent = clock(ete);
     fields.range.textContent = `${range.toFixed(1)} NM`;
-    fields.heading.textContent = `${heading.toFixed(1)}°`;
-    fields.speed.innerHTML = `${Math.round(speed)}<small>KT</small>`;
-    fields.altitude.innerHTML = `${Math.round(altitude).toLocaleString('en-US')}<small>FT</small>`;
     fields.xtrack.textContent = `${xtrack.toFixed(2)} NM`;
-    fields.link.textContent = `+${link.toFixed(1)} dB`;
-    fields.endurance.textContent = hoursMinutes(enduranceMinutes);
     fields.progressLabel.textContent = `${Math.round(progress)}%`;
     fields.progressBar.style.width = `${progress}%`;
   }
 
   updateMission();
+  if (shared) shared.subscribe(renderShared);
   setInterval(updateMission, 500);
 })();
