@@ -19,11 +19,11 @@ window.DISPLAY_CONFIG = {
 
   labels: {
     title: "GROUND CONTROL",
-    subtitle: "MISSION PLANNING",
+    subtitle: "MISSION CONTROL",
     system: "READY",
     link: "GOOD",
     gps: "LOCK",
-    mode: "SETUP",
+    mode: "EXECUTE",
     area: "ALPHA",
     operator: "OPERATOR 01"
   },
@@ -33,8 +33,8 @@ window.DISPLAY_CONFIG = {
     type: "RECONNAISSANCE",
     launch: "MANUAL",
     start: "STAGING AREA",
-    duration: "--:--",
-    state: "NOT STARTED"
+    duration: "00:38",
+    state: "IN PROGRESS"
   },
 
   panels: {
