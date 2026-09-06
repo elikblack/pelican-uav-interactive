@@ -18,11 +18,11 @@
 .heading-indicator-primary{
   --heading-size:82px;
   align-self:center;
-  margin-top:6px;
+  margin:6px auto 0;
 }
 .heading-indicator-mission{
-  --heading-size:60px;
-  margin-top:3px;
+  --heading-size:62px;
+  margin:3px auto 0;
 }
 
 .heading-indicator-card{
@@ -52,7 +52,7 @@
 .heading-indicator .heading-card-label{
   fill:#a6ec7d;
   font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-  font-size:8px;
+  font-size:12px;
   font-weight:800;
   text-anchor:middle;
   dominant-baseline:middle;
@@ -112,3 +112,5 @@
   font-variant-numeric:tabular-nums;
   white-space:nowrap;
 }
+.heading-indicator-primary .heading-indicator-value{font-size:11px}
+.heading-indicator-mission .heading-indicator-value{font-size:9px}
