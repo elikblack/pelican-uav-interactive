@@ -1,0 +1,104 @@
+/* Shared circular heading instrument. Presentation is common; heading is shared state. */
+.heading-indicator{
+  --heading-size:96px;
+  --heading-card-rotation:0deg;
+  position:relative;
+  width:var(--heading-size);
+  height:var(--heading-size);
+  flex:0 0 var(--heading-size);
+  border:1px solid rgba(119,201,91,.48);
+  border-radius:50%;
+  overflow:hidden;
+  background:#010201;
+  box-shadow:
+    inset 0 0 0 4px rgba(119,201,91,.035),
+    inset 0 0 0 5px rgba(119,201,91,.16);
+}
+
+.heading-indicator-card{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  transform:rotate(var(--heading-card-rotation));
+  transform-origin:50% 50%;
+  transition:transform .18s linear;
+  will-change:transform;
+}
+.heading-indicator .heading-card-ring{
+  fill:none;
+  stroke:rgba(119,201,91,.38);
+  stroke-width:1;
+}
+.heading-indicator .heading-tick-major{
+  stroke:#77c95b;
+  stroke-width:1.8;
+}
+.heading-indicator .heading-tick-minor{
+  stroke:rgba(119,201,91,.58);
+  stroke-width:1;
+}
+.heading-indicator .heading-card-label{
+  fill:#a6ec7d;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-size:8px;
+  font-weight:800;
+  text-anchor:middle;
+  dominant-baseline:middle;
+}
+
+.heading-indicator-lubber{
+  position:absolute;
+  z-index:4;
+  left:50%;
+  top:3px;
+  width:0;
+  height:0;
+  transform:translateX(-50%);
+  border-left:5px solid transparent;
+  border-right:5px solid transparent;
+  border-top:9px solid var(--amber);
+  filter:drop-shadow(0 0 3px rgba(215,170,53,.35));
+}
+.heading-indicator-reference{
+  position:absolute;
+  z-index:3;
+  left:50%;
+  top:50%;
+  width:32%;
+  height:32%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.heading-indicator-reference::before,
+.heading-indicator-reference::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(166,236,125,.76);
+}
+.heading-indicator-reference::before{top:0;width:1px;height:100%}
+.heading-indicator-reference::after{top:50%;width:70%;height:1px}
+
+.heading-indicator-value{
+  position:absolute;
+  z-index:5;
+  left:50%;
+  bottom:18%;
+  transform:translateX(-50%);
+  min-width:42%;
+  padding:2px 4px 1px;
+  background:rgba(1,2,1,.86);
+  color:#a6ec7d;
+  border:1px solid rgba(119,201,91,.18);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-size:calc(var(--heading-size) * .115);
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.02em;
+  text-align:center;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
