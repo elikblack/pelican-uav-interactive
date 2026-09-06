@@ -16,6 +16,16 @@
     diagnostics: {
       stationTempC: 38,
       activeFaults: 0
+    },
+    aircraft: {
+      headingDeg: 92,
+      groundSpeedKt: 188,
+      altitudeFt: 12480,
+      enduranceSeconds: 13320
+    },
+    navigation: {
+      source: 'GPS_INS',
+      valid: true
     }
   };
 
