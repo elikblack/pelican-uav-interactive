@@ -1,0 +1,139 @@
+/* Operational primary concept: replace inventory-heavy side rails with flight/task context. */
+.flight-panel{height:454px}
+.task-panel{height:306px}
+.nav-route-panel{height:238px}
+
+.flight-state{
+  height:calc(100% - 40px);
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  padding:10px 2px 0;
+}
+.flight-major-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:116px;
+  border-bottom:1px solid var(--line-soft);
+}
+.flight-major{
+  min-width:0;
+  padding:8px 10px 12px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.flight-major+ .flight-major{border-left:1px solid var(--line-soft)}
+.flight-major span,
+.flight-detail span,
+.task-row span,
+.nav-metric span,
+.nav-leg span,
+.task-next span,
+.flight-mode-strip span,
+.nav-progress-label span{
+  color:var(--green);
+  opacity:.7;
+  font-size:11px;
+  line-height:1;
+  letter-spacing:.08em;
+}
+.flight-major strong{
+  margin-top:8px;
+  color:var(--green);
+  font-size:31px;
+  line-height:.95;
+  font-weight:500;
+  letter-spacing:.015em;
+  font-variant-numeric:tabular-nums;
+}
+.flight-major small{
+  margin-top:6px;
+  color:var(--green);
+  opacity:.55;
+  font-size:10px;
+  letter-spacing:.08em;
+}
+.flight-detail-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  flex:1;
+  min-height:0;
+}
+.flight-detail{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:7px 10px;
+  border-bottom:1px solid var(--line-soft);
+}
+.flight-detail:nth-child(even){border-left:1px solid var(--line-soft)}
+.flight-detail strong{
+  margin-top:6px;
+  color:var(--text);
+  font-size:18px;
+  line-height:1;
+  font-weight:500;
+  letter-spacing:.035em;
+  font-variant-numeric:tabular-nums;
+}
+.flight-mode-strip{
+  min-height:48px;
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  align-items:center;
+  gap:14px;
+  padding:0 10px;
+}
+.flight-mode-strip strong{color:var(--green);font-size:13px;font-weight:500;letter-spacing:.04em}
+.flight-mode-strip b{color:var(--amber);font-size:11px;font-weight:500;letter-spacing:.07em}
+
+.task-body{
+  height:calc(100% - 40px);
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  padding:0 2px;
+}
+.task-hero{
+  min-height:84px;
+  padding:12px 8px 10px;
+  border-bottom:1px solid var(--line-soft);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.task-hero span{color:var(--green);opacity:.66;font-size:11px;letter-spacing:.08em}
+.task-hero strong{margin-top:6px;color:var(--amber);font-size:23px;font-weight:500;letter-spacing:.035em}
+.task-hero small{margin-top:5px;color:var(--green);opacity:.7;font-size:11px;letter-spacing:.06em}
+.task-rows{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0}
+.task-row{display:flex;flex-direction:column;justify-content:center;padding:7px 8px;border-bottom:1px solid var(--line-soft)}
+.task-row:nth-child(even){border-left:1px solid var(--line-soft)}
+.task-row strong{margin-top:5px;color:var(--text);font-size:14px;font-weight:500;letter-spacing:.035em}
+.task-row strong.amber{color:var(--amber)}
+.task-next{
+  min-height:46px;
+  padding:0 8px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:12px;
+}
+.task-next strong{color:var(--green);font-size:14px;font-weight:500;letter-spacing:.04em;font-variant-numeric:tabular-nums}
+
+.nav-route-body{height:calc(100% - 40px);display:flex;flex-direction:column;min-height:0;padding:0 2px}
+.nav-leg{min-height:56px;padding:9px 8px;border-bottom:1px solid var(--line-soft);display:flex;flex-direction:column;justify-content:center}
+.nav-leg strong{margin-top:5px;color:var(--cyan);font-size:19px;font-weight:500;letter-spacing:.03em}
+.nav-metrics{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0}
+.nav-metric{display:flex;flex-direction:column;justify-content:center;padding:6px 8px;border-bottom:1px solid var(--line-soft)}
+.nav-metric:nth-child(even){border-left:1px solid var(--line-soft)}
+.nav-metric strong{margin-top:5px;color:var(--text);font-size:14px;font-weight:500;letter-spacing:.035em;font-variant-numeric:tabular-nums}
+.nav-progress{min-height:48px;padding:7px 8px 6px;display:flex;flex-direction:column;justify-content:center}
+.nav-progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.nav-progress-label strong{color:var(--amber);font-size:11px;font-weight:500;letter-spacing:.04em}
+.nav-progress-track{height:8px;border:1px solid var(--green-dim);background:#020402;overflow:hidden}
+.nav-progress-track b{display:block;height:100%;width:0;background:var(--green);transition:width .35s linear}
+
+/* Keep the retained datalink panel visually subordinate to mission execution data. */
+.datalink-panel .panel-heading{opacity:.92}
