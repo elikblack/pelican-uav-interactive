@@ -6,19 +6,26 @@
   <title>Pelican UAV Interactive</title>
   <style>
     :root{color-scheme:dark;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#010301;color:#b3caaa}
-    main{width:min(720px,calc(100% - 40px));border:1px solid #345f30;padding:28px;background:#020804}
-    h1{margin:0 0 8px;color:#77c95b;font-size:24px;letter-spacing:.06em}p{color:#70866a;line-height:1.5}
-    nav{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}a{display:block;border:1px solid #77c95b;padding:20px;color:#77c95b;text-decoration:none;font-weight:700;letter-spacing:.08em}a:hover{background:#77c95b;color:#010301}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;display:grid;place-items:center;background:#010301;color:#b3caaa}
+    main{width:min(1040px,calc(100% - 40px));border:1px solid #345f30;padding:28px;background:#020804}
+    h1{margin:0 0 8px;color:#77c95b;font-size:24px;letter-spacing:.06em}
+    p{color:#70866a;line-height:1.5}
+    nav{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+    a{display:block;border:1px solid #77c95b;padding:20px;color:#77c95b;text-decoration:none;font-weight:700;letter-spacing:.08em;min-height:76px}
+    a:hover{background:#77c95b;color:#010301}
+    a small{display:block;margin-top:7px;color:inherit;opacity:.62;font-size:10px;letter-spacing:.05em}
+    @media(max-width:760px){nav{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <main>
     <h1>PELICAN UAV INTERACTIVE</h1>
-    <p>Development launcher. Open each display in its own browser window for the intended hardware layout.</p>
+    <p>Development launcher. Open individual displays for the intended hardware outputs, or view both live interfaces installed in the panel.</p>
     <nav>
-      <a href="primary/index.html" target="_blank">PRIMARY / 1920×1080</a>
-      <a href="secondary/index.html" target="_blank">SECONDARY / 1920×480</a>
+      <a href="primary/index.html" target="_blank">PRIMARY / 1920×1080<small>MISSION CONTROL DISPLAY</small></a>
+      <a href="secondary/index.html" target="_blank">SECONDARY / 1920×480<small>SYSTEMS DISPLAY</small></a>
+      <a href="panel/index.html" target="_blank">PANEL / COMPOSITE<small>BOTH DISPLAYS IN FRAME</small></a>
     </nav>
   </main>
 </body>
