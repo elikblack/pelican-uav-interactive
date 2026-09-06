@@ -2,6 +2,31 @@
   const shared = window.UAV_SHARED;
   if (!shared) return;
 
+  const currentScript = document.currentScript;
+  if (!document.querySelector('link[data-heading-indicator-css]')) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.dataset.headingIndicatorCss = 'true';
+    link.href = currentScript?.src
+      ? new URL('heading-indicator.css?v=20260906-1', currentScript.src).href
+      : '../shared/heading-indicator.css?v=20260906-1';
+    document.head.appendChild(link);
+  }
+
+  function upgradeReadout(id, variant) {
+    const readout = document.getElementById(id);
+    if (!readout || readout.matches('[data-heading-indicator]')) return;
+    const indicator = document.createElement('div');
+    indicator.className = `heading-indicator ${variant}`;
+    indicator.dataset.headingIndicator = '';
+    readout.replaceWith(indicator);
+  }
+
+  // Both consumers already expose a simple numeric heading field. Upgrade those
+  // fields in place so the underlying page code remains blissfully unaware.
+  upgradeReadout('flight-heading', 'heading-indicator-primary');
+  upgradeReadout('mission-heading', 'heading-indicator-mission');
+
   const labels = ['N','3','6','E','12','15','S','21','24','27','W','33'];
   const ticks = Array.from({ length: 36 }, (_, index) => {
     const major = index % 3 === 0;
