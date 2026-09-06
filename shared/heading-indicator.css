@@ -15,6 +15,16 @@
     inset 0 0 0 5px rgba(119,201,91,.16);
 }
 
+.heading-indicator-primary{
+  --heading-size:82px;
+  align-self:center;
+  margin-top:6px;
+}
+.heading-indicator-mission{
+  --heading-size:60px;
+  margin-top:3px;
+}
+
 .heading-indicator-card{
   position:absolute;
   inset:0;
