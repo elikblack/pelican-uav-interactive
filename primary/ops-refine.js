@@ -2,14 +2,17 @@
   const cfg = window.DISPLAY_CONFIG;
   if (!cfg) return;
 
+  const shared = window.UAV_SHARED;
   const aircraft = document.getElementById('aircraft');
   const routeProgress = document.getElementById('route-progress');
+  const gpsRibbon = document.querySelector('[data-bind="labels.gps"]');
   const fields = {
     altitude: document.getElementById('flight-altitude'),
     speed: document.getElementById('flight-speed'),
     heading: document.getElementById('flight-heading'),
     vspeed: document.getElementById('flight-vspeed'),
     endurance: document.getElementById('flight-endurance'),
+    navSource: document.getElementById('flight-nav-source'),
     leg: document.getElementById('ops-active-leg'),
     course: document.getElementById('ops-course'),
     xtk: document.getElementById('ops-xtk'),
@@ -26,6 +29,7 @@
 
   const started = performance.now();
   let lastPaint = 0;
+  let lastSharedPublish = 0;
 
   function pad3(value) {
     return String(Math.round((value % 360 + 360) % 360)).padStart(3, '0');
@@ -36,6 +40,10 @@
     const minutes = Math.floor(total / 60);
     const secs = total % 60;
     return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  }
+
+  function formatNavSource(source) {
+    return String(source || 'UNKNOWN').replaceAll('_', ' / ');
   }
 
   function parseAircraftTransform() {
@@ -49,6 +57,28 @@
     const active = document.querySelector('.waypoint-item.active');
     if (!active) return -1;
     return Number(active.dataset.waypointList);
+  }
+
+  function renderSharedNavigation(state) {
+    const nav = state?.navigation;
+    if (!nav) return;
+    if (fields.navSource) fields.navSource.textContent = formatNavSource(nav.source);
+    if (gpsRibbon) gpsRibbon.textContent = nav.valid ? 'LOCK' : 'INVALID';
+  }
+
+  if (shared) shared.subscribe(renderSharedNavigation);
+
+  function publishAircraft(now, heading, speed, altitude, enduranceSeconds) {
+    if (!shared || now - lastSharedPublish < 250) return;
+    lastSharedPublish = now;
+    shared.update({
+      aircraft: {
+        headingDeg: Number(heading.toFixed(1)),
+        groundSpeedKt: Number(speed.toFixed(1)),
+        altitudeFt: Math.round(altitude),
+        enduranceSeconds: Math.max(0, Math.round(enduranceSeconds))
+      }
+    }, 'primary-aircraft');
   }
 
   function paint(now) {
@@ -75,6 +105,8 @@
       const minutes = Math.floor((enduranceSeconds % 3600) / 60);
       fields.endurance.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
     }
+
+    publishAircraft(now, heading, speed, altitude, enduranceSeconds);
 
     const progressValue = Number((routeProgress?.textContent || '0').replace('%', '')) || 0;
     if (fields.progress) fields.progress.textContent = `${String(Math.round(progressValue)).padStart(2, '0')}%`;
