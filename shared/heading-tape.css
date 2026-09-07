@@ -19,7 +19,6 @@
   top:0;
   height:100%;
   will-change:transform;
-  transition:transform .22s linear;
 }
 
 .heading-tape-tick{
