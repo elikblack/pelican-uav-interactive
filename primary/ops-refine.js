@@ -35,6 +35,11 @@
     return String(Math.round((value % 360 + 360) % 360)).padStart(3, '0');
   }
 
+  function formatTrueHeading(value) {
+    const normalized = (value % 360 + 360) % 360;
+    return `${normalized.toFixed(1).padStart(5, '0')}°T`;
+  }
+
   function formatDuration(seconds) {
     const total = Math.max(0, Math.round(seconds));
     const minutes = Math.floor(total / 60);
@@ -98,7 +103,7 @@
 
     if (fields.altitude) fields.altitude.textContent = Math.round(altitude).toLocaleString('en-US');
     if (fields.speed) fields.speed.textContent = `${Math.round(speed)}`;
-    if (fields.heading) fields.heading.textContent = `${pad3(heading)}°`;
+    if (fields.heading) fields.heading.textContent = formatTrueHeading(heading);
     if (fields.vspeed) fields.vspeed.textContent = `${verticalSpeed >= 0 ? '+' : ''}${verticalSpeed} FPM`;
     if (fields.endurance) {
       const hours = Math.floor(enduranceSeconds / 3600);
