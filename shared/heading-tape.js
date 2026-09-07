@@ -8,8 +8,8 @@
     link.rel = 'stylesheet';
     link.dataset.headingTapeCss = 'true';
     link.href = currentScript?.src
-      ? new URL('heading-tape.css?v=20260907-1', currentScript.src).href
-      : '../shared/heading-tape.css?v=20260907-1';
+      ? new URL('heading-tape.css?v=20260907-2', currentScript.src).href
+      : '../shared/heading-tape.css?v=20260907-2';
     document.head.appendChild(link);
   }
 
@@ -17,9 +17,14 @@
   const START_DEG = -1080;
   const END_DEG = 2520;
   const STEP_DEG = 5;
+  const RESPONSE_MS = 125;
 
   function normalize(value) {
     return (value % 360 + 360) % 360;
+  }
+
+  function shortestDelta(from, to) {
+    return ((to - from + 540) % 360) - 180;
   }
 
   function formatLabel(value) {
@@ -65,36 +70,64 @@
     tape.appendChild(lubber);
   }
 
-  function render(state) {
+  const tapes = [...document.querySelectorAll('[data-heading-tape]')];
+  tapes.forEach(build);
+
+  let targetNormalized = null;
+  let targetUnwrapped = null;
+  let displayedUnwrapped = null;
+  let lastFrame = performance.now();
+
+  function receive(state) {
     const heading = Number(state?.aircraft?.headingDeg);
     if (!Number.isFinite(heading)) return;
     const normalized = normalize(heading);
 
-    document.querySelectorAll('[data-heading-tape]').forEach(tape => {
-      build(tape);
+    if (!Number.isFinite(targetNormalized) || !Number.isFinite(targetUnwrapped)) {
+      targetNormalized = normalized;
+      targetUnwrapped = normalized;
+      displayedUnwrapped = normalized;
+      return;
+    }
 
-      const previousNormalized = Number(tape.dataset.headingNormalized);
-      let unwrapped = Number(tape.dataset.headingUnwrapped);
-      if (!Number.isFinite(previousNormalized) || !Number.isFinite(unwrapped)) {
-        unwrapped = normalized;
-      } else {
-        const delta = ((normalized - previousNormalized + 540) % 360) - 180;
-        unwrapped += delta;
-      }
-
-      tape.dataset.headingNormalized = String(normalized);
-      tape.dataset.headingUnwrapped = String(unwrapped);
-
-      const scale = tape.querySelector('[data-heading-tape-scale]');
-      if (scale) {
-        const offset = (unwrapped - START_DEG) * PX_PER_DEG;
-        scale.style.transform = `translateX(${-offset}px)`;
-      }
-
-      const display = String(Math.round(normalized)).padStart(3, '0');
-      tape.setAttribute('aria-label', `True heading ${display} degrees`);
-    });
+    targetUnwrapped += shortestDelta(targetNormalized, normalized);
+    targetNormalized = normalized;
   }
 
-  shared.subscribe(render);
+  function recenterIfNeeded() {
+    if (!Number.isFinite(displayedUnwrapped) || !Number.isFinite(targetUnwrapped)) return;
+    if (displayedUnwrapped > 1800 || displayedUnwrapped < -360) {
+      const shift = Math.round((displayedUnwrapped - 720) / 360) * 360;
+      displayedUnwrapped -= shift;
+      targetUnwrapped -= shift;
+    }
+  }
+
+  function paint(now) {
+    if (Number.isFinite(targetUnwrapped)) {
+      if (!Number.isFinite(displayedUnwrapped)) displayedUnwrapped = targetUnwrapped;
+      const dt = Math.min(80, Math.max(0, now - lastFrame));
+      const alpha = 1 - Math.exp(-dt / RESPONSE_MS);
+      displayedUnwrapped += (targetUnwrapped - displayedUnwrapped) * alpha;
+      if (Math.abs(targetUnwrapped - displayedUnwrapped) < .002) displayedUnwrapped = targetUnwrapped;
+      recenterIfNeeded();
+
+      tapes.forEach(tape => {
+        const scale = tape.querySelector('[data-heading-tape-scale]');
+        if (scale) {
+          const offset = (displayedUnwrapped - START_DEG) * PX_PER_DEG;
+          scale.style.transform = `translate3d(${-offset}px,0,0)`;
+        }
+
+        const display = String(Math.round(normalize(displayedUnwrapped))).padStart(3, '0');
+        tape.setAttribute('aria-label', `True heading ${display} degrees`);
+      });
+    }
+
+    lastFrame = now;
+    requestAnimationFrame(paint);
+  }
+
+  shared.subscribe(receive);
+  requestAnimationFrame(paint);
 })();
