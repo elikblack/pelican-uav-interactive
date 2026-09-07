@@ -6,7 +6,7 @@
   <title>Pelican UAV Interactive — Primary</title>
   <link rel="stylesheet" href="../shared/ui-base.css">
   <link rel="stylesheet" href="primary.css">
-  <link rel="stylesheet" href="ops-refine.css?v=20260906-1">
+  <link rel="stylesheet" href="ops-refine.css?v=20260907-1">
   <link rel="stylesheet" href="effects.css" data-effects-css>
   <link rel="stylesheet" href="grid.css" data-grid-css>
 </head>
@@ -52,8 +52,16 @@
                   <small>KT</small>
                 </div>
               </div>
+
+              <div class="flight-heading-repeater">
+                <div class="flight-heading-header">
+                  <span>HEADING</span>
+                  <strong id="flight-heading">092.0°T</strong>
+                </div>
+                <div class="heading-tape heading-tape-primary" data-heading-tape aria-label="True heading tape"></div>
+              </div>
+
               <div class="flight-detail-grid">
-                <div class="flight-detail"><span>HEADING</span><strong id="flight-heading">092°</strong></div>
                 <div class="flight-detail"><span>VERT SPEED</span><strong id="flight-vspeed">+120 FPM</strong></div>
                 <div class="flight-detail"><span>ENDURANCE</span><strong id="flight-endurance">03:42</strong></div>
                 <div class="flight-detail"><span>NAV SOURCE</span><strong id="flight-nav-source">GPS / INS</strong></div>
@@ -163,9 +171,9 @@
   <script src="../shared/state.js?v=20260906-2"></script>
   <script src="config.js?v=20260906-1"></script>
   <script src="primary.js"></script>
-  <script src="ops-refine.js?v=20260906-2"></script>
+  <script src="ops-refine.js?v=20260907-1"></script>
   <script src="../shared/status-sync.js?v=20260905-3"></script>
-  <script src="../shared/heading-indicator.js?v=20260906-1"></script>
+  <script src="../shared/heading-tape.js?v=20260907-1"></script>
   <script src="grid.js"></script>
 </body>
 </html>
