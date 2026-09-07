@@ -8,8 +8,8 @@
     link.rel = 'stylesheet';
     link.dataset.headingIndicatorCss = 'true';
     link.href = currentScript?.src
-      ? new URL('heading-indicator.css?v=20260906-1', currentScript.src).href
-      : '../shared/heading-indicator.css?v=20260906-1';
+      ? new URL('heading-indicator.css?v=20260907-2', currentScript.src).href
+      : '../shared/heading-indicator.css?v=20260907-2';
     document.head.appendChild(link);
   }
 
@@ -22,9 +22,8 @@
     readout.replaceWith(indicator);
   }
 
-  // Both consumers already expose a simple numeric heading field. Upgrade those
-  // fields in place so the underlying page code remains blissfully unaware.
-  upgradeReadout('flight-heading', 'heading-indicator-primary');
+  // The secondary Mission page exposes a numeric heading field. Upgrade it in
+  // place so the page itself does not need to know about the instrument.
   upgradeReadout('mission-heading', 'heading-indicator-mission');
 
   const labels = ['N','3','6','E','12','15','S','21','24','27','W','33'];
@@ -55,33 +54,58 @@
     return (value % 360 + 360) % 360;
   }
 
-  function render(state) {
+  function shortestDelta(from, to) {
+    return ((to - from + 540) % 360) - 180;
+  }
+
+  const indicators = [...document.querySelectorAll('[data-heading-indicator]')];
+  indicators.forEach(build);
+
+  const RESPONSE_MS = 125;
+  let targetNormalized = null;
+  let targetUnwrapped = null;
+  let displayedUnwrapped = null;
+  let lastFrame = performance.now();
+
+  function receive(state) {
     const heading = Number(state?.aircraft?.headingDeg);
     if (!Number.isFinite(heading)) return;
     const normalized = normalize(heading);
 
-    document.querySelectorAll('[data-heading-indicator]').forEach(indicator => {
-      build(indicator);
+    if (!Number.isFinite(targetNormalized) || !Number.isFinite(targetUnwrapped)) {
+      targetNormalized = normalized;
+      targetUnwrapped = normalized;
+      displayedUnwrapped = normalized;
+      return;
+    }
 
-      const previousNormalized = Number(indicator.dataset.headingNormalized);
-      let unwrapped = Number(indicator.dataset.headingUnwrapped);
-      if (!Number.isFinite(previousNormalized) || !Number.isFinite(unwrapped)) {
-        unwrapped = normalized;
-      } else {
-        const delta = ((normalized - previousNormalized + 540) % 360) - 180;
-        unwrapped += delta;
-      }
-
-      indicator.dataset.headingNormalized = String(normalized);
-      indicator.dataset.headingUnwrapped = String(unwrapped);
-      indicator.style.setProperty('--heading-card-rotation', `${-unwrapped}deg`);
-
-      const value = indicator.querySelector('[data-heading-value]');
-      const display = String(Math.round(normalized)).padStart(3, '0');
-      if (value) value.textContent = `${display}°`;
-      indicator.setAttribute('aria-label', `Heading ${display} degrees`);
-    });
+    targetUnwrapped += shortestDelta(targetNormalized, normalized);
+    targetNormalized = normalized;
   }
 
-  shared.subscribe(render);
+  function paint(now) {
+    if (Number.isFinite(targetUnwrapped)) {
+      if (!Number.isFinite(displayedUnwrapped)) displayedUnwrapped = targetUnwrapped;
+      const dt = Math.min(80, Math.max(0, now - lastFrame));
+      const alpha = 1 - Math.exp(-dt / RESPONSE_MS);
+      displayedUnwrapped += (targetUnwrapped - displayedUnwrapped) * alpha;
+      if (Math.abs(targetUnwrapped - displayedUnwrapped) < .002) displayedUnwrapped = targetUnwrapped;
+
+      const normalized = normalize(displayedUnwrapped);
+      const display = String(Math.round(normalized)).padStart(3, '0');
+
+      indicators.forEach(indicator => {
+        indicator.style.setProperty('--heading-card-rotation', `${-displayedUnwrapped}deg`);
+        const value = indicator.querySelector('[data-heading-value]');
+        if (value) value.textContent = `${display}°`;
+        indicator.setAttribute('aria-label', `Heading ${display} degrees`);
+      });
+    }
+
+    lastFrame = now;
+    requestAnimationFrame(paint);
+  }
+
+  shared.subscribe(receive);
+  requestAnimationFrame(paint);
 })();
