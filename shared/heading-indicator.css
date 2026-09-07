@@ -33,7 +33,6 @@
   display:block;
   transform:rotate(var(--heading-card-rotation));
   transform-origin:50% 50%;
-  transition:transform .18s linear;
   will-change:transform;
 }
 .heading-indicator .heading-card-ring{
