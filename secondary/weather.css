@@ -104,11 +104,10 @@
   opacity:1;
 }
 
-/* Range furniture is deliberately stark. Full-opacity white strokes stay
-   readable over echo cores without a separate outline. */
+/* Range furniture stays high-contrast without overpowering the echoes. */
 .wx-sector-grid path{
   stroke:#fff;
-  stroke-width:3.2;
+  stroke-width:2.2;
   stroke-dasharray:14 9;
   stroke-linecap:butt;
   opacity:1;
