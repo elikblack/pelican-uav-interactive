@@ -104,17 +104,21 @@
   opacity:1;
 }
 
+/* Range furniture is deliberately stark. White, full-opacity strokes carry a
+   tiny dark edge so the rings survive yellow/red/magenta echo cores. */
 .wx-sector-grid path{
-  stroke:rgba(187,220,177,.56);
-  stroke-width:1.6;
+  stroke:#fff;
+  stroke-width:3.2;
   stroke-dasharray:7 9;
-  opacity:.92;
+  stroke-linecap:butt;
+  opacity:1;
+  filter:drop-shadow(0 0 1px #020402) drop-shadow(0 0 1px #020402);
 }
 .wx-sector-grid .wx-centerline{
-  stroke:rgba(119,201,91,.78);
-  stroke-width:1.8;
+  stroke:rgba(119,201,91,.96);
+  stroke-width:2.4;
   stroke-dasharray:10 8;
-  opacity:.9;
+  opacity:1;
 }
 .wx-range-labels text{
   fill:rgba(151,232,116,.94);
