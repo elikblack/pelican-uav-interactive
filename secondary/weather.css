@@ -104,15 +104,14 @@
   opacity:1;
 }
 
-/* Range furniture is deliberately stark. White, full-opacity strokes carry a
-   tiny dark edge so the rings survive yellow/red/magenta echo cores. */
+/* Range furniture is deliberately stark. Full-opacity white strokes stay
+   readable over echo cores without a separate outline. */
 .wx-sector-grid path{
   stroke:#fff;
   stroke-width:3.2;
-  stroke-dasharray:7 9;
+  stroke-dasharray:14 9;
   stroke-linecap:butt;
   opacity:1;
-  filter:drop-shadow(0 0 1px #020402) drop-shadow(0 0 1px #020402);
 }
 .wx-sector-grid .wx-centerline{
   stroke:rgba(119,201,91,.96);
