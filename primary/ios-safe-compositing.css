@@ -1,0 +1,51 @@
+/*
+ * Temporary WebKit crash-isolation profile for the primary display.
+ * Enabled by viewport-zoom-guard.js on iPhone/iPad-class devices.
+ *
+ * The goal is to preserve the instrument layout while removing expensive or
+ * layer-promoting effects that WebKit may try to re-rasterize during pinch zoom.
+ */
+html.ios-safe-compositing .workspace{
+  isolation:auto;
+}
+
+/* The side rails normally blur a second copy of the terrain underneath them.
+   On iOS use a nearly opaque panel instead and do not render that duplicate. */
+html.ios-safe-compositing .workspace::before{
+  display:none;
+}
+html.ios-safe-compositing .panel{
+  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;
+  background:rgba(2,8,4,.94);
+}
+
+/* Avoid forcing the large map and moving aircraft into dedicated GPU layers. */
+html.ios-safe-compositing .map-world{
+  will-change:auto;
+  transform:translate(-250px,-100px);
+}
+html.ios-safe-compositing .aircraft,
+html.ios-safe-compositing .heading-tape-scale{
+  will-change:auto;
+}
+
+/* Large filtered rasters and SVG drop shadows are useful polish, but they are
+   expendable while we determine what causes WebKit's pinch-zoom process crash. */
+html.ios-safe-compositing #terrain-image{
+  filter:none;
+  opacity:.78;
+}
+html.ios-safe-compositing .waypoint.active circle,
+html.ios-safe-compositing .aircraft,
+html.ios-safe-compositing .route-progress-path,
+html.ios-safe-compositing .aoi-box.active .aoi-quadrant.revealed,
+html.ios-safe-compositing .throughput path{
+  filter:none !important;
+}
+
+/* Screen scanlines remain, but without blend-mode compositing. */
+html.ios-safe-compositing .display::after{
+  mix-blend-mode:normal;
+  opacity:.7;
+}
