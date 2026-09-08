@@ -1,4 +1,15 @@
 (() => {
+  const maxTouchPoints = navigator.maxTouchPoints || 0;
+  const ua = navigator.userAgent || '';
+  const isAppleTouch = /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === 'MacIntel' && maxTouchPoints > 1);
+
+  // Temporary A/B switch while isolating an iOS WebKit renderer crash.
+  // ?safe=0 disables the profile; ?safe=1 forces it on any browser.
+  const safeParam = new URLSearchParams(location.search).get('safe');
+  const safeCompositing = safeParam === '1' || (safeParam !== '0' && isAppleTouch);
+  document.documentElement.classList.toggle('ios-safe-compositing', safeCompositing);
+
   // The fixed primary display only needs to refit when the device's physical
   // layout changes. On touch devices, Safari also emits window resize events
   // while pinch-zooming and moving browser chrome. Rather than trying to infer
@@ -6,7 +17,7 @@
   // registration and reroute it to orientationchange instead.
   //
   // Desktop/non-touch browsers keep the original resize behavior unchanged.
-  const isTouchDevice = navigator.maxTouchPoints > 0;
+  const isTouchDevice = maxTouchPoints > 0;
   if (!isTouchDevice) return;
 
   const nativeAddEventListener = window.addEventListener;
