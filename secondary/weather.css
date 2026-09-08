@@ -59,7 +59,7 @@
   object-fit:contain;
   object-position:center;
   pointer-events:none;
-  opacity:.84;
+  opacity:1;
   mix-blend-mode:screen;
   image-rendering:crisp-edges;
   image-rendering:pixelated;
