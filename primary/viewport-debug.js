@@ -70,10 +70,12 @@
     const rect = display?.getBoundingClientRect();
     const transform = display?.style.transform || getComputedStyle(display || document.body).transform || '-';
     const safeMode = de.classList.contains('ios-safe-compositing') ? 'ON' : 'off';
+    const fitMode = window.__PRIMARY_FIT_MODE || 'pending';
+    const fitScale = window.__PRIMARY_FIT_SCALE;
 
     panel.textContent = [
       `VIEWPORT DEBUG  boot:${boot} nav:${navType}`,
-      `safeFX  ${safeMode}`,
+      `safeFX  ${safeMode}  fit:${fitMode}${Number.isFinite(fitScale) ? ` ${n(fitScale, 3)}` : ''}`,
       `inner   ${size(innerWidth, innerHeight)}  outer ${size(outerWidth, outerHeight)}`,
       `client  ${size(de.clientWidth, de.clientHeight)}  screen ${size(screen.width, screen.height)}`,
       vv
@@ -104,9 +106,6 @@
     window.addEventListener(name, event => log(name, touchSummary(event)), { capture: true, passive: true });
   });
 
-  // iOS Safari still exposes GestureEvent on many versions. If present, these
-  // are especially useful for seeing whether the jump occurs before or after
-  // the browser considers the pinch complete.
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(name => {
     window.addEventListener(name, event => {
       log(name, ` scale=${n(event.scale, 3)} rot=${n(event.rotation, 1)}`);
