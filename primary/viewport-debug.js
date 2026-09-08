@@ -33,8 +33,7 @@
     whiteSpace: 'pre',
     pointerEvents: 'none',
     userSelect: 'none',
-    WebkitUserSelect: 'none',
-    transform: 'translateZ(0)'
+    WebkitUserSelect: 'none'
   });
   document.body.appendChild(panel);
 
@@ -70,9 +69,11 @@
     const display = document.getElementById('primary-display');
     const rect = display?.getBoundingClientRect();
     const transform = display?.style.transform || getComputedStyle(display || document.body).transform || '-';
+    const safeMode = de.classList.contains('ios-safe-compositing') ? 'ON' : 'off';
 
     panel.textContent = [
       `VIEWPORT DEBUG  boot:${boot} nav:${navType}`,
+      `safeFX  ${safeMode}`,
       `inner   ${size(innerWidth, innerHeight)}  outer ${size(outerWidth, outerHeight)}`,
       `client  ${size(de.clientWidth, de.clientHeight)}  screen ${size(screen.width, screen.height)}`,
       vv
