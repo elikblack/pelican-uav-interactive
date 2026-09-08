@@ -107,7 +107,7 @@
 /* Range furniture stays high-contrast without overpowering the echoes. */
 .wx-sector-grid path{
   stroke:#fff;
-  stroke-width:2.2;
+  stroke-width:1.5;
   stroke-dasharray:14 9;
   stroke-linecap:butt;
   opacity:1;
