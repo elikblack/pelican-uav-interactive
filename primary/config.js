@@ -76,8 +76,6 @@ window.DISPLAY_CONFIG = {
     image: "../shared/assets/terrain-desert.jpg",
     worldWidth: 2400,
     worldHeight: 1028,
-    // Center the 2400 px terrain across the 1920 px workspace at mission start.
-    // The route coordinates are offset by the same amount so its on-screen composition stays put.
     startX: -664,
     startY: -60,
     endX: -884,
@@ -85,12 +83,11 @@ window.DISPLAY_CONFIG = {
   },
 
   animation: {
-    // One physical speed now drives route travel, loiter orbit and rejoin curves.
-    // This makes the motion easy to tune without doing timing math by hand.
     aircraftSpeedPxPerSec: 20,
-    orbitRadius: 36,
-    orbitTurns: 1,
-    endPauseMs: 2600,
+    crossTrackAmplitudePx: 5,
+    taskIngressPx: 52,
+    taskEgressPx: 52,
+    endPauseMs: 3200,
     aoiSize: 126
   },
 
@@ -98,13 +95,23 @@ window.DISPLAY_CONFIG = {
     stepMs: 185
   },
 
+  // The route describes mission intent. NAV points are simple routing fixes;
+  // TASK points own an AOI and a maneuver pattern; the hidden RTB point closes
+  // the planned route back at staging without drawing a duplicate marker.
   route: {
     waypoints: [
-      { id: "STG", label: "STAGING", x: 730, y: 254 },
-      { id: "WPT 1", label: "", x: 1152, y: 254 },
-      { id: "WPT 2", label: "", x: 1345, y: 477 },
-      { id: "WPT 3", label: "", x: 1217, y: 719 },
-      { id: "WPT 4", label: "", x: 1141, y: 951 }
+      { id: "STG", label: "STAGING", x: 730, y: 254, kind: "staging" },
+      { id: "WPT 1", label: "NAV", x: 1152, y: 254, kind: "nav" },
+      {
+        id: "AOI 1", label: "SURVEY AREA", x: 1345, y: 477, kind: "task",
+        task: { pattern: "orbit", label: "AREA SURVEY", radius: 50, turns: 1, speedMultiplier: 0.82 }
+      },
+      { id: "WPT 2", label: "NAV", x: 1217, y: 719, kind: "nav" },
+      {
+        id: "AOI 2", label: "SEARCH AREA", x: 1141, y: 951, kind: "task",
+        task: { pattern: "sweep", label: "SEARCH PATTERN", width: 118, height: 78, passes: 5, angleDeg: -10, speedMultiplier: 0.72 }
+      },
+      { id: "RTB", label: "STAGING AREA", x: 730, y: 254, kind: "recovery", marker: false, list: false }
     ]
   }
 };
