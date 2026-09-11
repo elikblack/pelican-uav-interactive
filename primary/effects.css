@@ -12,11 +12,20 @@
   filter:drop-shadow(0 0 2px rgba(49,92,88,.22));
 }
 
-/* AOI treatment follows the original concept: dashed survey frame, strong corner brackets,
-   inner scan ring and small center designation. Each quadrant arrives with the loiter orbit. */
+/* Mission behavior now distinguishes navigation fixes from persistent task areas.
+   This is intentionally conservative placeholder styling until the AOI visual spec
+   is settled: task geometry exists from mission start and does not disappear or
+   dim after completion. */
+.aoi-item{display:none}
+
+.waypoint-item.completed,
+#waypoint-layer .waypoint.completed{
+  opacity:1;
+}
+
 .aoi-box{pointer-events:none}
 .aoi-quadrant{
-  opacity:0;
+  opacity:.46;
   transition:opacity .18s ease,filter .22s ease;
 }
 .aoi-edge,.aoi-ring,.aoi-corner,.aoi-crosshair{
@@ -41,7 +50,7 @@
 }
 .aoi-crosshair{
   stroke-width:2;
-  opacity:0;
+  opacity:.72;
   transition:opacity .2s ease;
 }
 .aoi-label{
@@ -51,30 +60,26 @@
   paint-order:stroke;
   stroke:#11150e;
   stroke-width:3px;
-  opacity:0;
+  opacity:.72;
   transition:opacity .2s ease;
 }
 .aoi-label-main{font-size:12px;font-weight:700;letter-spacing:.08em}
 .aoi-label-sub{font-size:8px;letter-spacing:.08em}
-.aoi-box.started .aoi-crosshair,
-.aoi-box.started .aoi-label{opacity:.9}
-.aoi-box.active .aoi-quadrant.revealed{
+.aoi-box.active .aoi-quadrant{
   opacity:.98;
-  filter:drop-shadow(0 0 5px rgba(237,139,47,.38));
+  filter:drop-shadow(0 0 4px rgba(237,139,47,.28));
 }
-.aoi-box.active .aoi-quadrant.revealed .aoi-edge,
-.aoi-box.active .aoi-quadrant.revealed .aoi-ring,
-.aoi-box.active .aoi-quadrant.revealed .aoi-corner{
+.aoi-box.active .aoi-edge,
+.aoi-box.active .aoi-ring,
+.aoi-box.active .aoi-corner,
+.aoi-box.active .aoi-crosshair{
   stroke:var(--throughput-orange);
 }
-.aoi-box.completed .aoi-quadrant{
-  opacity:.42;
-  filter:none;
-}
+.aoi-box.active .aoi-crosshair,
+.aoi-box.active .aoi-label{opacity:.94}
+.aoi-box.completed .aoi-quadrant{opacity:.46;filter:none}
 .aoi-box.completed .aoi-crosshair,
-.aoi-box.completed .aoi-label{
-  opacity:.34;
-}
+.aoi-box.completed .aoi-label{opacity:.72}
 
 /* The telemetry trace remains independent of aircraft timing. */
 .throughput svg{
