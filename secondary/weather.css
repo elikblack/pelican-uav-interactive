@@ -77,14 +77,12 @@
   pointer-events:none;
 }
 
-/* Small processed-weather hazard patches. They intentionally sit over the
-   moving echo image but under the heading/range/ownship furniture. */
+/* Processed-weather cue: black hatching cuts directly through the echo returns,
+   matching the visual language of older integrated weather displays. */
 .wx-hazard-hatching path{
   fill:url(#wxHazardHatch);
-  stroke:rgba(215,170,53,.72);
-  stroke-width:1;
-  opacity:.88;
-  vector-effect:non-scaling-stroke;
+  stroke:none;
+  opacity:1;
 }
 
 .wx-heading-scale path,
