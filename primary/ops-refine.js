@@ -30,6 +30,8 @@
   const started = performance.now();
   let lastPaint = 0;
   let lastSharedPublish = 0;
+  const PAINT_INTERVAL_MS = 50;
+  const SHARED_PUBLISH_INTERVAL_MS = 50;
 
   function pad3(value) {
     return String(Math.round((value % 360 + 360) % 360)).padStart(3, '0');
@@ -74,7 +76,7 @@
   if (shared) shared.subscribe(renderSharedNavigation);
 
   function publishAircraft(now, heading, speed, altitude, enduranceSeconds) {
-    if (!shared || now - lastSharedPublish < 250) return;
+    if (!shared || now - lastSharedPublish < SHARED_PUBLISH_INTERVAL_MS) return;
     lastSharedPublish = now;
     shared.update({
       aircraft: {
@@ -87,7 +89,7 @@
   }
 
   function paint(now) {
-    if (now - lastPaint < 100) {
+    if (now - lastPaint < PAINT_INTERVAL_MS) {
       requestAnimationFrame(paint);
       return;
     }
