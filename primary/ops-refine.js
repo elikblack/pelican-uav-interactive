@@ -4,6 +4,7 @@
 
   const shared = window.UAV_SHARED;
   const flight = window.UAV_FLIGHT;
+  const mission = window.UAV_MISSION;
   const routeProgress = document.getElementById('route-progress');
   const gpsRibbon = document.querySelector('[data-bind="labels.gps"]');
   const fields = {
@@ -81,6 +82,64 @@
     }, 'primary-aircraft');
   }
 
+  function renderMission(execution, position, speed, heading, t) {
+    const points = cfg.route?.waypoints || [];
+    const activeIndex = Number.isInteger(execution?.targetIndex)
+      ? execution.targetIndex
+      : activeWaypointIndex();
+    const target = points[activeIndex];
+    const previous = activeIndex > 0 ? points[activeIndex - 1] : null;
+    const distancePx = target && position ? Math.hypot(target.x - position.x, target.y - position.y) : 0;
+    const distanceNm = distancePx * 0.032;
+    const eteSeconds = speed > 0 ? distanceNm / speed * 3600 : 0;
+    const phase = execution?.phase || 'NAV';
+
+    if (fields.course) fields.course.textContent = `${pad3(heading)}°`;
+    if (fields.xtk) fields.xtk.textContent = `${(0.02 + Math.abs(Math.sin(t / 8)) * 0.03).toFixed(2)} NM`;
+
+    if (phase === 'COMPLETE') {
+      if (fields.leg) fields.leg.textContent = 'ROUTE COMPLETE';
+      if (fields.distance) fields.distance.textContent = '0.0 NM';
+      if (fields.ete) fields.ete.textContent = '00:00';
+      if (fields.taskName) fields.taskName.textContent = 'MISSION COMPLETE';
+      if (fields.taskState) fields.taskState.textContent = 'COMPLETE';
+      if (fields.taskNext) fields.taskNext.textContent = 'RECOVERY';
+      return;
+    }
+
+    if (previous && target && fields.leg) fields.leg.textContent = `${previous.id}  >  ${target.id}`;
+    if (fields.distance) fields.distance.textContent = `${distanceNm.toFixed(1)} NM`;
+    if (fields.ete) fields.ete.textContent = formatDuration(eteSeconds);
+
+    if (phase === 'RTB') {
+      if (fields.taskName) fields.taskName.textContent = 'RETURN TO BASE';
+      if (fields.taskState) fields.taskState.textContent = 'RTB';
+      if (fields.taskNext) fields.taskNext.textContent = `STAGING · ${distanceNm.toFixed(1)} NM`;
+      return;
+    }
+
+    if (phase === 'TASK' || phase === 'TASK_INGRESS' || phase === 'TASK_EGRESS') {
+      const label = execution?.taskLabel || target?.task?.label || target?.label || 'MISSION TASK';
+      const progress = Math.round((Number(execution?.taskProgress) || 0) * 100);
+      if (fields.taskName) fields.taskName.textContent = label;
+      if (fields.taskState) {
+        fields.taskState.textContent = phase === 'TASK'
+          ? 'ON STATION'
+          : phase === 'TASK_INGRESS' ? 'TASK INGRESS' : 'TASK COMPLETE';
+      }
+      if (fields.taskNext) {
+        fields.taskNext.textContent = phase === 'TASK'
+          ? `${String(execution?.taskType || 'TASK').toUpperCase()} · ${String(progress).padStart(2, '0')}%`
+          : `${target?.id || 'TASK'} · ${distanceNm.toFixed(1)} NM`;
+      }
+      return;
+    }
+
+    if (fields.taskName) fields.taskName.textContent = 'TRANSIT';
+    if (fields.taskState) fields.taskState.textContent = 'IN TRANSIT';
+    if (fields.taskNext) fields.taskNext.textContent = target ? `${target.id} · ${distanceNm.toFixed(1)} NM` : 'NAV';
+  }
+
   function paint(now) {
     if (now - lastPaint < PAINT_INTERVAL_MS) {
       requestAnimationFrame(paint);
@@ -90,6 +149,7 @@
 
     const t = (now - started) / 1000;
     const position = flight.getState();
+    const execution = mission?.getState?.() || null;
     const heading = Number.isFinite(position?.headingDeg) ? position.headingDeg : 92;
     const speed = 188 + Math.sin(t / 6.5) * 3.8 + Math.sin(t / 2.7) * 1.1;
     const altitude = 12480 + Math.sin(t / 10.5) * 62;
@@ -112,32 +172,7 @@
     if (fields.progress) fields.progress.textContent = `${String(Math.round(progressValue)).padStart(2, '0')}%`;
     if (fields.progressBar) fields.progressBar.style.width = `${Math.max(0, Math.min(100, progressValue))}%`;
 
-    const activeIndex = activeWaypointIndex();
-    const points = cfg.route?.waypoints || [];
-    if (activeIndex > 0 && points[activeIndex]) {
-      const previous = points[activeIndex - 1];
-      const target = points[activeIndex];
-      const distancePx = position ? Math.hypot(target.x - position.x, target.y - position.y) : 0;
-      const distanceNm = distancePx * 0.032;
-      const eteSeconds = speed > 0 ? distanceNm / speed * 3600 : 0;
-      const onStation = distanceNm < 1.25;
-
-      if (fields.leg) fields.leg.textContent = `${previous.id}  >  ${target.id}`;
-      if (fields.course) fields.course.textContent = `${pad3(heading)}°`;
-      if (fields.xtk) fields.xtk.textContent = `${(0.02 + Math.abs(Math.sin(t / 8)) * 0.03).toFixed(2)} NM`;
-      if (fields.distance) fields.distance.textContent = `${distanceNm.toFixed(1)} NM`;
-      if (fields.ete) fields.ete.textContent = formatDuration(eteSeconds);
-      if (fields.taskName) fields.taskName.textContent = `SURVEY AREA ${String(activeIndex).padStart(2, '0')}`;
-      if (fields.taskState) fields.taskState.textContent = onStation ? 'ON STATION' : 'IN TRANSIT';
-      if (fields.taskNext) fields.taskNext.textContent = `${target.id} · ${distanceNm.toFixed(1)} NM`;
-    } else if (activeIndex < 0 && progressValue >= 99) {
-      if (fields.leg) fields.leg.textContent = 'ROUTE COMPLETE';
-      if (fields.distance) fields.distance.textContent = '0.0 NM';
-      if (fields.ete) fields.ete.textContent = '00:00';
-      if (fields.taskState) fields.taskState.textContent = 'COMPLETE';
-      if (fields.taskNext) fields.taskNext.textContent = 'RECOVERY';
-    }
-
+    renderMission(execution, position, speed, heading, t);
     requestAnimationFrame(paint);
   }
 
