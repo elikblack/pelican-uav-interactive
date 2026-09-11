@@ -238,7 +238,7 @@
 
 /* Edge readouts deliberately occupy leftover space instead of forming a panel. */
 .weather-sector-body::before{
-  content:"082°\A40NM\A11:19";
+  content:"082°\A60NM\A11:19";
   position:absolute;
   right:10px;
   top:5px;
