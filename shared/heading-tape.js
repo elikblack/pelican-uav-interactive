@@ -1,6 +1,7 @@
 (() => {
   const shared = window.UAV_SHARED;
-  if (!shared) return;
+  const localFlight = window.UAV_FLIGHT;
+  if (!shared && !localFlight) return;
 
   const currentScript = document.currentScript;
   if (!document.querySelector('link[data-heading-tape-css]')) {
@@ -78,8 +79,8 @@
   let displayedUnwrapped = null;
   let lastFrame = performance.now();
 
-  function receive(state) {
-    const heading = Number(state?.aircraft?.headingDeg);
+  function receiveHeading(headingValue) {
+    const heading = Number(headingValue);
     if (!Number.isFinite(heading)) return;
     const normalized = normalize(heading);
 
@@ -92,6 +93,14 @@
 
     targetUnwrapped += shortestDelta(targetNormalized, normalized);
     targetNormalized = normalized;
+  }
+
+  function receiveShared(state) {
+    receiveHeading(state?.aircraft?.headingDeg);
+  }
+
+  function receiveLocal(state) {
+    receiveHeading(state?.headingDeg);
   }
 
   function recenterIfNeeded() {
@@ -128,6 +137,7 @@
     requestAnimationFrame(paint);
   }
 
-  shared.subscribe(receive);
+  if (localFlight?.subscribe) localFlight.subscribe(receiveLocal);
+  else if (shared) shared.subscribe(receiveShared, ['aircraft']);
   requestAnimationFrame(paint);
 })();
