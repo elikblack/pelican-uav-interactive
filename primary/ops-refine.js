@@ -3,7 +3,7 @@
   if (!cfg) return;
 
   const shared = window.UAV_SHARED;
-  const aircraft = document.getElementById('aircraft');
+  const flight = window.UAV_FLIGHT;
   const routeProgress = document.getElementById('route-progress');
   const gpsRibbon = document.querySelector('[data-bind="labels.gps"]');
   const fields = {
@@ -25,7 +25,7 @@
     taskNext: document.getElementById('ops-task-next')
   };
 
-  if (!aircraft) return;
+  if (!flight) return;
 
   const started = performance.now();
   let lastPaint = 0;
@@ -53,13 +53,6 @@
     return String(source || 'UNKNOWN').replaceAll('_', ' / ');
   }
 
-  function parseAircraftTransform() {
-    const transform = aircraft.getAttribute('transform') || '';
-    const match = transform.match(/translate\(([-\d.]+)[ ,]([-\d.]+)\)\s*rotate\(([-\d.]+)\)/);
-    if (!match) return null;
-    return { x: Number(match[1]), y: Number(match[2]), heading: Number(match[3]) };
-  }
-
   function activeWaypointIndex() {
     const active = document.querySelector('.waypoint-item.active');
     if (!active) return -1;
@@ -73,7 +66,7 @@
     if (gpsRibbon) gpsRibbon.textContent = nav.valid ? 'LOCK' : 'INVALID';
   }
 
-  if (shared) shared.subscribe(renderSharedNavigation);
+  if (shared) shared.subscribe(renderSharedNavigation, ['navigation']);
 
   function publishAircraft(now, heading, speed, altitude, enduranceSeconds) {
     if (!shared || now - lastSharedPublish < SHARED_PUBLISH_INTERVAL_MS) return;
@@ -96,8 +89,8 @@
     lastPaint = now;
 
     const t = (now - started) / 1000;
-    const position = parseAircraftTransform();
-    const heading = position ? (position.heading % 360 + 360) % 360 : 92;
+    const position = flight.getState();
+    const heading = Number.isFinite(position?.headingDeg) ? position.headingDeg : 92;
     const speed = 188 + Math.sin(t / 6.5) * 3.8 + Math.sin(t / 2.7) * 1.1;
     const altitude = 12480 + Math.sin(t / 10.5) * 62;
     const verticalSpeed = Math.round(Math.cos(t / 10.5) * 145 / 10) * 10;
