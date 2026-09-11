@@ -33,6 +33,8 @@
   const channel = typeof BroadcastChannel === 'function'
     ? new BroadcastChannel(CHANNEL_NAME)
     : null;
+  let revisions = Object.fromEntries(Object.keys(state).map(key => [key, 0]));
+  let revisionClock = Date.now();
 
   function merge(base, patch) {
     if (!patch || typeof patch !== 'object' || Array.isArray(patch)) return clone(patch);
@@ -45,34 +47,110 @@
     return next;
   }
 
-  function notify(source = 'local') {
+  function nextRevision() {
+    revisionClock = Math.max(Date.now(), revisionClock + 1);
+    return revisionClock;
+  }
+
+  function normalizeKeys(keys) {
+    if (keys == null) return null;
+    const values = Array.isArray(keys) ? keys : [keys];
+    return new Set(values.map(String));
+  }
+
+  function notify(source = 'local', changedKeys = null) {
     const snapshot = clone(state);
-    listeners.forEach(listener => listener(snapshot, source));
+    const changed = changedKeys ? [...changedKeys] : null;
+    listeners.forEach(entry => {
+      if (entry.keys && changed && !changed.some(key => entry.keys.has(key))) return;
+      entry.listener(snapshot, source, changed);
+    });
+  }
+
+  function broadcastState(source, changedKeys) {
+    if (!channel) return;
+    channel.postMessage({
+      type: 'state',
+      state,
+      source,
+      changedKeys: changedKeys ? [...changedKeys] : null,
+      revisions
+    });
   }
 
   function replace(next, source = 'local', broadcast = true) {
     state = clone(next);
-    notify(source);
-    if (broadcast && channel) channel.postMessage({ type: 'state', state, source });
+    const changedKeys = Object.keys(state);
+    changedKeys.forEach(key => {
+      revisions[key] = nextRevision();
+    });
+    notify(source, changedKeys);
+    if (broadcast) broadcastState(source, changedKeys);
   }
 
   function update(patch, source = 'local') {
-    replace(merge(state, patch), source, true);
+    const changedKeys = Object.keys(patch || {});
+    if (!changedKeys.length) return;
+    state = merge(state, patch);
+    changedKeys.forEach(key => {
+      revisions[key] = nextRevision();
+    });
+    notify(source, changedKeys);
+    broadcastState(source, changedKeys);
   }
 
-  function subscribe(listener) {
-    listeners.add(listener);
-    listener(clone(state), 'initial');
-    return () => listeners.delete(listener);
+  function subscribe(listener, keys = null) {
+    const entry = { listener, keys: normalizeKeys(keys) };
+    listeners.add(entry);
+    listener(clone(state), 'initial', null);
+    return () => listeners.delete(entry);
+  }
+
+  function applyRemote(message) {
+    const incomingState = message.state;
+    const incomingRevisions = message.revisions;
+    if (!incomingState || typeof incomingState !== 'object') return;
+
+    // Backward-compatible fallback for a tab still running the old state client.
+    // Only accept an unversioned snapshot before this instance has seen any
+    // authoritative mutation of its own.
+    if (!incomingRevisions || typeof incomingRevisions !== 'object') {
+      if (Object.values(revisions).some(value => value > 0)) return;
+      state = clone(incomingState);
+      notify(message.source || 'remote', Object.keys(state));
+      return;
+    }
+
+    const patch = {};
+    const changedKeys = [];
+    Object.keys(incomingState).forEach(key => {
+      const incomingRevision = Number(incomingRevisions[key]) || 0;
+      const currentRevision = Number(revisions[key]) || 0;
+      if (incomingRevision <= currentRevision) return;
+      patch[key] = incomingState[key];
+      revisions[key] = incomingRevision;
+      revisionClock = Math.max(revisionClock, incomingRevision);
+      changedKeys.push(key);
+    });
+
+    if (!changedKeys.length) return;
+    state = merge(state, patch);
+    notify(message.source || 'remote', changedKeys);
   }
 
   if (channel) {
     channel.addEventListener('message', event => {
       const message = event.data || {};
       if (message.type === 'hello') {
-        channel.postMessage({ type: 'state', state, source: 'sync' });
+        channel.postMessage({
+          type: 'state',
+          state,
+          source: 'sync',
+          changedKeys: null,
+          revisions
+        });
       } else if (message.type === 'state' && message.state) {
-        replace(message.state, message.source || 'remote', false);
+        applyRemote(message);
       }
     });
     channel.postMessage({ type: 'hello' });
