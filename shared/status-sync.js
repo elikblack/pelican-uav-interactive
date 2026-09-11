@@ -178,5 +178,5 @@
     renderPrimary(state);
   }
 
-  shared.subscribe(render);
+  shared.subscribe(render, ['power', 'link', 'diagnostics']);
 })();
