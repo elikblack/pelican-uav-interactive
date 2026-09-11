@@ -27,6 +27,32 @@
   let motionEndMs = 1;
   let totalLoopMs = 1;
 
+  const flightListeners = new Set();
+  let flightState = null;
+
+  function normalizeHeading(value) {
+    return (value % 360 + 360) % 360;
+  }
+
+  function publishFlightState(point, headingDeg) {
+    flightState = {
+      x: Number(point.x),
+      y: Number(point.y),
+      headingDeg: normalizeHeading(headingDeg)
+    };
+    const snapshot = { ...flightState };
+    flightListeners.forEach(listener => listener(snapshot));
+  }
+
+  window.UAV_FLIGHT = {
+    getState: () => flightState ? { ...flightState } : null,
+    subscribe(listener) {
+      flightListeners.add(listener);
+      if (flightState) listener({ ...flightState });
+      return () => flightListeners.delete(listener);
+    }
+  };
+
   const sparkCount = 58;
   const sparkStepMs = cfg.throughput?.stepMs ?? 185;
   const sparkSamples = [];
@@ -358,6 +384,7 @@
 
   function setAircraft(point, vector) {
     const angle = Math.atan2(vector.y, vector.x) * 180 / Math.PI + 90;
+    publishFlightState(point, angle);
     aircraft.setAttribute("transform", `translate(${point.x} ${point.y}) rotate(${angle})`);
   }
 
