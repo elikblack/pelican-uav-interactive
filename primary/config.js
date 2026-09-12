@@ -84,6 +84,7 @@ window.DISPLAY_CONFIG = {
 
   animation: {
     aircraftSpeedPxPerSec: 20,
+    cruiseGroundSpeedKt: 188,
     crossTrackAmplitudePx: 5,
     taskIngressPx: 52,
     taskEgressPx: 52,
