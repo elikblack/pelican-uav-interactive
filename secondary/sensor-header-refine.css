@@ -1,0 +1,46 @@
+/* Sensor-module title tabs and reclaimed header space.
+   Air and weather are active instrument surfaces; Ground Station Status keeps
+   the original full-width administrative header. */
+
+.air-module > .module-heading,
+.weather-module > .module-heading{
+  position:absolute;
+  left:10px;
+  top:6px;
+  z-index:30;
+  box-sizing:border-box;
+  width:max-content;
+  height:28px;
+  padding:0 9px;
+  border:1.5px solid var(--green);
+  background:#020402;
+  display:inline-flex;
+  align-items:center;
+  color:var(--green);
+  font-size:18px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:.045em;
+  white-space:nowrap;
+  text-shadow:0 0 3px rgba(119,201,91,.18);
+  pointer-events:none;
+}
+
+/* Air radar: keep the control cluster at its familiar vertical position, but
+   allow the scope and selected-track rail to occupy the old header band. */
+.air-module .airspace-plot{
+  top:-37px;
+  height:calc(100% + 37px);
+}
+
+.air-module .radar-side-data{
+  top:-37px;
+}
+
+/* Weather radar: the outer range arc already extends above the SVG viewBox.
+   Let that geometry escape the old body/header boundary so it can rise into
+   the reclaimed title band while echoes and message layout stay put. */
+.weather-module .weather-radar-pane,
+.weather-module .weather-sector{
+  overflow:visible;
+}
