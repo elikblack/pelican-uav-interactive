@@ -4,14 +4,31 @@
   if (!feed || !rail) return;
 
   const identities = {
-    A17: { type: 'C172', hex: 'A4D91C' },
-    T03: { type: 'PC12', hex: 'A91F03' },
-    A08: { type: 'B350', hex: '------' },
-    T11: { type: '----', hex: 'A6F20B' }
+    A17: { type: 'C172', hex: 'A4D91C', altitude: 'FL120' },
+    T03: { type: 'PC12', hex: 'A91F03', altitude: 'FL080' },
+    A08: { type: 'B350', hex: '------', altitude: 'FL260' },
+    T11: { type: '----', hex: 'A6F20B', altitude: 'FL055' }
   };
+
+  const header = rail.querySelector('.air-alert b');
+  let altitudeRow = rail.querySelector('.air-altitude-row');
+  if (!altitudeRow) {
+    altitudeRow = document.createElement('div');
+    altitudeRow.className = 'air-altitude-row';
+    altitudeRow.innerHTML = '<span>ALTITUDE</span><strong data-live-value="---">---</strong>';
+    const alert = rail.querySelector('.air-alert');
+    rail.insertBefore(altitudeRow, alert || null);
+  }
+  const altitudeValue = altitudeRow.querySelector('strong');
 
   function targetId(text) {
     return Object.keys(identities).find(id => text.includes(id)) || null;
+  }
+
+  function syncAltitude() {
+    if (!altitudeValue) return;
+    const id = targetId(header?.textContent || '');
+    altitudeValue.dataset.liveValue = id ? identities[id].altitude : '---';
   }
 
   function wholeDegrees(value) {
@@ -20,7 +37,7 @@
   }
 
   function liveFields() {
-    const values = [...rail.querySelectorAll(':scope > div:not(.air-alert) > strong')].slice(0, 4);
+    const values = [...rail.querySelectorAll(':scope > div:not(.air-alert):not(.air-altitude-row) > strong')].slice(0, 4);
     const raw = values.map(node => node && node.dataset.liveValue || '');
     const speed = parseFloat(raw[1]);
     const range = parseFloat(raw[3]);
@@ -82,6 +99,12 @@
 
     entry.dataset.identityGreeble = '1';
     entry.textContent = `${lineOne}\n${lineTwo}`;
+  }
+
+  syncAltitude();
+  if (header) {
+    const headerObserver = new MutationObserver(syncAltitude);
+    headerObserver.observe(header, { childList: true, characterData: true, subtree: true });
   }
 
   [...feed.querySelectorAll(':scope > .air-message-entry')].forEach(enrich);
