@@ -92,14 +92,11 @@
 }
 .throughput strong{color:var(--throughput-yellow)}
 
-/* Compositor stability: the large moving terrain layers previously combined CSS
-   image filters with translucent backdrop-filter panels. WebKit can briefly drop
-   and recreate those GPU surfaces, which presents as a dark frame followed by a
-   bright terrain flash. Preserve approximately the same luminance using opacity
-   and panel alpha instead of large-area filters. */
+/* Compositor isolation test: remove the workspace-wide terrain copy behind the
+   floating side panels. The center mission map keeps its own terrain layer. */
 .workspace:before{
-  filter:none;
-  opacity:.52;
+  content:none;
+  display:none;
 }
 #terrain-image{
   filter:none;
