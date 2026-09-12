@@ -48,7 +48,7 @@
   overflow:visible;
 }
 
-/* Weather scope breathing-room pass. The outermost solid range arc is omitted;
+/* Weather scope breathing-room pass. The outermost range arc stays omitted;
    the remaining scope furniture expands slightly around the ownship origin. */
 .weather-module .wx-sector-grid path:last-child{
   display:none;
@@ -61,15 +61,32 @@
   transform:scale(1.045);
 }
 
-/* Promote the opposing edge readouts to a genuinely legible instrument size. */
+/* The bearing ring is the 45 NM arc just inside the omitted outer arc. It is
+   deliberately solid so the bearing ticks and labels read as attached to it. */
+.weather-module .wx-sector-grid .wx-bearing-ring{
+  stroke:#fff;
+  stroke-width:1.7;
+  stroke-dasharray:none;
+  opacity:1;
+}
+
+/* Promote the opposing edge readouts to a genuinely legible instrument size.
+   A space after \A terminates the CSS hex escape so the following digits remain
+   ordinary text instead of becoming unknown Unicode glyphs. */
 .weather-module .weather-radar-pane::before{
+  content:"GS 478   TAS 476\A 194/12";
   font-size:16px;
   line-height:.98;
 }
 
 .weather-module .weather-sector-body::before{
+  content:"082°\A 60NM\A 11:19";
   font-size:16px;
   line-height:.98;
+}
+
+.weather-module .weather-sector-body::after{
+  content:"GAIN A\A CLTR 2";
 }
 
 /* Give the lower-right intensity legend enough contrast to survive bright
@@ -78,22 +95,38 @@
   right:7px;
   bottom:7px;
   box-sizing:border-box;
-  width:166px;
+  width:112px;
   padding:5px 6px 4px;
   background:rgba(0,0,0,.5);
 }
 
-/* The old ANT/ECHO annotation lived above the legend. A real element now owns
-   that text so it can sit independently at the lower-left of the radar pane. */
+/* The old ANT/ECHO annotation lived above the legend. Keep it suppressed now
+   that the lower-left instrument cluster owns that information. */
 .weather-module .weather-legend-greeble::before{
   content:none;
 }
 
-.weather-module .weather-lower-status{
+/* Lower-left instrument greeble: the green mode box and ANT/ECHO annotation
+   travel together and stay clear of the precipitation intensity legend. */
+.weather-module .weather-lower-left{
   position:absolute;
   left:8px;
   bottom:8px;
   z-index:7;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+  pointer-events:none;
+}
+
+.weather-module .weather-lower-left .wx-mode{
+  width:max-content;
+  margin:0;
+}
+
+.weather-module .weather-lower-status{
+  position:static;
   color:rgba(151,232,116,.68);
   white-space:nowrap;
   text-align:left;
