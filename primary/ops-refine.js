@@ -29,6 +29,8 @@
   if (!flight) return;
 
   const started = performance.now();
+  const nmPerPx = Number(cfg.map?.nmPerPx) || 0.032;
+  const cruiseGroundSpeedKt = Number(cfg.animation?.cruiseGroundSpeedKt) || 188;
   let lastPaint = 0;
   let lastSharedPublish = 0;
   const PAINT_INTERVAL_MS = 50;
@@ -69,33 +71,106 @@
 
   if (shared) shared.subscribe(renderSharedNavigation, ['navigation']);
 
-  function publishAircraft(now, heading, speed, altitude, enduranceSeconds) {
-    if (!shared || now - lastSharedPublish < SHARED_PUBLISH_INTERVAL_MS) return;
-    lastSharedPublish = now;
-    shared.update({
-      aircraft: {
-        headingDeg: Number(heading.toFixed(1)),
-        groundSpeedKt: Number(speed.toFixed(1)),
-        altitudeFt: Math.round(altitude),
-        enduranceSeconds: Math.max(0, Math.round(enduranceSeconds))
-      }
-    }, 'primary-aircraft');
-  }
-
-  function renderMission(execution, position, speed, heading, t) {
+  function missionMetrics(execution, position, speed) {
     const points = cfg.route?.waypoints || [];
     const activeIndex = Number.isInteger(execution?.targetIndex)
       ? execution.targetIndex
       : activeWaypointIndex();
     const target = points[activeIndex];
     const previous = activeIndex > 0 ? points[activeIndex - 1] : null;
-    const distancePx = target && position ? Math.hypot(target.x - position.x, target.y - position.y) : 0;
-    const distanceNm = distancePx * 0.032;
-    const eteSeconds = speed > 0 ? distanceNm / speed * 3600 : 0;
     const phase = execution?.phase || 'NAV';
+    const course = Number(position?.courseDeg);
+    const crossTrack = Number(position?.crossTrackNm);
 
-    if (fields.course) fields.course.textContent = `${pad3(heading)}°`;
-    if (fields.xtk) fields.xtk.textContent = `${(0.02 + Math.abs(Math.sin(t / 8)) * 0.03).toFixed(2)} NM`;
+    if (phase === 'COMPLETE') {
+      return {
+        phase,
+        activeIndex,
+        target,
+        previous,
+        activeLeg: 'ROUTE COMPLETE',
+        courseDeg: Number.isFinite(course) ? course : Number(position?.headingDeg) || 0,
+        crossTrackNm: 0,
+        distanceToNextNm: 0,
+        eteSeconds: 0
+      };
+    }
+
+    if (phase === 'TASK') {
+      return {
+        phase,
+        activeIndex,
+        target,
+        previous,
+        activeLeg: `${target?.id || 'TASK'} / ${String(execution?.taskType || 'TASK').toUpperCase()}`,
+        courseDeg: Number.isFinite(course) ? course : Number(position?.headingDeg) || 0,
+        crossTrackNm: null,
+        distanceToNextNm: 0,
+        eteSeconds: 0
+      };
+    }
+
+    const distancePx = target && position ? Math.hypot(target.x - position.x, target.y - position.y) : 0;
+    const distanceNm = distancePx * nmPerPx;
+    const eteSeconds = speed > 0 ? distanceNm / speed * 3600 : 0;
+    return {
+      phase,
+      activeIndex,
+      target,
+      previous,
+      activeLeg: previous && target ? `${previous.id} > ${target.id}` : target?.id || 'NAV',
+      courseDeg: Number.isFinite(course) ? course : Number(position?.headingDeg) || 0,
+      crossTrackNm: Number.isFinite(crossTrack) ? crossTrack : null,
+      distanceToNextNm: distanceNm,
+      eteSeconds
+    };
+  }
+
+  function publishShared(now, execution, position, metrics, altitude, enduranceSeconds) {
+    if (!shared || now - lastSharedPublish < SHARED_PUBLISH_INTERVAL_MS) return;
+    lastSharedPublish = now;
+
+    const heading = Number(position?.headingDeg);
+    const speed = Number(position?.groundSpeedKt);
+    const missionSnapshot = execution ? {
+      phase: execution.phase || 'NAV',
+      targetIndex: Number.isInteger(execution.targetIndex) ? execution.targetIndex : -1,
+      targetId: execution.targetId || metrics.target?.id || '',
+      targetKind: execution.targetKind || metrics.target?.kind || '',
+      completedThrough: Number.isInteger(execution.completedThrough) ? execution.completedThrough : -1,
+      taskType: execution.taskType || null,
+      taskLabel: execution.taskLabel || null,
+      taskProgress: Number(execution.taskProgress) || 0,
+      routeProgress: Number(execution.routeProgress) || 0,
+      activeLeg: metrics.activeLeg,
+      courseDeg: Number(metrics.courseDeg) || 0,
+      crossTrackNm: metrics.crossTrackNm,
+      distanceToNextNm: Number(metrics.distanceToNextNm) || 0,
+      eteSeconds: Number(metrics.eteSeconds) || 0
+    } : null;
+
+    const patch = {
+      aircraft: {
+        headingDeg: Number.isFinite(heading) ? Number(heading.toFixed(1)) : 0,
+        groundSpeedKt: Number.isFinite(speed) ? Number(speed.toFixed(1)) : cruiseGroundSpeedKt,
+        altitudeFt: Math.round(altitude),
+        enduranceSeconds: Math.max(0, Math.round(enduranceSeconds))
+      }
+    };
+    if (missionSnapshot) patch.mission = missionSnapshot;
+    shared.update(patch, 'primary-flight');
+  }
+
+  function renderMission(execution, metrics) {
+    const phase = metrics.phase;
+    const target = metrics.target;
+
+    if (fields.course) fields.course.textContent = `${pad3(metrics.courseDeg)}°`;
+    if (fields.xtk) {
+      fields.xtk.textContent = Number.isFinite(metrics.crossTrackNm)
+        ? `${metrics.crossTrackNm.toFixed(2)} NM`
+        : '--';
+    }
 
     if (phase === 'COMPLETE') {
       if (fields.leg) fields.leg.textContent = 'ROUTE COMPLETE';
@@ -107,14 +182,14 @@
       return;
     }
 
-    if (previous && target && fields.leg) fields.leg.textContent = `${previous.id}  >  ${target.id}`;
-    if (fields.distance) fields.distance.textContent = `${distanceNm.toFixed(1)} NM`;
-    if (fields.ete) fields.ete.textContent = formatDuration(eteSeconds);
+    if (fields.leg) fields.leg.textContent = metrics.activeLeg.replace(' > ', '  >  ');
+    if (fields.distance) fields.distance.textContent = `${metrics.distanceToNextNm.toFixed(1)} NM`;
+    if (fields.ete) fields.ete.textContent = formatDuration(metrics.eteSeconds);
 
     if (phase === 'RTB') {
       if (fields.taskName) fields.taskName.textContent = 'RETURN TO BASE';
       if (fields.taskState) fields.taskState.textContent = 'RTB';
-      if (fields.taskNext) fields.taskNext.textContent = `STAGING · ${distanceNm.toFixed(1)} NM`;
+      if (fields.taskNext) fields.taskNext.textContent = `STAGING · ${metrics.distanceToNextNm.toFixed(1)} NM`;
       return;
     }
 
@@ -130,14 +205,14 @@
       if (fields.taskNext) {
         fields.taskNext.textContent = phase === 'TASK'
           ? `${String(execution?.taskType || 'TASK').toUpperCase()} · ${String(progress).padStart(2, '0')}%`
-          : `${target?.id || 'TASK'} · ${distanceNm.toFixed(1)} NM`;
+          : `${target?.id || 'TASK'} · ${metrics.distanceToNextNm.toFixed(1)} NM`;
       }
       return;
     }
 
     if (fields.taskName) fields.taskName.textContent = 'TRANSIT';
     if (fields.taskState) fields.taskState.textContent = 'IN TRANSIT';
-    if (fields.taskNext) fields.taskNext.textContent = target ? `${target.id} · ${distanceNm.toFixed(1)} NM` : 'NAV';
+    if (fields.taskNext) fields.taskNext.textContent = target ? `${target.id} · ${metrics.distanceToNextNm.toFixed(1)} NM` : 'NAV';
   }
 
   function paint(now) {
@@ -151,10 +226,11 @@
     const position = flight.getState();
     const execution = mission?.getState?.() || null;
     const heading = Number.isFinite(position?.headingDeg) ? position.headingDeg : 92;
-    const speed = 188 + Math.sin(t / 6.5) * 3.8 + Math.sin(t / 2.7) * 1.1;
+    const speed = Number.isFinite(position?.groundSpeedKt) ? position.groundSpeedKt : cruiseGroundSpeedKt;
     const altitude = 12480 + Math.sin(t / 10.5) * 62;
     const verticalSpeed = Math.round(Math.cos(t / 10.5) * 145 / 10) * 10;
     const enduranceSeconds = 3 * 3600 + 42 * 60 - t;
+    const metrics = missionMetrics(execution, position, speed);
 
     if (fields.altitude) fields.altitude.textContent = Math.round(altitude).toLocaleString('en-US');
     if (fields.speed) fields.speed.textContent = `${Math.round(speed)}`;
@@ -166,13 +242,16 @@
       fields.endurance.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
     }
 
-    publishAircraft(now, heading, speed, altitude, enduranceSeconds);
+    publishShared(now, execution, position, metrics, altitude, enduranceSeconds);
 
-    const progressValue = Number((routeProgress?.textContent || '0').replace('%', '')) || 0;
+    const executionProgress = Number(execution?.routeProgress);
+    const progressValue = Number.isFinite(executionProgress)
+      ? executionProgress * 100
+      : Number((routeProgress?.textContent || '0').replace('%', '')) || 0;
     if (fields.progress) fields.progress.textContent = `${String(Math.round(progressValue)).padStart(2, '0')}%`;
     if (fields.progressBar) fields.progressBar.style.width = `${Math.max(0, Math.min(100, progressValue))}%`;
 
-    renderMission(execution, position, speed, heading, t);
+    renderMission(execution, metrics);
     requestAnimationFrame(paint);
   }
 
