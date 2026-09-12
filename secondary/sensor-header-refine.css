@@ -2,27 +2,31 @@
    Air and weather are active instrument surfaces; Ground Station Status keeps
    the original full-width administrative header. */
 
+/* Preserve the original module-heading typography and height, but only reserve
+   enough horizontal space for the title itself. The module border supplies the
+   top/left edges; these rules close the compact tab on the right and bottom. */
 .air-module > .module-heading,
 .weather-module > .module-heading{
   position:absolute;
-  left:10px;
-  top:6px;
+  left:0;
+  top:0;
   z-index:30;
   box-sizing:border-box;
   width:max-content;
-  height:28px;
-  padding:0 9px;
-  border:1.5px solid var(--green);
-  background:#020402;
+  height:40px;
+  padding:0 14px;
+  border:0;
+  border-right:1px solid var(--line-soft);
+  border-bottom:1px solid var(--line-soft);
+  background:var(--panel);
   display:inline-flex;
   align-items:center;
   color:var(--green);
-  font-size:18px;
-  font-weight:800;
+  font-size:24px;
+  font-weight:700;
   line-height:1;
   letter-spacing:.045em;
   white-space:nowrap;
-  text-shadow:0 0 3px rgba(119,201,91,.18);
   pointer-events:none;
 }
 
@@ -37,9 +41,8 @@
   top:-37px;
 }
 
-/* Weather radar: the outer range arc already extends above the SVG viewBox.
-   Let that geometry escape the old body/header boundary so it can rise into
-   the reclaimed title band while echoes and message layout stay put. */
+/* Weather radar: allow the range furniture to rise into the header band while
+   echoes and the message layout remain anchored to the existing body. */
 .weather-module .weather-radar-pane,
 .weather-module .weather-sector{
   overflow:visible;
