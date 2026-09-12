@@ -1,5 +1,7 @@
 (() => {
   const display = document.getElementById('secondary-display');
+  const world = window.UAV_WORLD;
+  const airRangeNm = Number(world?.regionalAir?.rangeNm) || 120;
 
   function fitDisplay() {
     const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 480);
@@ -15,7 +17,7 @@
     if (!radarModule || !radarBody || !radarLegend) return;
 
     radarBody.innerHTML = `
-      <svg class="airspace-plot" viewBox="0 0 390 320" role="img" aria-label="Local tactical airspace surveillance plot">
+      <svg class="airspace-plot" viewBox="0 0 390 320" role="img" aria-label="Regional airspace surveillance plot">
         <g class="airspace-geometry" aria-hidden="true">
           <path class="air-geo-line strong" d="M15 286A250 250 0 0 1 377 39"/>
           <path class="air-geo-line" d="M42 264A210 210 0 0 1 353 58"/>
@@ -123,7 +125,7 @@
 
       <div class="radar-side-data">
         <div><span>MODE</span><strong>AIRSPACE</strong></div>
-        <div><span>RANGE</span><strong>120 NM</strong></div>
+        <div><span>RANGE</span><strong>${airRangeNm} NM</strong></div>
         <div><span>FILTER</span><strong>FL025+</strong></div>
         <div><span>TRACKS</span><strong>07 ACTIVE</strong></div>
         <div class="air-alert">
