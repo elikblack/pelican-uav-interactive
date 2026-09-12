@@ -28,22 +28,26 @@
     if (!scale || !grid) return;
 
     const gridPaths = [...grid.querySelectorAll(':scope > path')];
-    const outerRing = gridPaths[gridPaths.length - 1];
+    /* The 360-radius arc remains hidden. Use the next ring inward as the
+       bearing ring so labels and ticks can live directly on its inner edge. */
+    const bearingRing = gridPaths[gridPaths.length - 2];
     const centerline = grid.querySelector('.wx-centerline');
 
-    if (outerRing) {
-      outerRing.classList.add('wx-bearing-ring');
-      outerRing.style.stroke = '#fff';
-      outerRing.style.strokeWidth = '1.7px';
-      outerRing.style.strokeDasharray = 'none';
-      outerRing.style.opacity = '1';
+    if (bearingRing) {
+      bearingRing.classList.add('wx-bearing-ring');
+      bearingRing.style.stroke = '#fff';
+      bearingRing.style.strokeWidth = '1.7px';
+      bearingRing.style.strokeDasharray = 'none';
+      bearingRing.style.opacity = '1';
     }
 
     if (centerline) centerline.setAttribute('d', 'M310 312V14');
 
     const cx = 310;
     const cy = 312;
-    const outerRadius = 305;
+    /* The 275-radius bearing ring is enlarged 1.045x by CSS, landing at ~287px
+       on screen. Build the heading furniture against that displayed radius. */
+    const bearingRadius = 287;
     const point = (radius, degrees) => {
       const radians = degrees * Math.PI / 180;
       return {
@@ -52,7 +56,7 @@
       };
     };
     const segment = (angle, innerRadius) => {
-      const a = point(outerRadius, angle);
+      const a = point(bearingRadius, angle);
       const b = point(innerRadius, angle);
       return `M${a.x.toFixed(1)} ${a.y.toFixed(1)}L${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
     };
@@ -60,10 +64,10 @@
     const majorAngles = [-35, -25, -15, -5, 5, 15, 25, 35];
     const minorAngles = [-40, -30, -20, -10, 0, 10, 20, 30, 40];
 
-    const majorTicks = majorAngles.map(angle => segment(angle, 289)).join('');
-    const minorTicks = minorAngles.map(angle => segment(angle, 297)).join('');
+    const majorTicks = majorAngles.map(angle => segment(angle, 267)).join('');
+    const minorTicks = minorAngles.map(angle => segment(angle, 278)).join('');
     const labelMarkup = majorAngles.map(angle => {
-      const p = point(274, angle);
+      const p = point(253, angle);
       const rotation = angle * .72;
       const label = headingTickLabel(referenceBearingDeg + angle);
       return `<text x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" transform="rotate(${rotation.toFixed(1)} ${p.x.toFixed(1)} ${p.y.toFixed(1)})" style="fill:#fff;opacity:1;font-size:11px;font-weight:600;text-anchor:middle;letter-spacing:.03em;paint-order:stroke;stroke:#020402;stroke-width:2px">${label}</text>`;
@@ -87,7 +91,7 @@
       label.textContent = index === 3 ? `${value} NM` : String(value);
     });
 
-    const mode = document.querySelector('.weather-legend-greeble .wx-mode');
+    const mode = document.querySelector('.weather-module .wx-mode');
     if (mode) {
       const labels = [...mode.querySelectorAll('span')];
       const rangeLabel = labels.find(label => label.textContent.trim() === 'RNG');
