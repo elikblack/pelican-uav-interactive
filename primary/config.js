@@ -76,6 +76,7 @@ window.DISPLAY_CONFIG = {
     image: "../shared/assets/terrain-desert.jpg",
     worldWidth: 2400,
     worldHeight: 1028,
+    nmPerPx: 0.032,
     startX: -664,
     startY: -60,
     endX: -884,
