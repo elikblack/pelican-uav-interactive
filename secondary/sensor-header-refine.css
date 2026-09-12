@@ -47,3 +47,27 @@
 .weather-module .weather-sector{
   overflow:visible;
 }
+
+/* Weather scope breathing-room pass. The outermost solid range arc is omitted;
+   the remaining scope furniture expands slightly around the ownship origin. */
+.weather-module .wx-sector-grid path:last-child{
+  display:none;
+}
+
+.weather-module .wx-sector-grid,
+.weather-module .wx-range-labels{
+  transform-box:view-box;
+  transform-origin:310px 312px;
+  transform:scale(1.045);
+}
+
+/* Promote the tiny opposing edge readouts without turning them into panels. */
+.weather-module .weather-radar-pane::before{
+  font-size:12px;
+  line-height:.98;
+}
+
+.weather-module .weather-sector-body::before{
+  font-size:13px;
+  line-height:.98;
+}
