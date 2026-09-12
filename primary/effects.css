@@ -92,26 +92,8 @@
 }
 .throughput strong{color:var(--throughput-yellow)}
 
-/* Workspace base is transparent. Terrain remains visible through the gaps between
-   floating panels, while each panel retains its own dark fill. Keep the terrain
-   copy filter-free to reduce compositor cost. */
-.workspace{
-  background:transparent;
-}
-.workspace:before{
-  content:"";
-  display:block;
-  filter:none;
-  opacity:.52;
-}
-.workspace:after{
-  content:none;
-  display:none;
-}
-#terrain-image{
-  filter:none;
-  opacity:.92;
-}
+/* Panels stay dark over the single shared terrain surface. Avoid backdrop filters so
+   the browser does not need to resample the moving terrain for each panel. */
 .panel{
   -webkit-backdrop-filter:none;
   backdrop-filter:none;
