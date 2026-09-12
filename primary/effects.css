@@ -92,12 +92,18 @@
 }
 .throughput strong{color:var(--throughput-yellow)}
 
-/* Compositor isolation test: the workspace itself contributes no background.
-   Individual panels retain their own dark fill and the center map keeps its terrain. */
+/* Workspace base is transparent. Terrain remains visible through the gaps between
+   floating panels, while each panel retains its own dark fill. Keep the terrain
+   copy filter-free to reduce compositor cost. */
 .workspace{
   background:transparent;
 }
-.workspace:before,
+.workspace:before{
+  content:"";
+  display:block;
+  filter:none;
+  opacity:.52;
+}
 .workspace:after{
   content:none;
   display:none;
