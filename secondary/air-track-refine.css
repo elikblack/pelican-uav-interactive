@@ -134,5 +134,5 @@
 
 /* Keep the data/message separator visually consistent with the stronger group rule. */
 .secondary-display .air-module .radar-side-data .air-alert{
-  border-top:2px solid rgba(119,201,91,.68);
+  border-top:2px solid var(--track-divider);
 }
