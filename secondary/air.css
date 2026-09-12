@@ -206,3 +206,121 @@
 @media (prefers-reduced-motion:reduce){
   .air-contact{animation:none;opacity:var(--peak-opacity)}
 }
+
+/* Selected-track hierarchy: state first, relative position second. This keeps the
+   existing live-value nodes intact while presenting the five operational values
+   as two coherent groups. Higher specificity intentionally beats the later
+   preflight/message layout layers without changing their geometry. */
+.secondary-display .air-module .radar-side-data{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-rows:14px 45px 47px 22px 45px;
+  column-gap:8px;
+  row-gap:0;
+  align-content:start;
+}
+
+.secondary-display .air-module .radar-side-data::before,
+.secondary-display .air-module .radar-side-data::after{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  color:rgba(119,201,91,.68);
+  font:800 8.5px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.13em;
+  white-space:nowrap;
+  pointer-events:none;
+}
+
+.secondary-display .air-module .radar-side-data::before{
+  content:"TARGET STATE";
+  grid-row:1;
+  align-self:end;
+}
+
+.secondary-display .air-module .radar-side-data::after{
+  content:"RELATIVE POSITION";
+  grid-row:4;
+  align-self:stretch;
+  padding-top:6px;
+  border-top:1px solid rgba(119,201,91,.24);
+}
+
+.secondary-display .air-module .radar-side-data>.air-altitude-row{
+  grid-column:1/-1;
+  grid-row:2;
+  width:100%;
+  height:auto;
+  margin:0;
+  display:grid;
+  grid-template-columns:34px 1fr;
+  align-items:center;
+}
+
+.secondary-display .air-module .radar-side-data>div:nth-child(1){grid-column:1;grid-row:3}
+.secondary-display .air-module .radar-side-data>div:nth-child(2){grid-column:2;grid-row:3}
+.secondary-display .air-module .radar-side-data>div:nth-child(3){grid-column:1;grid-row:5}
+.secondary-display .air-module .radar-side-data>div:nth-child(4){grid-column:2;grid-row:5}
+
+.secondary-display .air-module .radar-side-data>div:nth-child(-n+4):not(.air-alert){
+  width:auto;
+  height:auto;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:3px;
+}
+
+.secondary-display .air-module .radar-side-data>div:not(.air-alert)>span::after{
+  min-width:0;
+  min-height:0;
+  padding:0;
+  border:0;
+  display:block;
+  place-items:initial;
+  color:rgba(119,201,91,.76);
+  font-size:8px;
+  line-height:1;
+  letter-spacing:.08em;
+  text-align:left;
+}
+
+.secondary-display .air-module .radar-side-data>div:not(.air-alert)>strong{
+  width:100%;
+  padding:0;
+  text-align:left;
+}
+
+.secondary-display .air-module .radar-side-data>.air-altitude-row>strong{
+  text-align:right;
+}
+
+.secondary-display .air-module .radar-side-data>.air-altitude-row>strong::after{
+  font-size:34px;
+  line-height:.9;
+  letter-spacing:0;
+}
+
+.secondary-display .air-module .radar-side-data>div:nth-child(1)>strong::after,
+.secondary-display .air-module .radar-side-data>div:nth-child(2)>strong::after{
+  font-size:28px;
+  line-height:.88;
+  letter-spacing:0;
+}
+
+.secondary-display .air-module .radar-side-data>div:nth-child(3)>strong::after,
+.secondary-display .air-module .radar-side-data>div:nth-child(4)>strong::after{
+  font-size:25px;
+  line-height:.9;
+  letter-spacing:0;
+}
+
+/* The selected-track rail is intentionally limited to the five target values. */
+.secondary-display .air-module .radar-side-data>div:nth-child(2)>strong::before,
+.secondary-display .air-module .radar-side-data>div:nth-child(2)::before,
+.secondary-display .air-module .radar-side-data>div:nth-child(2)::after{
+  content:none;
+  display:none;
+}
