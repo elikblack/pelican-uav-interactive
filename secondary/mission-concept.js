@@ -10,14 +10,14 @@
 
   page.innerHTML = `
     <div class="mission-top-strip" aria-label="Mission execution summary">
-      <div class="mission-top-cell mission-execute"><span>MISSION / PHASE</span><strong>EXECUTE · TRANSIT</strong></div>
-      <div class="mission-top-cell"><span>ACTIVE LEG</span><strong>WP04 → WP05</strong></div>
-      <div class="mission-top-cell"><span>LEG ETE</span><strong id="mission-leg-ete">00:08:42</strong></div>
+      <div class="mission-top-cell mission-execute"><span>MISSION / PHASE</span><strong id="mission-phase">EXECUTE · TRANSIT</strong></div>
+      <div class="mission-top-cell"><span>ACTIVE LEG</span><strong id="mission-active-leg">STG → WPT 1</strong></div>
+      <div class="mission-top-cell"><span>LEG ETE</span><strong id="mission-leg-ete">00:00:00</strong></div>
     </div>
 
     <div class="mission-main-grid">
       <section class="mission-panel mission-route-panel" aria-label="Route and flight plan">
-        <header class="mission-panel-heading">ROUTE / FLIGHT PLAN <small>SEQ 04 / 09</small></header>
+        <header class="mission-panel-heading">ROUTE / FLIGHT PLAN <small>MISSION EXECUTION</small></header>
         <div class="mission-route-body">
           <svg class="mission-route-map" viewBox="0 0 400 260" role="img" aria-label="Mission route overview">
             <path class="mission-map-line" d="M25 45H375M25 95H375M25 145H375M25 195H375M70 20V240M155 20V240M240 20V240M325 20V240"/>
@@ -34,18 +34,18 @@
 
             <path id="mission-route-ownship" class="mission-ownship" d="M0 -9L6 7L0 4L-6 7Z" transform="translate(188 141) rotate(92)"/>
 
-            <text class="mission-map-label" x="130" y="148">WP04</text>
-            <text class="mission-map-label" x="224" y="118">WP05</text>
-            <text class="mission-map-label" x="285" y="82">WP06</text>
+            <text class="mission-map-label" x="130" y="148">NAV</text>
+            <text class="mission-map-label" x="224" y="118">TASK</text>
+            <text class="mission-map-label" x="285" y="82">RTB</text>
             <text class="mission-map-label" x="315" y="39">REC</text>
 
-            <text class="mission-map-dim" x="24" y="28">ROUTE 17B</text>
-            <text class="mission-map-dim" x="270" y="239">TRK 044°T</text>
+            <text class="mission-map-dim" x="24" y="28">MISSION ROUTE</text>
+            <text class="mission-map-dim" id="mission-track-course" x="270" y="239">CRS 092°T</text>
           </svg>
 
           <div class="mission-waypoints" aria-label="Flight plan sequence">
-            <div class="mission-waypoint active"><span>WP04 / ACTIVE</span><strong id="mission-wp-range">23.6 NM</strong></div>
-            <div class="mission-waypoint"><span>WP05 / NEXT</span><strong>TURN 061°</strong></div>
+            <div class="mission-waypoint active"><span id="mission-active-waypoint">WPT 1 / ACTIVE</span><strong id="mission-wp-range">0.0 NM</strong></div>
+            <div class="mission-waypoint"><span>GUIDANCE</span><strong id="mission-guidance">CRS 092°</strong></div>
           </div>
         </div>
       </section>
@@ -73,9 +73,9 @@
 
             <text class="profile-dim" x="18" y="28">14,000</text>
             <text class="profile-dim" x="18" y="122">10,000</text>
-            <text class="profile-label" x="155" y="75">WP04</text>
-            <text class="profile-label" x="515" y="67">WP05</text>
-            <text class="profile-label" x="695" y="63">WP06</text>
+            <text class="profile-label" x="155" y="75">NAV</text>
+            <text class="profile-label" x="515" y="67">TASK</text>
+            <text class="profile-label" x="695" y="63">RTB</text>
             <text class="profile-amber" x="425" y="69">ACFT 17</text>
             <text class="profile-dim" x="690" y="190">MIN CLR 4.1K</text>
           </svg>
@@ -84,10 +84,10 @@
         <div class="mission-flight-footer">
           <div class="mission-mode-box">NAV / AUTO</div>
           <div class="mission-progress">
-            <div class="mission-progress-label"><span>MISSION PROGRESS</span><strong id="mission-progress-label">46%</strong></div>
+            <div class="mission-progress-label"><span>MISSION PROGRESS</span><strong id="mission-progress-label">00%</strong></div>
             <div class="mission-progress-track"><i id="mission-progress-bar"></i></div>
           </div>
-          <div class="mission-xtrack"><span>XTK ERROR</span><strong id="mission-xtrack">0.03 NM</strong></div>
+          <div class="mission-xtrack"><span>XTK ERROR</span><strong id="mission-xtrack">0.00 NM</strong></div>
         </div>
       </section>
 
@@ -102,21 +102,26 @@
 
           <div class="mission-event-queue">
             <span>NEXT MISSION EVENT</span>
-            <div class="mission-event"><time>+08:42</time><strong>WP05 AUTO TURN / HDG 061°</strong></div>
+            <div class="mission-event"><time id="mission-next-ete">+00:00</time><strong id="mission-next-event">WPT 1 AUTO NAV</strong></div>
           </div>
         </div>
       </section>
     </div>
 
     <div class="mission-bottom-strip" aria-label="Mission execution status">
-      <div class="mission-bottom-cell mission-bottom-good"><span>EXECUTION</span><strong>NORMAL</strong></div>
-      <div class="mission-bottom-cell mission-bottom-next"><span>NEXT ACTION</span><strong>WP05 AUTO TURN</strong></div>
+      <div class="mission-bottom-cell mission-bottom-good"><span>EXECUTION</span><strong id="mission-execution">NORMAL</strong></div>
+      <div class="mission-bottom-cell mission-bottom-next"><span>NEXT ACTION</span><strong id="mission-next-action">WPT 1 AUTO NAV</strong></div>
     </div>
   `;
 
   const fields = {
+    phase: document.getElementById('mission-phase'),
+    activeLeg: document.getElementById('mission-active-leg'),
     ete: document.getElementById('mission-leg-ete'),
     range: document.getElementById('mission-wp-range'),
+    activeWaypoint: document.getElementById('mission-active-waypoint'),
+    guidance: document.getElementById('mission-guidance'),
+    trackCourse: document.getElementById('mission-track-course'),
     heading: document.getElementById('mission-heading'),
     speed: document.getElementById('mission-speed'),
     altitude: document.getElementById('mission-altitude'),
@@ -128,12 +133,12 @@
     navState: document.getElementById('mission-nav-state'),
     ownship: document.getElementById('mission-route-ownship'),
     progressLabel: document.getElementById('mission-progress-label'),
-    progressBar: document.getElementById('mission-progress-bar')
+    progressBar: document.getElementById('mission-progress-bar'),
+    nextEte: document.getElementById('mission-next-ete'),
+    nextEvent: document.getElementById('mission-next-event'),
+    execution: document.getElementById('mission-execution'),
+    nextAction: document.getElementById('mission-next-action')
   };
-
-  const startedAt = Date.now();
-  const baseEte = 8 * 60 + 42;
-  const baseRange = 23.6;
 
   function clock(totalSeconds) {
     const value = Math.max(0, Math.round(totalSeconds));
@@ -141,6 +146,13 @@
     const m = Math.floor((value % 3600) / 60);
     const s = value % 60;
     return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+
+  function shortClock(totalSeconds) {
+    const value = Math.max(0, Math.round(totalSeconds));
+    const m = Math.floor(value / 60);
+    const s = value % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   }
 
   function hoursMinutes(totalSeconds) {
@@ -154,6 +166,26 @@
     return String(source || 'UNKNOWN').replaceAll('_', '/');
   }
 
+  function phaseLabel(phase) {
+    if (phase === 'TASK_INGRESS') return 'TASK INGRESS';
+    if (phase === 'TASK') return 'TASK EXEC';
+    if (phase === 'TASK_EGRESS') return 'TASK EGRESS';
+    if (phase === 'RTB') return 'RTB';
+    if (phase === 'COMPLETE') return 'COMPLETE';
+    return 'TRANSIT';
+  }
+
+  function nextAction(mission) {
+    const target = mission?.targetId || 'NAV';
+    const phase = mission?.phase || 'NAV';
+    if (phase === 'TASK_INGRESS') return `${target} TASK INGRESS`;
+    if (phase === 'TASK') return `${target} ${String(mission?.taskType || 'TASK').toUpperCase()}`;
+    if (phase === 'TASK_EGRESS') return 'EGRESS / RESUME NAV';
+    if (phase === 'RTB') return 'RETURN STAGING';
+    if (phase === 'COMPLETE') return 'MISSION COMPLETE';
+    return `${target} AUTO NAV`;
+  }
+
   function renderShared(state) {
     const aircraft = state?.aircraft;
     if (aircraft) {
@@ -163,7 +195,7 @@
       const endurance = Number(aircraft.enduranceSeconds);
 
       if (Number.isFinite(heading)) {
-        fields.heading.textContent = `${heading.toFixed(1)}°`;
+        if (fields.heading?.isConnected) fields.heading.textContent = `${heading.toFixed(1)}°`;
         if (fields.ownship) fields.ownship.setAttribute('transform', `translate(188 141) rotate(${heading.toFixed(1)})`);
       }
       if (Number.isFinite(speed)) fields.speed.innerHTML = `${Math.round(speed)}<small>KT</small>`;
@@ -181,25 +213,33 @@
 
     const margin = Number(state?.link?.marginDb);
     if (Number.isFinite(margin)) fields.link.textContent = `${margin >= 0 ? '+' : ''}${margin.toFixed(1)} dB`;
+
+    const mission = state?.mission;
+    if (mission) {
+      const phase = mission.phase || 'NAV';
+      const course = Number(mission.courseDeg);
+      const crossTrack = Number(mission.crossTrackNm);
+      const distance = Number(mission.distanceToNextNm);
+      const ete = Number(mission.eteSeconds);
+      const progress = Math.max(0, Math.min(100, (Number(mission.routeProgress) || 0) * 100));
+      const action = nextAction(mission);
+
+      fields.phase.textContent = `EXECUTE · ${phaseLabel(phase)}`;
+      fields.activeLeg.textContent = String(mission.activeLeg || mission.targetId || 'NAV').replaceAll(' > ', ' → ');
+      fields.ete.textContent = clock(Number.isFinite(ete) ? ete : 0);
+      fields.range.textContent = `${Number.isFinite(distance) ? distance.toFixed(1) : '0.0'} NM`;
+      fields.activeWaypoint.textContent = `${mission.targetId || 'NAV'} / ACTIVE`;
+      fields.guidance.textContent = Number.isFinite(course) ? `CRS ${String(Math.round(course)).padStart(3, '0')}°` : 'CRS ---';
+      fields.trackCourse.textContent = Number.isFinite(course) ? `CRS ${String(Math.round(course)).padStart(3, '0')}°T` : 'CRS ---°T';
+      fields.xtrack.textContent = Number.isFinite(crossTrack) ? `${crossTrack.toFixed(2)} NM` : '--';
+      fields.progressLabel.textContent = `${Math.round(progress)}%`;
+      fields.progressBar.style.width = `${progress}%`;
+      fields.nextEte.textContent = `+${shortClock(Number.isFinite(ete) ? ete : 0)}`;
+      fields.nextEvent.textContent = action;
+      fields.nextAction.textContent = action;
+      fields.execution.textContent = phase === 'COMPLETE' ? 'COMPLETE' : 'NORMAL';
+    }
   }
 
-  function updateMission() {
-    const elapsedSeconds = (Date.now() - startedAt) / 1000;
-    const slowSeconds = elapsedSeconds * 0.16;
-
-    const ete = Math.max(0, baseEte - slowSeconds);
-    const range = Math.max(0, baseRange - slowSeconds * 0.0105);
-    const progress = Math.min(99, 46 + slowSeconds * 0.018);
-    const xtrack = 0.03 + Math.abs(Math.sin(elapsedSeconds / 12.4)) * 0.018;
-
-    fields.ete.textContent = clock(ete);
-    fields.range.textContent = `${range.toFixed(1)} NM`;
-    fields.xtrack.textContent = `${xtrack.toFixed(2)} NM`;
-    fields.progressLabel.textContent = `${Math.round(progress)}%`;
-    fields.progressBar.style.width = `${progress}%`;
-  }
-
-  updateMission();
-  if (shared) shared.subscribe(renderShared);
-  setInterval(updateMission, 500);
+  if (shared) shared.subscribe(renderShared, ['aircraft', 'navigation', 'link', 'mission']);
 })();
