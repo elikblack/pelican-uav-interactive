@@ -61,13 +61,44 @@
   transform:scale(1.045);
 }
 
-/* Promote the tiny opposing edge readouts without turning them into panels. */
+/* Promote the opposing edge readouts to a genuinely legible instrument size. */
 .weather-module .weather-radar-pane::before{
-  font-size:12px;
+  font-size:16px;
   line-height:.98;
 }
 
 .weather-module .weather-sector-body::before{
-  font-size:13px;
+  font-size:16px;
   line-height:.98;
+}
+
+/* Give the lower-right intensity legend enough contrast to survive bright
+   echo returns without turning it into a heavy opaque panel. */
+.weather-module .weather-legend-greeble{
+  right:7px;
+  bottom:7px;
+  box-sizing:border-box;
+  width:166px;
+  padding:5px 6px 4px;
+  background:rgba(0,0,0,.5);
+}
+
+/* The old ANT/ECHO annotation lived above the legend. A real element now owns
+   that text so it can sit independently at the lower-left of the radar pane. */
+.weather-module .weather-legend-greeble::before{
+  content:none;
+}
+
+.weather-module .weather-lower-status{
+  position:absolute;
+  left:8px;
+  bottom:8px;
+  z-index:7;
+  color:rgba(151,232,116,.68);
+  white-space:nowrap;
+  text-align:left;
+  font:800 10px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.03em;
+  text-shadow:0 0 3px rgba(119,201,91,.14);
+  pointer-events:none;
 }
