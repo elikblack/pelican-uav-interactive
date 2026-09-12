@@ -218,7 +218,7 @@
     if (mission) {
       const phase = mission.phase || 'NAV';
       const course = Number(mission.courseDeg);
-      const crossTrack = Number(mission.crossTrackNm);
+      const crossTrack = mission.crossTrackNm == null ? null : Number(mission.crossTrackNm);
       const distance = Number(mission.distanceToNextNm);
       const ete = Number(mission.eteSeconds);
       const progress = Math.max(0, Math.min(100, (Number(mission.routeProgress) || 0) * 100));
