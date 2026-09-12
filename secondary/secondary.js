@@ -141,69 +141,7 @@
     `;
   }
 
-  function curveWeatherHeadingScale() {
-    const scale = document.querySelector('.wx-heading-scale');
-    if (!scale) return;
-
-    scale.innerHTML = `
-      <path d="M54 55 Q310 1 566 55" />
-
-      <path d="M77 48l-2 11M143 34l-1 11M209 24v11M276 18v15M344 18v15M411 24v11M477 34l1 11M543 48l2 11" />
-
-      <text x="77" y="40">30</text>
-      <text x="143" y="26">31</text>
-      <text x="209" y="16">32</text>
-      <text x="276" y="10">33</text>
-      <text x="344" y="10">34</text>
-      <text x="411" y="16">35</text>
-      <text x="477" y="26">36</text>
-      <text x="543" y="40">37</text>
-
-      <path class="wx-heading-bug" d="M310 4v30M301 12h18" />
-    `;
-  }
-
-  const fields = {
-    tx: document.getElementById('tx-power'),
-    consumption: document.getElementById('power-consumption'),
-    thermal: document.getElementById('thermal'),
-    margin: document.getElementById('link-margin'),
-    txMeter: document.getElementById('tx-meter'),
-    powerMeter: document.getElementById('power-meter'),
-    thermalMeter: document.getElementById('thermal-meter'),
-    linkMeter: document.getElementById('link-meter')
-  };
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-
-  function jitter(base, amount) {
-    return base + (Math.random() - .5) * amount;
-  }
-
-  function updateTelemetry() {
-    const tx = jitter(25, 1.7);
-    const consumption = jitter(232, 8);
-    const thermal = jitter(38, 1.8);
-    const margin = jitter(18.2, 1.4);
-
-    fields.tx.textContent = `${tx.toFixed(1)} W`;
-    fields.consumption.textContent = `${Math.round(consumption)} W`;
-    fields.thermal.textContent = `${Math.round(thermal)}°C`;
-    fields.margin.textContent = `+${margin.toFixed(1)} dB`;
-
-    fields.txMeter.style.width = `${clamp(tx / 40 * 100, 35, 90)}%`;
-    fields.powerMeter.style.width = `${clamp(consumption / 340 * 100, 40, 90)}%`;
-    fields.thermalMeter.style.width = `${clamp(thermal / 70 * 100, 35, 80)}%`;
-    fields.linkMeter.style.width = `${clamp((margin + 5) / 30 * 100, 35, 96)}%`;
-  }
-
   buildAirspacePlot();
-  curveWeatherHeadingScale();
   fitDisplay();
-  updateTelemetry();
-
-  setInterval(updateTelemetry, 1100);
   window.addEventListener('resize', fitDisplay);
 })();
