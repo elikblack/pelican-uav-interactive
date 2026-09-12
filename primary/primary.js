@@ -6,9 +6,10 @@
   const root = document.documentElement;
   const display = document.getElementById("primary-display");
   const workspace = document.querySelector(".workspace");
+  const mapPanel = document.querySelector(".map-panel");
   const mapWorld = document.getElementById("map-world");
   const mapSvg = document.getElementById("map-svg");
-  const terrain = document.getElementById("terrain-image");
+  const terrain = document.getElementById("workspace-terrain");
   const routeBase = document.getElementById("route-base");
   const routeProgress = document.getElementById("route-progress-path");
   let aoiLayer = document.getElementById("aoi-layer");
@@ -114,9 +115,15 @@
     if (document.querySelector('link[data-effects-css]')) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "effects.css?v=20260911-1";
+    link.href = "effects.css?v=20260912-3";
     link.dataset.effectsCss = "true";
     document.head.appendChild(link);
+  }
+
+  function setCameraTransform(x, y) {
+    const transform = `translate3d(${x}px, ${y}px, 0)`;
+    mapWorld.style.transform = transform;
+    if (terrain) terrain.style.transform = transform;
   }
 
   function ensureThroughputGradient() {
@@ -151,20 +158,19 @@
     const { worldWidth:w, worldHeight:h } = cfg.map;
     mapWorld.style.width = `${w}px`;
     mapWorld.style.height = `${h}px`;
-    terrain.src = cfg.map.image;
-    terrain.style.width = `${w}px`;
-    terrain.style.height = `${h}px`;
+    if (terrain) {
+      terrain.src = cfg.map.image;
+      terrain.style.width = `${w}px`;
+      terrain.style.height = `${h}px`;
+      if (workspace && mapPanel) {
+        terrain.style.left = `${mapPanel.offsetLeft}px`;
+        terrain.style.top = `${mapPanel.offsetTop}px`;
+      }
+    }
+    setCameraTransform(cfg.map.startX, cfg.map.startY);
     mapSvg.setAttribute("viewBox", `0 0 ${w} ${h}`);
     mapSvg.setAttribute("width", w);
     mapSvg.setAttribute("height", h);
-
-    if (workspace) {
-      workspace.style.setProperty("--map-image", `url("${cfg.map.image}")`);
-      workspace.style.setProperty("--map-width", `${w}px`);
-      workspace.style.setProperty("--map-height", `${h}px`);
-      workspace.style.setProperty("--map-x", `${cfg.map.startX}px`);
-      workspace.style.setProperty("--map-y", `${cfg.map.startY}px`);
-    }
 
     if (!aoiLayer) {
       aoiLayer = document.createElementNS(NS, "g");
@@ -608,11 +614,7 @@
 
     const x = cfg.map.startX + (cfg.map.endX - cfg.map.startX) * cameraEase;
     const y = cfg.map.startY + (cfg.map.endY - cfg.map.startY) * cameraEase;
-    mapWorld.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    if (workspace) {
-      workspace.style.setProperty("--map-x", `${x}px`);
-      workspace.style.setProperty("--map-y", `${y}px`);
-    }
+    setCameraTransform(x, y);
     progressText.textContent = `${String(Math.round(progress * 100)).padStart(2, "0")}%`;
   }
 
