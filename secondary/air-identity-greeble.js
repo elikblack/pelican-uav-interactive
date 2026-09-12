@@ -15,20 +15,34 @@
   if (!altitudeRow) {
     altitudeRow = document.createElement('div');
     altitudeRow.className = 'air-altitude-row';
-    altitudeRow.innerHTML = '<span>ALTITUDE</span><strong data-live-value="---">---</strong>';
+    altitudeRow.innerHTML = '<span>ALTITUDE</span><strong data-live-value="---">---</strong><em class="air-altitude-ft">----- FT</em>';
     const alert = rail.querySelector('.air-alert');
     rail.insertBefore(altitudeRow, alert || null);
   }
   const altitudeValue = altitudeRow.querySelector('strong');
+  let altitudeFeet = altitudeRow.querySelector('.air-altitude-ft');
+  if (!altitudeFeet) {
+    altitudeFeet = document.createElement('em');
+    altitudeFeet.className = 'air-altitude-ft';
+    altitudeFeet.textContent = '----- FT';
+    altitudeRow.appendChild(altitudeFeet);
+  }
 
   function targetId(text) {
     return Object.keys(identities).find(id => text.includes(id)) || null;
   }
 
-  function syncAltitude() {
-    if (!altitudeValue) return;
+  function flightLevelFeet(value) {
+    const match = /^FL(\d{2,3})$/i.exec(value || '');
+    return match ? `${Number(match[1]) * 100} FT` : '----- FT';
+  }
+
+  function syncTargetDetails() {
     const id = targetId(header?.textContent || '');
-    altitudeValue.dataset.liveValue = id ? identities[id].altitude : '---';
+    const altitude = id ? identities[id].altitude : '---';
+    rail.dataset.targetId = id || '---';
+    if (altitudeValue) altitudeValue.dataset.liveValue = altitude;
+    if (altitudeFeet) altitudeFeet.textContent = flightLevelFeet(altitude);
   }
 
   function wholeDegrees(value) {
@@ -101,9 +115,9 @@
     entry.textContent = `${lineOne}\n${lineTwo}`;
   }
 
-  syncAltitude();
+  syncTargetDetails();
   if (header) {
-    const headerObserver = new MutationObserver(syncAltitude);
+    const headerObserver = new MutationObserver(syncTargetDetails);
     headerObserver.observe(header, { childList: true, characterData: true, subtree: true });
   }
 
