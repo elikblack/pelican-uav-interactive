@@ -75,31 +75,46 @@
     const value = document.getElementById(id);
     const card = value?.closest('.status-card');
     if (!card) return;
+    value.textContent = text;
     card.dataset.sharedTelemetry = 'true';
     card.dataset.sharedValue = text;
     card.style.setProperty('--shared-meter-width', `${width}%`);
   }
 
   function renderSecondaryMeters(state) {
+    const txWatts = Number(state.link?.txPowerWatts);
     const loadWatts = Number(state.power?.loadWatts);
     const tempC = Number(state.diagnostics?.stationTempC);
     const marginDb = Number(state.link?.marginDb);
 
-    setSharedMeter(
-      'power-consumption',
-      `${Math.round(loadWatts)} W`,
-      clamp(loadWatts / 340 * 100, 40, 90)
-    );
-    setSharedMeter(
-      'thermal',
-      `${Math.round(tempC)}°C`,
-      clamp(tempC / 70 * 100, 35, 80)
-    );
-    setSharedMeter(
-      'link-margin',
-      `${marginDb >= 0 ? '+' : ''}${marginDb.toFixed(1)} dB`,
-      clamp((marginDb + 5) / 30 * 100, 35, 96)
-    );
+    if (Number.isFinite(txWatts)) {
+      setSharedMeter(
+        'tx-power',
+        `${txWatts.toFixed(1)} W`,
+        clamp(txWatts / 40 * 100, 35, 90)
+      );
+    }
+    if (Number.isFinite(loadWatts)) {
+      setSharedMeter(
+        'power-consumption',
+        `${Math.round(loadWatts)} W`,
+        clamp(loadWatts / 340 * 100, 40, 90)
+      );
+    }
+    if (Number.isFinite(tempC)) {
+      setSharedMeter(
+        'thermal',
+        `${Math.round(tempC)}°C`,
+        clamp(tempC / 70 * 100, 35, 80)
+      );
+    }
+    if (Number.isFinite(marginDb)) {
+      setSharedMeter(
+        'link-margin',
+        `${marginDb >= 0 ? '+' : ''}${marginDb.toFixed(1)} dB`,
+        clamp((marginDb + 5) / 30 * 100, 35, 96)
+      );
+    }
   }
 
   function renderSecondary(state) {
