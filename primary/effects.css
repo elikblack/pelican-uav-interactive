@@ -92,9 +92,13 @@
 }
 .throughput strong{color:var(--throughput-yellow)}
 
-/* Compositor isolation test: remove the workspace-wide terrain copy behind the
-   floating side panels. The center mission map keeps its own terrain layer. */
-.workspace:before{
+/* Compositor isolation test: the workspace itself contributes no background.
+   Individual panels retain their own dark fill and the center map keeps its terrain. */
+.workspace{
+  background:transparent;
+}
+.workspace:before,
+.workspace:after{
   content:none;
   display:none;
 }
