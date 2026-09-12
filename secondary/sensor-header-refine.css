@@ -48,22 +48,17 @@
   overflow:visible;
 }
 
-/* Weather scope breathing-room pass. The outermost range arc stays omitted;
-   the remaining scope furniture expands slightly around the ownship origin. */
-.weather-module .wx-sector-grid path:last-child{
-  display:none;
-}
-
+/* Weather rings are explicitly laid out by weather-sequence.js at equal
+   85-unit spacing, so no additional scale transform is needed here. */
 .weather-module .wx-sector-grid,
 .weather-module .wx-range-labels{
-  transform-box:view-box;
-  transform-origin:310px 312px;
-  transform:scale(1.045);
+  transform:none;
 }
 
-/* The bearing ring is the 45 NM arc just inside the omitted outer arc. It is
-   deliberately solid so the bearing ticks and labels read as attached to it. */
+/* The outer range ring doubles as the bearing ring and therefore stays solid;
+   the three inner rings retain the default dashed weather-range treatment. */
 .weather-module .wx-sector-grid .wx-bearing-ring{
+  display:inline;
   stroke:#fff;
   stroke-width:1.7;
   stroke-dasharray:none;
