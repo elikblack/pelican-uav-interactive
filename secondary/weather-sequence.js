@@ -3,10 +3,23 @@
   const WEATHER_FRAME_MS = 750;
   const WEATHER_FRAME_PATH = '../shared/assets/weather';
 
+  const shared = window.UAV_SHARED;
   const weatherBody = document.querySelector('.weather-sector-body');
   const weatherPane = document.querySelector('.weather-radar-pane') || weatherBody;
   const weatherSvg = weatherPane && weatherPane.querySelector('.weather-sector');
   if (!weatherBody || !weatherPane || !weatherSvg) return;
+
+  function normalizeHeading(value) {
+    return (value % 360 + 360) % 360;
+  }
+
+  function headingTickLabel(value) {
+    const normalized = normalizeHeading(value);
+    let tens = Math.round(normalized / 10);
+    if (tens === 0) tens = 36;
+    if (tens > 36) tens -= 36;
+    return String(tens).padStart(2, '0');
+  }
 
   function integrateBearingScale() {
     const scale = weatherSvg.querySelector('.wx-heading-scale');
@@ -45,14 +58,13 @@
 
     const majorAngles = [-35, -25, -15, -5, 5, 15, 25, 35];
     const minorAngles = [-40, -30, -20, -10, 0, 10, 20, 30, 40];
-    const labels = ['30', '31', '32', '33', '34', '35', '36', '37'];
 
     const majorTicks = majorAngles.map(angle => segment(angle, 289)).join('');
     const minorTicks = minorAngles.map(angle => segment(angle, 297)).join('');
-    const labelMarkup = majorAngles.map((angle, index) => {
+    const labelMarkup = majorAngles.map(angle => {
       const p = point(274, angle);
       const rotation = angle * .72;
-      return `<text x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" transform="rotate(${rotation.toFixed(1)} ${p.x.toFixed(1)} ${p.y.toFixed(1)})" style="fill:#fff;opacity:1;font-size:11px;font-weight:600;text-anchor:middle;letter-spacing:.03em;paint-order:stroke;stroke:#020402;stroke-width:2px">${labels[index]}</text>`;
+      return `<text data-bearing-offset="${angle}" x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" transform="rotate(${rotation.toFixed(1)} ${p.x.toFixed(1)} ${p.y.toFixed(1)})" style="fill:#fff;opacity:1;font-size:11px;font-weight:600;text-anchor:middle;letter-spacing:.03em;paint-order:stroke;stroke:#020402;stroke-width:2px">--</text>`;
     }).join('');
 
     scale.innerHTML = `
@@ -63,7 +75,17 @@
     `;
   }
 
+  function renderBearingScale(state) {
+    const heading = Number(state?.aircraft?.headingDeg);
+    if (!Number.isFinite(heading)) return;
+    weatherSvg.querySelectorAll('[data-bearing-offset]').forEach(label => {
+      const offset = Number(label.dataset.bearingOffset) || 0;
+      label.textContent = headingTickLabel(heading + offset);
+    });
+  }
+
   integrateBearingScale();
+  if (shared) shared.subscribe(renderBearingScale, ['aircraft']);
 
   const frames = Array.from({ length: WEATHER_FRAME_COUNT }, (_, index) =>
     `${WEATHER_FRAME_PATH}/weather-radar-frame-${String(index + 1).padStart(3, '0')}.png`
