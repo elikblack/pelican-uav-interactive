@@ -138,6 +138,7 @@
     progressBar: document.getElementById('ops-route-progress-bar'),
     taskName: document.getElementById('ops-task-name'),
     taskState: document.getElementById('ops-task-state'),
+    taskPass: document.querySelector('.task-rows .task-row:nth-child(2) strong'),
     taskNext: document.getElementById('ops-task-next')
   };
 
@@ -274,9 +275,33 @@
     shared.update(patch, 'primary-flight');
   }
 
+  function renderTaskPass(execution, target, phase) {
+    if (!fields.taskPass) return;
+    const task = target?.task;
+    if (!task || !['TASK_INGRESS', 'TASK', 'TASK_EGRESS'].includes(phase)) {
+      fields.taskPass.textContent = '-- / --';
+      return;
+    }
+
+    let total = 1;
+    if (task.pattern === 'sweep') total = Math.max(1, Math.round(task.passes ?? 1));
+    else if (task.pattern === 'orbit') total = Math.max(1, Math.ceil(Math.abs(task.turns ?? 1)));
+
+    const progress = Math.max(0, Math.min(1, Number(execution?.taskProgress) || 0));
+    const current = phase === 'TASK_EGRESS'
+      ? total
+      : phase === 'TASK_INGRESS'
+        ? 1
+        : Math.min(total, Math.max(1, Math.floor(progress * total) + 1));
+
+    fields.taskPass.textContent = `${current} / ${total}`;
+  }
+
   function renderMission(execution, metrics) {
     const phase = metrics.phase;
     const target = metrics.target;
+
+    renderTaskPass(execution, target, phase);
 
     if (fields.course) fields.course.textContent = `${pad3(metrics.courseDeg)}°`;
     if (fields.xtk) {
