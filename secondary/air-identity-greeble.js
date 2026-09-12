@@ -28,8 +28,30 @@
     altitudeRow.appendChild(altitudeFeet);
   }
 
+  let targetMeta = rail.querySelector('.air-target-meta');
+  if (!targetMeta) {
+    targetMeta = document.createElement('div');
+    targetMeta.className = 'air-target-meta';
+    targetMeta.setAttribute('aria-hidden', 'true');
+    targetMeta.innerHTML = '<b class="air-target-status">TRACK</b><b class="air-target-type">----</b>';
+    rail.insertBefore(targetMeta, altitudeRow);
+  }
+  const targetStatus = targetMeta.querySelector('.air-target-status');
+  const targetType = targetMeta.querySelector('.air-target-type');
+
   function targetId(text) {
     return Object.keys(identities).find(id => text.includes(id)) || null;
+  }
+
+  function headerState(text) {
+    const match = /\/\s*([^\]]+)\]/.exec(text || '');
+    return match ? match[1].trim().toUpperCase() : 'TRACK';
+  }
+
+  function targetTone(state) {
+    if (/HOSTILE|THREAT|CRITICAL/.test(state)) return 'critical';
+    if (/COAST|IDENT CHECK|UNCORR|BOGEY/.test(state)) return 'warning';
+    return 'normal';
   }
 
   function flightLevelFeet(value) {
@@ -38,9 +60,18 @@
   }
 
   function syncTargetDetails() {
-    const id = targetId(header?.textContent || '');
-    const altitude = id ? identities[id].altitude : '---';
+    const headerText = header?.textContent || '';
+    const id = targetId(headerText);
+    const state = headerState(headerText);
+    const identity = id ? identities[id] : null;
+    const altitude = identity?.altitude || '---';
+    const hideType = /IDENT CHECK|UNCORR|BOGEY/.test(state);
+
     rail.dataset.targetId = id || '---';
+    rail.dataset.targetState = state;
+    rail.dataset.targetTone = targetTone(state);
+    if (targetStatus) targetStatus.textContent = state;
+    if (targetType) targetType.textContent = hideType ? '----' : (identity?.type || '----');
     if (altitudeValue) altitudeValue.dataset.liveValue = altitude;
     if (altitudeFeet) altitudeFeet.textContent = flightLevelFeet(altitude);
   }
