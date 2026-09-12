@@ -28,17 +28,15 @@
   text-shadow:0 0 4px rgba(119,201,91,.22);
 }
 
-/* Relative-position heading doubles as a strong group divider. */
+/* Strong divider between target state and relative position. */
 .secondary-display .air-module .radar-side-data::after{
-  content:"RELATIVE POSITION";
+  content:"";
   grid-column:1/-1;
   grid-row:4;
   align-self:stretch;
   padding-top:5px;
   border-top:2px solid var(--track-divider);
-  color:rgba(119,201,91,.88);
-  font:800 9.5px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-  letter-spacing:.1em;
+  pointer-events:none;
 }
 
 /* Box every field label and pull it tightly against its value. */
@@ -51,7 +49,7 @@
   color:var(--track-green);
   display:inline-grid;
   place-items:center;
-  font:800 11px/.9 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font:800 12px/.9 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:-.015em;
   text-align:center;
   text-shadow:0 0 3px rgba(119,201,91,.22);
