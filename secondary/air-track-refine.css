@@ -1,0 +1,138 @@
+/* Final selected-track readout hierarchy.
+   Keep the older radar layout intact and only refine the right-hand data block. */
+.secondary-display .air-module .radar-side-data{
+  --track-green:var(--green);
+  --track-divider:rgba(119,201,91,.82);
+  grid-template-rows:39px 42px 39px 20px 39px;
+  column-gap:8px;
+}
+
+/* Replace the old TARGET STATE heading with the live selected target ID. */
+.secondary-display .air-module .radar-side-data::before{
+  content:attr(data-target-id);
+  grid-column:1/-1;
+  grid-row:1;
+  justify-self:start;
+  align-self:start;
+  box-sizing:border-box;
+  min-width:64px;
+  height:36px;
+  padding:2px 7px 1px;
+  border:1.5px solid currentColor;
+  color:var(--track-green);
+  background:transparent;
+  display:flex;
+  align-items:center;
+  font:700 31px/.9 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:0;
+  text-shadow:0 0 4px rgba(119,201,91,.22);
+}
+
+/* Relative-position heading doubles as a strong group divider. */
+.secondary-display .air-module .radar-side-data::after{
+  content:"RELATIVE POSITION";
+  grid-column:1/-1;
+  grid-row:4;
+  align-self:stretch;
+  padding-top:5px;
+  border-top:2px solid var(--track-divider);
+  color:rgba(119,201,91,.88);
+  font:800 9.5px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.1em;
+}
+
+/* Box every field label and pull it tightly against its value. */
+.secondary-display .air-module .radar-side-data>div:not(.air-alert)>span::after{
+  box-sizing:border-box;
+  min-width:34px;
+  min-height:21px;
+  padding:2px 3px 1px;
+  border:1.5px solid currentColor;
+  color:var(--track-green);
+  display:inline-grid;
+  place-items:center;
+  font:800 11px/.9 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:-.015em;
+  text-align:center;
+  text-shadow:0 0 3px rgba(119,201,91,.22);
+}
+
+/* ALT / FL / feet occupy one dense line. */
+.secondary-display .air-module .radar-side-data>.air-altitude-row{
+  order:initial;
+  grid-column:1/-1;
+  grid-row:2;
+  width:100%;
+  height:auto;
+  margin:0;
+  display:grid;
+  grid-template-columns:38px auto 1fr;
+  align-items:center;
+  column-gap:4px;
+}
+
+.secondary-display .air-module .radar-side-data>.air-altitude-row>strong{
+  width:auto;
+  padding:0;
+  text-align:left;
+}
+
+.secondary-display .air-module .radar-side-data>.air-altitude-row>strong::after{
+  font-size:31px;
+  line-height:.9;
+  letter-spacing:0;
+}
+
+.secondary-display .air-module .radar-side-data .air-altitude-ft{
+  justify-self:end;
+  color:var(--track-green);
+  font:700 18px/.9 "Kode Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  font-style:normal;
+  letter-spacing:0;
+  white-space:nowrap;
+  text-shadow:0 0 3px rgba(119,201,91,.18);
+}
+
+/* Kinematic pair. */
+.secondary-display .air-module .radar-side-data>div:nth-child(1){grid-column:1;grid-row:3}
+.secondary-display .air-module .radar-side-data>div:nth-child(2){grid-column:2;grid-row:3}
+
+/* Relative-position pair. */
+.secondary-display .air-module .radar-side-data>div:nth-child(3){grid-column:1;grid-row:5}
+.secondary-display .air-module .radar-side-data>div:nth-child(4){grid-column:2;grid-row:5}
+
+.secondary-display .air-module .radar-side-data>div:nth-child(-n+4):not(.air-alert){
+  width:auto;
+  height:auto;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:1px;
+}
+
+.secondary-display .air-module .radar-side-data>div:nth-child(-n+4)>strong{
+  width:100%;
+  padding:0;
+  text-align:left;
+}
+
+.secondary-display .air-module .radar-side-data>div:nth-child(1)>strong::after,
+.secondary-display .air-module .radar-side-data>div:nth-child(2)>strong::after{
+  font-size:27px;
+  line-height:.88;
+  letter-spacing:0;
+}
+
+.secondary-display .air-module .radar-side-data>div:nth-child(3)>strong::after,
+.secondary-display .air-module .radar-side-data>div:nth-child(4)>strong::after{
+  font-size:25px;
+  line-height:.9;
+  letter-spacing:0;
+}
+
+/* Keep the data/message separator visually consistent with the stronger group rule. */
+.secondary-display .air-module .radar-side-data .air-alert{
+  border-top:2px solid rgba(119,201,91,.68);
+}
