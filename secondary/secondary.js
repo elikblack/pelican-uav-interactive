@@ -1,6 +1,7 @@
 (() => {
   const display = document.getElementById('secondary-display');
   const world = window.UAV_WORLD;
+  const shared = window.UAV_SHARED;
   const airRangeNm = Number(world?.regionalAir?.rangeNm) || 120;
 
   function fitDisplay() {
@@ -143,7 +144,36 @@
     `;
   }
 
+  function publishStationTelemetry() {
+    if (!shared) return;
+    const t = Date.now() / 1000;
+    const busVoltage = 27.8 + Math.sin(t / 13.0) * 0.22 + Math.sin(t / 31.0 + 0.7) * 0.08;
+    const loadWatts = 232 + Math.sin(t / 6.4) * 8.5 + Math.sin(t / 17.2 + 1.0) * 4.5;
+    const txPowerWatts = 25.0 + Math.sin(t / 5.2) * 0.7 + Math.sin(t / 11.7 + 0.4) * 0.3;
+    const marginDb = 18.2 + Math.sin(t / 7.4) * 0.8 + Math.sin(t / 15.1 + 0.8) * 0.5;
+    const latencyMs = 84 + Math.sin(t / 8.6) * 7.5 + Math.sin(t / 19.0 + 1.2) * 3.0;
+    const stationTempC = 38 + Math.sin(t / 24.0) * 1.2 + Math.sin(t / 9.5 + 0.5) * 0.4;
+
+    shared.update({
+      power: {
+        busVoltage: Number(busVoltage.toFixed(2)),
+        loadWatts: Number(loadWatts.toFixed(1))
+      },
+      link: {
+        marginDb: Number(marginDb.toFixed(1)),
+        latencyMs: Math.round(latencyMs),
+        txPowerWatts: Number(txPowerWatts.toFixed(1))
+      },
+      diagnostics: {
+        stationTempC: Number(stationTempC.toFixed(1)),
+        activeFaults: 0
+      }
+    }, 'secondary-station-telemetry');
+  }
+
   buildAirspacePlot();
   fitDisplay();
+  publishStationTelemetry();
+  setInterval(publishStationTelemetry, 1000);
   window.addEventListener('resize', fitDisplay);
 })();
