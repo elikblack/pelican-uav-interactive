@@ -106,6 +106,6 @@
     requestAnimationFrame(paint);
   }
 
-  shared.subscribe(receive);
+  shared.subscribe(receive, ['aircraft']);
   requestAnimationFrame(paint);
 })();
