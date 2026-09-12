@@ -11,7 +11,8 @@
     },
     link: {
       marginDb: 18.2,
-      latencyMs: 84
+      latencyMs: 84,
+      txPowerWatts: 25.0
     },
     diagnostics: {
       stationTempC: 38,
@@ -26,6 +27,22 @@
     navigation: {
       source: 'GPS_INS',
       valid: true
+    },
+    mission: {
+      phase: 'NAV',
+      targetIndex: 1,
+      targetId: 'WPT 1',
+      targetKind: 'nav',
+      completedThrough: 0,
+      taskType: null,
+      taskLabel: null,
+      taskProgress: 0,
+      routeProgress: 0,
+      activeLeg: 'STG > WPT 1',
+      courseDeg: 92,
+      crossTrackNm: 0,
+      distanceToNextNm: 0,
+      eteSeconds: 0
     }
   };
 
