@@ -1,4 +1,6 @@
 (() => {
+  const world = window.UAV_WORLD;
+
   function buildAirControlRail() {
     const body = document.querySelector('.air-module .radar-module-body');
     if (!body || body.querySelector('.air-control-rail')) return;
@@ -101,7 +103,10 @@
       const dx = position.x - 195;
       const dy = position.y - 160;
       const bearing = (Math.atan2(dx, -dy) * 180 / Math.PI + 360) % 360;
-      const range = Math.hypot(dx, dy) / 15;
+      const relative = world?.airPlotPointToRelativeNm?.(position);
+      const range = relative
+        ? Math.hypot(relative.eastNm, relative.northNm)
+        : Math.hypot(dx, dy) / 15;
       const heading = (target.heading + Math.sin(now / 9000 + target.phase) * 1.8 + 360) % 360;
       const speed = target.speed + Math.sin(now / 7200 + target.phase * 1.7) * 3.2;
       return { heading, speed, bearing, range };
