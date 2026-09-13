@@ -1,0 +1,19 @@
+/* Selected-target identity legibility pass.
+   The state/type boxes were visually too small at final display scale. */
+
+.secondary-display .air-module .radar-side-data{
+  grid-template-rows:56px 42px 39px 20px 39px;
+}
+
+.secondary-display .air-module .radar-side-data>.air-target-meta{
+  width:116px;
+  height:54px;
+  grid-template-rows:26px 26px;
+  gap:2px;
+}
+
+.secondary-display .air-module .radar-side-data>.air-target-meta>b{
+  padding:2px 6px 1px;
+  font:800 13px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:.015em;
+}
