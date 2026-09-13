@@ -1,19 +1,29 @@
 /* Selected-target identity legibility pass.
-   The state/type boxes were visually too small at final display scale. */
+   Keep the readable status treatment while reclaiming vertical space. */
 
 .secondary-display .air-module .radar-side-data{
-  grid-template-rows:56px 42px 39px 20px 39px;
+  grid-template-rows:42px 42px 39px 20px 39px;
 }
 
 .secondary-display .air-module .radar-side-data>.air-target-meta{
   width:116px;
-  height:54px;
-  grid-template-rows:26px 26px;
-  gap:2px;
+  height:39px;
+  margin:-3px 0 0 72px;
+  grid-template-rows:25px 14px;
+  gap:0;
 }
 
 .secondary-display .air-module .radar-side-data>.air-target-meta>b{
-  padding:2px 6px 1px;
+  padding:0 6px;
   font:800 13px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
   letter-spacing:.015em;
+}
+
+.secondary-display .air-module .radar-side-data>.air-target-meta>.air-target-status{
+  padding:2px 6px 1px;
+}
+
+.secondary-display .air-module .radar-side-data>.air-target-meta>.air-target-type{
+  border:0;
+  padding:0 6px;
 }
