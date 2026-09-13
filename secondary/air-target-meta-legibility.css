@@ -2,7 +2,7 @@
    Keep the readable status treatment while reclaiming vertical space. */
 
 .secondary-display .air-module .radar-side-data{
-  grid-template-rows:42px 42px 39px 20px 39px;
+  grid-template-rows:38px 37px 39px 20px 39px;
 }
 
 .secondary-display .air-module .radar-side-data>.air-target-meta{
@@ -26,4 +26,12 @@
 .secondary-display .air-module .radar-side-data>.air-target-meta>.air-target-type{
   border:0;
   padding:0 6px;
+}
+
+/* Bring altitude back into the same visual tier as HDG/SPD. The shorter first
+   two rows leave only a couple of pixels beneath the ID/meta cluster and buy
+   breathing room before the message feed. */
+.secondary-display .air-module .radar-side-data>.air-altitude-row>strong::after{
+  font-size:27px;
+  line-height:.88;
 }
