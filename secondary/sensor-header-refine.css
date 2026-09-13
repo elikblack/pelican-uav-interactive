@@ -56,11 +56,11 @@
 }
 
 /* The outer range ring doubles as the bearing ring and therefore stays solid;
-   the three inner rings retain the default dashed weather-range treatment. */
+   keep it lighter than the dashed range arcs so its larger labels lead. */
 .weather-module .wx-sector-grid .wx-bearing-ring{
   display:inline;
   stroke:#fff;
-  stroke-width:1.7;
+  stroke-width:1px;
   stroke-dasharray:none;
   opacity:1;
 }
@@ -117,7 +117,12 @@
 
 .weather-module .weather-lower-left .wx-mode{
   width:max-content;
+  min-height:19px;
   margin:0;
+  padding:3px 5px 2px;
+  gap:5px;
+  font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+  letter-spacing:-.02em;
 }
 
 .weather-module .weather-lower-status{
