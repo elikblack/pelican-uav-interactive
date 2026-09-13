@@ -65,10 +65,10 @@
     const majorTicks = majorAngles.map(angle => segment(angle, bearingRadius - 22)).join('');
     const minorTicks = minorAngles.map(angle => segment(angle, bearingRadius - 11)).join('');
     const labelMarkup = majorAngles.map(angle => {
-      const p = point(bearingRadius - 38, angle);
+      const p = point(bearingRadius - 40, angle);
       const rotation = angle * .72;
       const label = headingTickLabel(referenceBearingDeg + angle);
-      return `<text x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" transform="rotate(${rotation.toFixed(1)} ${p.x.toFixed(1)} ${p.y.toFixed(1)})" style="fill:#fff;opacity:1;font-size:11px;font-weight:600;text-anchor:middle;letter-spacing:.03em;paint-order:stroke;stroke:#020402;stroke-width:2px">${label}</text>`;
+      return `<text x="${p.x.toFixed(1)}" y="${p.y.toFixed(1)}" transform="rotate(${rotation.toFixed(1)} ${p.x.toFixed(1)} ${p.y.toFixed(1)})" style="fill:#fff;opacity:1;font-size:14px;font-weight:600;text-anchor:middle;letter-spacing:.025em;paint-order:stroke;stroke:#020402;stroke-width:2px">${label}</text>`;
     }).join('');
 
     /* The downward-pointing heading caret lands directly on the top of the
