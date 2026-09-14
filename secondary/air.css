@@ -3,9 +3,14 @@
 .airspace-plot{
   overflow:hidden;
   background:
-    linear-gradient(rgba(86,112,132,.035),rgba(86,112,132,.012)),
+    linear-gradient(rgba(86,112,132,.025),rgba(86,112,132,.008)),
+    url("air-background-v3.svg?v=20260913-1") center/100% 100% no-repeat,
     #020402;
 }
+
+/* The original generated geometry remains in secondary.js as a quick fallback,
+   but the revised local-AO background now supplies the static context. */
+.airspace-geometry{opacity:0}
 
 .air-geo-line,
 .air-geo-zone,
