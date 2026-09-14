@@ -1,31 +1,28 @@
 (() => {
-  const SVG_NS = 'http://www.w3.org/2000/svg';
-  const XLINK_NS = 'http://www.w3.org/1999/xlink';
-
   function mountAirBackground() {
-    const plot = document.querySelector('.air-module .airspace-plot');
-    if (!plot) return;
+    const radarBody = document.querySelector('.air-module .radar-module-body');
+    const plot = radarBody && radarBody.querySelector('.airspace-plot');
+    if (!radarBody || !plot) return;
 
-    if (!plot.querySelector('.airspace-background-v3')) {
-      const image = document.createElementNS(SVG_NS, 'image');
-      const href = 'air-background-v3.svg?v=20260913-2';
-
-      image.classList.add('airspace-background-v3');
-      image.setAttribute('x', '0');
-      image.setAttribute('y', '0');
-      image.setAttribute('width', '390');
-      image.setAttribute('height', '320');
-      image.setAttribute('preserveAspectRatio', 'none');
-      image.setAttribute('href', href);
-      image.setAttributeNS(XLINK_NS, 'xlink:href', href);
-      image.setAttribute('aria-hidden', 'true');
-
-      plot.insertBefore(image, plot.firstChild);
+    /* The wide AO artwork lives as its own surface behind the live SVG. Keeping
+       it separate lets the map continue beneath the control and target-data
+       overlays without stretching or relocating the live contacts. */
+    let surface = radarBody.querySelector('.airspace-background-surface');
+    if (!surface) {
+      surface = document.createElement('img');
+      surface.className = 'airspace-background-surface';
+      surface.alt = '';
+      surface.setAttribute('aria-hidden', 'true');
+      surface.setAttribute('draggable', 'false');
+      surface.decoding = 'async';
+      radarBody.insertBefore(surface, plot);
     }
+    surface.src = 'air-background-v4.svg?v=20260914-1';
 
-    /* SVG-element CSS backgrounds are inconsistently painted across browsers.
-       Once the real image node is mounted, clear the CSS background-image path. */
-    plot.style.background = '#020402';
+    /* Remove the earlier SVG-in-SVG mount if it is still present from a cached
+       script, then make the live plot transparent so the wide surface shows. */
+    plot.querySelectorAll('.airspace-background-v3').forEach((node) => node.remove());
+    plot.style.background = 'transparent';
 
     const legacyGeometry = plot.querySelector('.airspace-geometry');
     if (legacyGeometry) legacyGeometry.style.opacity = '0';
