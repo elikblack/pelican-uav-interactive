@@ -7,21 +7,43 @@
   top:41px;
   bottom:46px;
   display:block;
+  overflow:hidden;
+}
+
+/* Wide static AO context. The live radar SVG remains independently positioned
+   above it so extending the map does not distort or relocate the contacts. */
+.air-module .airspace-background-surface{
+  position:absolute;
+  left:0;
+  right:-12px;
+  top:0;
+  bottom:0;
+  width:calc(100% + 12px);
+  height:100%;
+  z-index:0;
+  display:block;
+  object-fit:fill;
+  pointer-events:none;
+  user-select:none;
 }
 
 /* Explicit rendered dimensions avoid Safari resolving the SVG against its
-   intrinsic aspect ratio and showing a zoomed/cropped corner. */
+   intrinsic aspect ratio and showing a zoomed/cropped corner. The plot now
+   overlaps the side overlays slightly, while the wide background spans all of
+   them underneath. */
 .air-module .airspace-plot{
   position:absolute;
-  left:122px;
+  left:104px;
   right:auto;
   top:0;
   bottom:auto;
-  width:calc(100% - 378px);
+  width:calc(100% - 340px);
   height:100%;
   max-width:none;
   max-height:none;
+  z-index:2;
   display:block;
+  background:transparent!important;
 }
 
 .air-control-rail{
@@ -78,7 +100,9 @@
 .air-control-box.control-menu{min-height:44px}
 .air-control-box.control-pulse{width:92px;min-height:42px}
 
-/* The data rail is attached to the module edge rather than framed as a card. */
+/* The data rail is attached to the module edge rather than framed as a card.
+   A left-to-right opacity ramp lets the AO map continue underneath without
+   compromising the selected-track values. */
 .air-module .radar-side-data{
   position:absolute;
   top:0;
@@ -90,7 +114,11 @@
   z-index:6;
   border:0;
   border-left:1px solid var(--line-soft);
-  background:#020402;
+  background:linear-gradient(90deg,
+    rgba(2,4,2,.28) 0%,
+    rgba(2,4,2,.78) 16%,
+    rgba(2,4,2,.94) 46%,
+    #020402 100%);
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
