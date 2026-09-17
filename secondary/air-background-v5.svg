@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 320" role="img" aria-label="Tactical regional airspace background">
+  <title>Tactical regional airspace background</title>
+  <desc>Wide compact airspace context with canted concentric procedural rings, sector boundaries, local fixes, range geometry, and a hatched caution sub-area.</desc>
+  <defs>
+    <style><![CDATA[
+      .strong{fill:none;stroke:#b9ced9;stroke-opacity:.86;stroke-width:1.45;vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}
+      .mid{fill:none;stroke:#a9bfce;stroke-opacity:.68;stroke-width:1.7;vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}
+      .ghost{fill:none;stroke:#9eb4c4;stroke-opacity:.36;stroke-width:1.05;vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}
+      .dash{fill:none;stroke:#a6bccb;stroke-opacity:.58;stroke-width:1.55;stroke-dasharray:7 6;vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}
+      .dashghost{fill:none;stroke:#a1b5c4;stroke-opacity:.41;stroke-width:1.05;stroke-dasharray:4.5 6.5;vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}
+      .point{fill:#020402;stroke:#bdcfd9;stroke-opacity:.78;stroke-width:1.55;vector-effect:non-scaling-stroke}
+      .label{fill:#c4d3dc;fill-opacity:.80;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:.5px}
+      .majorlabel{fill:#d2dee5;fill-opacity:.90;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.7px}
+      .micro{fill:#bacbd5;fill-opacity:.58;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:7px;font-weight:650;letter-spacing:.35px}
+      .caution{fill:url(#cautionHatch);stroke:#c75454;stroke-opacity:.90;stroke-width:1.2;vector-effect:non-scaling-stroke;shape-rendering:geometricPrecision}
+      .cautionlabel{fill:#d45d57;fill-opacity:.94;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:7px;font-weight:750;letter-spacing:.35px}
+    ]]></style>
+    <clipPath id="clip"><rect width="700" height="320"/></clipPath>
+    <pattern id="cautionHatch" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M-2 8L8 -2M4 10L10 4" fill="none" stroke="#c75454" stroke-opacity=".72" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <g clip-path="url(#clip)">
+    <!-- extra context at the expanded left edge -->
+    <path class="ghost" d="M-18 51L28 28L83 38L120 65"/>
+    <path class="dashghost" d="M-22 292L43 260L94 281L132 333"/>
+    <circle class="ghost" cx="44" cy="248" r="122"/>
+    <text class="micro" x="28" y="50">BNDY 6</text>
+
+    <!-- core tactical map shifted slightly left within the wide surface -->
+    <g transform="translate(100 0)">
+      <circle class="mid" cx="-48" cy="264" r="205"/>
+      <circle class="ghost" cx="-48" cy="264" r="274"/>
+      <path class="dashghost" d="M-48 264L330 16"/>
+      <path class="ghost" d="M-48 264L401 186"/>
+
+      <path class="strong" d="M31 73L101 39L181 57L229 37L323 70L359 139L339 222L270 274L176 263L93 229L39 177Z"/>
+      <text class="majorlabel" x="73" y="89">SECTOR 4A</text>
+
+      <path class="ghost" d="M101 39L126 104L102 176L93 229"/>
+      <path class="ghost" d="M181 57L188 124L230 165L339 222"/>
+
+      <path class="dash" d="M244 68L306 59L355 93L349 142L302 156L258 127Z"/>
+      <text class="majorlabel" x="286" y="84">R-2307</text>
+      <path class="caution" d="M304 92L341 101L337 131L308 141L289 119Z"/>
+      <text class="cautionlabel" x="301" y="117">R-2307A</text>
+
+      <g transform="translate(198 168) rotate(-9) skewX(-5) scale(1.10 .88) translate(-198 -168)">
+        <circle class="dash" cx="198" cy="168" r="39"/>
+        <circle class="dash" cx="198" cy="168" r="70"/>
+        <circle class="dash" cx="198" cy="168" r="101"/>
+        <circle class="dashghost" cx="198" cy="168" r="132"/>
+
+        <path class="mid" d="M198 132V204M162 168H234"/>
+        <path class="dash" d="M88 89L306 247"/>
+        <path class="dash" d="M100 239L302 100"/>
+
+        <path class="mid" d="M184 150L193 145L201 150L211 148L218 157L216 168L221 178L211 186L201 184L192 190L183 182L185 172L179 163Z"/>
+        <path class="ghost" d="M198 136v13M198 187v14M166 168h13M217 168h14"/>
+      </g>
+
+      <path class="dash" d="M104 95L284 251" opacity=".72"/>
+      <path class="dash" d="M111 240L291 105" opacity=".72"/>
+
+      <g transform="translate(112 111)">
+        <circle class="point" r="7"/><circle class="ghost" r="2"/>
+        <text class="label" x="11" y="3">CP21</text>
+      </g>
+      <g transform="translate(74 180)">
+        <path class="mid" d="M-5 -5L5 5M5 -5L-5 5"/>
+        <text class="micro" x="9" y="2">FX3</text>
+      </g>
+      <g transform="translate(291 213)">
+        <circle class="point" r="7"/><circle class="ghost" r="2"/>
+        <text class="label" x="11" y="3">CP24</text>
+      </g>
+      <g transform="translate(237 257)">
+        <path class="mid" d="M-5 0H5M0-5V5"/>
+        <text class="micro" x="9" y="2">K7</text>
+      </g>
+
+      <path class="dashghost" d="M296 191C310 181 334 182 345 193C356 204 352 219 338 224C322 230 305 226 296 217"/>
+      <text class="micro" x="319" y="238">HLD24</text>
+
+      <circle class="point" cx="143" cy="218" r="3.5" opacity=".68"/>
+      <circle class="point" cx="250" cy="112" r="3.5" opacity=".68"/>
+      <circle class="point" cx="325" cy="252" r="3.5" opacity=".58"/>
+      <path class="ghost" d="M25 135h14M32 128v14M226 20h16M234 12v16M363 184h13M369 178v13"/>
+      <path class="ghost" d="M-17 27L26 14L66 31L79 55M337 20L378 10L408 30M330 292L363 274L405 288"/>
+      <path class="dashghost" d="M8 309L58 285L94 302L121 336"/>
+
+      <text class="micro" x="350" y="37">AC-17</text>
+      <text class="micro" x="221" y="32">120</text>
+    </g>
+
+    <!-- low-contrast continuation intended to live beneath the right data rail -->
+    <g opacity=".78">
+      <path class="ghost" d="M482 76L542 92L605 70L692 100"/>
+      <path class="dashghost" d="M496 239L554 212L622 228L692 196"/>
+      <circle class="ghost" cx="596" cy="166" r="50"/>
+      <path class="ghost" d="M596 116V216M546 166H646"/>
+      <text class="micro" x="613" y="161">LCL</text>
+      <text class="micro" x="613" y="171">REF</text>
+      <path class="ghost" d="M518 22L578 10L646 37L704 30"/>
+      <path class="ghost" d="M522 296L583 268L649 286L702 333"/>
+    </g>
+  </g>
+</svg>
