@@ -17,7 +17,7 @@
       surface.decoding = 'async';
       radarBody.insertBefore(surface, plot);
     }
-    surface.src = 'air-background-v4.svg?v=20260914-1';
+    surface.src = 'air-background-v5.svg?v=20260916-1';
 
     /* Remove the earlier SVG-in-SVG mount if it is still present from a cached
        script, then make the live plot transparent so the wide surface shows. */
