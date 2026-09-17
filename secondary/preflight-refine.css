@@ -101,8 +101,8 @@
 .air-control-box.control-pulse{width:92px;min-height:42px}
 
 /* The data rail is attached to the module edge rather than framed as a card.
-   A left-to-right opacity ramp lets the AO map continue underneath without
-   compromising the selected-track values. */
+   The stronger opacity ramp lets the AO map continue underneath while keeping
+   selected-track values clean when live contacts pass behind the rail. */
 .air-module .radar-side-data{
   position:absolute;
   top:0;
@@ -115,9 +115,9 @@
   border:0;
   border-left:1px solid var(--line-soft);
   background:linear-gradient(90deg,
-    rgba(2,4,2,.28) 0%,
-    rgba(2,4,2,.78) 16%,
-    rgba(2,4,2,.94) 46%,
+    rgba(2,4,2,.38) 0%,
+    rgba(2,4,2,.86) 16%,
+    rgba(2,4,2,.97) 46%,
     #020402 100%);
   display:flex;
   flex-direction:column;
